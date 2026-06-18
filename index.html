@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
+    <!-- Tailwind CSS para Design Moderno -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Biblioteca do Supabase para o Banco de Dados -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Ícones de SST, EPIs e Ferramentas -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -25,12 +28,16 @@
 </head>
 <body>
 
+    <!-- ======================================================== -->
+    <!-- 1. TELA DE LOGIN COM ABAS DE ACESSO TOTALMENTE SEPARADAS -->
+    <!-- ======================================================== -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-950 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center">
             <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain">
             <h2 class="text-xl font-bold text-slate-800 mb-1">Portal de Segurança e Auditoria</h2>
             <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrar na plataforma</p>
             
+            <!-- SELETOR GRÁFICO DE ABAS DE ENTRADA -->
             <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6">
                 <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow-sm transition-all duration-200">
                     <i class="fa-solid fa-building mr-1"></i> Acesso Empresa
@@ -40,6 +47,7 @@
                 </button>
             </div>
 
+            <!-- FORMULÁRIO DE LOGIN 1: EXCLUSIVO PARA EMPRESAS PRESTADORAS -->
             <form id="form-login-empresa" onsubmit="processarLoginEmpresa(event)" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-address-card mr-1"></i> CNPJ da Empresa</label>
@@ -54,6 +62,7 @@
                 </button>
             </form>
 
+            <!-- FORMULÁRIO DE LOGIN 2: SEU ACESSO EXCLUSIVO DE ADMINISTRADOR -->
             <form id="form-login-admin" onsubmit="processarLoginAdmin(event)" class="space-y-4 text-left hidden">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-user mr-1"></i> Usuário Administrador</label>
@@ -70,6 +79,9 @@
         </div>
     </div>
 
+    <!-- ======================================================== -->
+    <!-- 2. CABEÇALHO (MONTA DINAMICAMENTE DE ACORDO COM O LOGIN) -->
+    <!-- ======================================================== -->
     <header class="header-fa text-white p-4 shadow-md flex flex-col sm:flex-row justify-between items-center gap-4 hidden" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-14 bg-white p-1 rounded-lg">
@@ -81,9 +93,14 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
+    <!-- ======================================================== -->
+    <!-- 3. PORTAIS INTERNOS TOTALMENTE ISOLADOS                  -->
+    <!-- ======================================================== -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden" id="main-content">
         
+        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
+            <!-- PGR e PCMSO da Empresa -->
             <div class="card-fa p-6 rounded-2xl shadow-sm">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 border-b pb-2 flex items-center gap-2"><i class="fa-solid fa-building"></i> Documentos da Empresa Contratada</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,6 +115,7 @@
                 </div>
             </div>
 
+            <!-- Cadastro de Terceiros e NRs -->
             <div class="card-fa p-6 rounded-2xl shadow-sm">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 border-b pb-2 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Enviar Documentos do Colaborador</h2>
                 <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
@@ -107,6 +125,7 @@
                         <input type="text" id="col-funcao" placeholder="Função Técnica (Ex: Eletricista)" required class="p-3 border rounded-xl text-sm w-full bg-gray-50">
                     </div>
 
+                    <!-- Arquivos Obrigatórios Base -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
                         <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-medical text-emerald-700"></i> ASO (Atestado Saúde Ocupacional)</span><div class="flex gap-1"><input type="file" id="file-aso" required class="text-xs w-full"><input type="date" id="val-aso" required class="text-xs border rounded-md"></div></div>
                         <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-id-card text-emerald-700"></i> Ficha de Registro de Empregado</span><div class="flex gap-1"><input type="file" id="file-ficha" required class="text-xs w-full"><input type="date" id="val-ficha" required class="text-xs border rounded-md"></div></div>
@@ -115,6 +134,7 @@
                         <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-passport text-emerald-700"></i> e-Social / Comprovação de CTPS</span><div class="flex gap-1"><input type="file" id="file-esocial" required class="text-xs w-full"><input type="date" id="val-esocial" required class="text-xs border rounded-md"></div></div>
                     </div>
 
+                    <!-- NRs -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
                         <div class="bg-white p-3 border rounded-xl shadow-sm">
                             <label class="text-xs font-bold flex items-center space-x-2 text-gray-700"><input type="checkbox" id="chk-nr11" onchange="document.getElementById('box-nr11').classList.toggle('hidden')" class="w-4 h-4 text-emerald-700"><span>NR-11 (Movimentação de Cargas)</span></label>
@@ -129,6 +149,7 @@
                         <div class="bg-white p-2 border rounded-xl md:col-span-2"><label class="text-xs font-bold flex items-center space-x-1"><input type="checkbox" id="chk-nr6"><span>NR-06 (EPI)</span></label><div class="flex gap-1 mt-1"><input type="file" id="file-nr6" class="text-xs w-full"><input type="date" id="val-nr6" class="text-xs border rounded-md"></div></div>
                     </div>
 
+                    <!-- Diversos -->
                     <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-white p-3 border rounded-xl"><input type="text" id="t-div1" placeholder="Título do Documento Diversos 1" class="text-xs font-bold w-full mb-2 outline-none border-b"><div class="flex gap-1"><input type="file" id="file-div1" class="text-xs w-full"><input type="date" id="val-div1" class="text-xs border rounded-md"></div></div>
                         <div class="bg-white p-3 border rounded-xl"><input type="text" id="t-div2" placeholder="Título do Documento Diversos 2" class="text-xs font-bold w-full mb-2 outline-none border-b"><div class="flex gap-1"><input type="file" id="file-div2" class="text-xs w-full"><input type="date" id="val-div2" class="text-xs border rounded-md"></div></div>
@@ -139,8 +160,10 @@
             </div>
         </section>
 
+        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Alterar Sua Própria Senha Master -->
                 <div class="card-fa p-6 rounded-2xl shadow-sm border border-slate-200 bg-slate-50/50">
                     <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-user-lock text-emerald-800"></i> Alterar Minha Senha Master de Administrador</h3>
                     <form onsubmit="alterarSenhaAdminNoBanco(event)" class="space-y-3">
@@ -149,6 +172,7 @@
                     </form>
                 </div>
 
+                <!-- Criar Acesso para Novas Empresas -->
                 <div class="card-fa p-6 rounded-2xl shadow-sm border border-emerald-100 bg-emerald-50/20">
                     <h3 class="text-sm font-bold text-emerald-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-key text-emerald-700"></i> Gerar Login e Senha para Empresa Prestadora</h3>
                     <form onsubmit="gerarAcessoEmpresaNoSupabase(event)" class="space-y-3">
@@ -161,6 +185,7 @@
                 </div>
             </div>
 
+            <!-- Filtros de Busca e Relatórios -->
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
@@ -171,6 +196,7 @@
                 </button>
             </div>
 
+            <!-- Tabela Central -->
             <div class="card-fa p-6 rounded-2xl shadow-sm">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> Triagem Geral de Conformidade de Terceiros</h2>
                 <div class="overflow-x-auto">
@@ -184,17 +210,21 @@
                             </tr>
                         </thead>
                         <tbody id="tabela-admin-dados" class="divide-y bg-white">
-                            </tbody>
+                            <!-- JS data -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- ======================================================== -->
+    <!-- 4. LÓGICA DE EXECUÇÃO DE BANCO DE DADOS (SUPABASE CLOUD) -->
+    <!-- ======================================================== -->
     <script>
-        // COLOQUE SEUS DOIS DADOS REAIS DO SUPABASE ENTRE AS ASPAS ABAIXO:
-        const SUPABASE_URL = "https://xskvclgudgihomgqffas.supabase.co"; 
-        const SUPABASE_KEY = "sb_publishable_YEbjFMYjoe6xQuqEBUc7fA_3IzKoAZJ";           
+        // CREDENCIAIS OFICIAIS ATUALIZADAS DO SEU PROJETO
+        const SUPABASE_URL = "https://kystxdxiwoplpujkwiwh.supabase.co"; 
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let dadosTrabalhadores = [];
@@ -222,7 +252,7 @@
             }
         }
 
-        // LOGIN DO ADMINISTRADOR (VOCÊ)
+        // LOGIN DO ADMINISTRADOR
         async function processarLoginAdmin(e) {
             e.preventDefault();
             const usuario = document.getElementById('login-usuario-admin').value.trim();
@@ -238,7 +268,7 @@
             }
         }
 
-        // LOGIN DAS PRESTADORAS QUE VOCÊ CRIAR NO PAINEL
+        // LOGIN DAS PRESTADORAS
         async function processarLoginEmpresa(e) {
             e.preventDefault();
             const cnpj = document.getElementById('login-cnpj').value.trim();
@@ -251,8 +281,6 @@
                 liberarTelaPorPerfil('prestador');
             } else { alert("CNPJ ou Senha não autorizados pela FA!"); }
         }
-
-        function SkinnerGeral() {}
 
         function liberarTelaPorPerfil(perfil) {
             document.getElementById('tela-login').classList.add('hidden');
@@ -276,6 +304,7 @@
             const nova = document.getElementById('nova-senha-master').value;
             const { error } = await _supabase.from('config_admin').update({ senha: nova }).eq('id', 1);
             if(!error) { alert("Sua senha Master foi atualizada permanentemente no banco de dados!"); document.getElementById('nova-senha-master').value = ""; }
+            else { alert("Erro ao atualizar a senha master."); }
         }
 
         async function gerarAcessoEmpresaNoSupabase(e) {
@@ -284,7 +313,7 @@
             const senha = document.getElementById('cad-senha').value.trim();
 
             const { error } = await _supabase.from('acessos_empresas').insert([{ cnpj, senha }]);
-            if(!error) { alert(`Acesso gerado para a empresa ${cnpj}!`); document.getElementById('cad-cnpj').value = ""; document.getElementById('cad-senha').value = ""; }
+            if(!error) { alert(`Acesso gerado com sucesso para a empresa ${cnpj}!`); document.getElementById('cad-cnpj').value = ""; document.getElementById('cad-senha').value = ""; }
             else { alert("Erro ao criar acesso. Verifique se o CNPJ já existe."); }
         }
 
