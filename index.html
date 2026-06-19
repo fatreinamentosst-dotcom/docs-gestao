@@ -135,8 +135,7 @@
                                 <th class="p-3">Doc / Status / Validade / Observação da FA</th>
                             </tr>
                         </thead>
-                        <tbody id="tabela-retorno-empresa" class="divide-y bg-white">
-                            </tbody>
+                        <tbody id="tabela-retorno-empresa" class="divide-y bg-white"></tbody>
                     </table>
                 </div>
             </div>
@@ -168,14 +167,9 @@
 
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-lg border-2 border-emerald-600 hidden bg-emerald-50/10">
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Auditando Documentos de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
-                <p class="text-xs text-gray-500 mb-6">Abra os anexos enviados pela empresa contratada, insira as respectivas validades legais, defina os status de conformidade técnica e adicione notas de reprovação se necessário.</p>
-                
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
                     <input type="hidden" id="audit-id-colaborador">
-                    
-                    <div id="container-documentos-auditoria" class="space-y-3">
-                        </div>
-
+                    <div id="container-documentos-auditoria" class="space-y-3"></div>
                     <div class="flex gap-4 pt-4 border-t">
                         <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md"><i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Parecer e Validades no Sistema</button>
                         <button type="button" onclick="document.getElementById('bloco-auditoria').classList.add('hidden')" class="bg-gray-400 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-500 transition">Cancelar</button>
@@ -192,7 +186,6 @@
 
         let dadosTrabalhadores = [];
         let empresaCnpjSessao = "";
-        let abaLoginAtiva = "empresa";
 
         const listaDocsDefinidos = [
             { id: 'aso', nome: 'ASO (Atestado de Saúde)' },
@@ -210,7 +203,6 @@
         ];
 
         function alternarAbaEntrada(tipo) {
-            abaLoginAtiva = tipo;
             document.getElementById('form-login-empresa').classList.toggle('hidden', tipo !== 'empresa');
             document.getElementById('form-login-admin').classList.toggle('hidden', tipo !== 'admin');
             document.getElementById('aba-empresa').className = tipo === 'empresa' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
@@ -258,9 +250,23 @@
             const input = document.getElementById(idInput);
             if (!input || !input.files || input.files.length === 0) return null;
             const file = input.files[0];
-            const filePath = `${empresaCnpjSessao}/${pasta}_${Date.now()}_${file.name}`;
-            const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file);
-            if (!error && data) {
+            
+            // Gerar um nome único e seguro para o arquivo
+            const nomeLimpo = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+            const filePath = `${empresaCnpjSessao}/${pasta}_${Date.now()}_${nomeLimpo}`;
+            
+            const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: true
+            });
+
+            if (error) {
+                console.error("Erro completo do upload no Supabase:", error);
+                alert(`Aviso: O arquivo do campo [${pasta.toUpperCase()}] não pôde ser enviado para a nuvem. Verifique as permissões de 'Policies' do seu Storage no Supabase. Detalhe: ${error.message}`);
+                return null;
+            }
+            
+            if (data) {
                 const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
                 return urlData.publicUrl;
             }
@@ -292,11 +298,11 @@
 
                 const { error } = await _supabase.from('colaboradores').insert([payload]);
                 if (!error) { 
-                    alert(`Documentos de ${nome} enviados com sucesso!`); 
+                    alert(`Sucesso! Os documentos de ${nome} foram transmitidos.`); 
                     document.getElementById('form-colaborador').reset();
                     carregarRetornosDaEmpresa();
-                } else { alert("Erro ao gravar: " + error.message); }
-            } catch (err) { alert("Erro no envio."); }
+                } else { alert("Erro ao gravar na tabela: " + error.message); }
+            } catch (err) { alert("Erro no envio geral."); }
         }
 
         async function carregarRetornosDaEmpresa() {
@@ -305,7 +311,7 @@
             tbody.innerHTML = "";
             
             if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum retorno disponível.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado por esta empresa.</td></tr>`;
                 return;
             }
 
@@ -313,7 +319,7 @@
                 let blocosDocs = "";
                 listaDocsDefinidos.forEach(d => {
                     const status = c[`status_${d.id}`] || 'Pendente de envio';
-                    const validade = c[`val_${d.id}`] ? new Date(c[`val_${d.id}`]).toLocaleDateString('pt-BR') : 'Não informada';
+                    const validade = c[`val_${d.id}`] ? new Date(c[`val_${d.id}`]).toLocaleDateString('pt-BR') : 'Não analisada';
                     const obs = c[`obs_${d.id}`] || '';
                     
                     let badgeColor = "bg-gray-100 text-gray-700";
@@ -328,7 +334,7 @@
                                 <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
                                 <span class="text-gray-500">Validade: <strong>${validade}</strong></span>
                             </div>
-                            <span class="text-red-600 italic max-w-xs truncate" title="${obs}">${obs ? 'Motivo: ' + obs : ''}</span>
+                            <span class="text-red-600 font-medium max-w-xs truncate" title="${obs}">${obs ? 'Motivo: ' + obs : ''}</span>
                         </div>
                     `;
                 });
@@ -379,7 +385,7 @@
                 const valAtual = c[`val_${d.id}`] || '';
                 const obsAtual = c[`obs_${d.id}`] || '';
 
-                let linkHtml = urlPdf 
+                let linkHtml = (urlPdf && urlPdf !== "Não enviado") 
                     ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs hover:bg-blue-700 inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-file-pdf"></i> Visualizar Anexo</a>`
                     : `<span class="text-gray-400 italic text-xs bg-gray-100 px-2 py-1.5 rounded border border-dashed"><i class="fa-solid fa-ban"></i> Não enviado</span>`;
 
@@ -404,7 +410,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo Reprovação</label>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo</label>
                         <input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none">
                     </div>
                 `;
