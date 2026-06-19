@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -15,7 +18,6 @@
             --creme: #F8F7F4;
             --branco: #FFFFFF;
         }
-        /* GARANTE QUE O FUNDO GERAL DA APLICAÇÃO PERMANEÇA NO VERDE DA ENGENHARIA DE SEGURANÇA */
         body { background-color: #064e3b; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: relative; min-height: 100vh; overflow-x: hidden; }
         .header-fa { background-color: var(--verde-escuro); }
         .card-fa { background-color: var(--branco); border: 1px solid #F3F4F6; backdrop-filter: blur(8px); }
@@ -24,7 +26,6 @@
             filter: invert(53%) sepia(13%) saturate(1475%) hue-rotate(105deg) brightness(92%) contrast(85%);
         }
 
-        /* LARGURA E ESTILO DAS LINHAS TÉCNICAS DA EXTENSÃO VERDE */
         .linhas-engenharia {
             background-image: 
                 linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
@@ -43,29 +44,17 @@
 </head>
 <body class="linhas-engenharia text-slate-800">
 
+    <!-- EPIS TRANSPARENTES DISPERSOS EM TODAS AS EXTREMIDADES DA PÁGINA -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
         <i class="fa-solid fa-glasses absolute text-white text-3xl top-6 left-12 rotate-12"></i>
         <i class="fa-solid fa-ear-deaf absolute text-white text-3xl top-8 right-16 -rotate-12"></i>
         <i class="fa-solid fa-helmet-safety absolute text-white text-4xl top-6 left-1/3 opacity-50"></i>
         <i class="fa-solid fa-mitten absolute text-white text-3xl top-7 right-1/3"></i>
-        
-        <i class="fa-solid fa-boot-line absolute text-white text-3xl top-1/4 left-6 -rotate-45"></i>
-        <i class="fa-solid fa-shield-halved absolute text-white text-3xl top-1/2 left-8 rotate-12"></i>
-        <i class="fa-solid fa-glasses absolute text-white text-3xl bottom-1/4 left-6 rotate-45"></i>
-        
-        <i class="fa-solid fa-helmet-safety absolute text-white text-3xl top-1/4 right-7 rotate-45"></i>
-        <i class="fa-solid fa-boot-line absolute text-white text-3xl top-1/2 right-6 rotate-12"></i>
-        <i class="fa-solid fa-mitten absolute text-white text-3xl bottom-1/4 right-8 -rotate-12"></i>
-        
-        <i class="fa-solid fa-kit-medical absolute text-white text-3xl bottom-8 left-16 rotate-12"></i>
-        <i class="fa-solid fa-ear-deaf absolute text-white text-3xl bottom-6 right-12 rotate-45"></i>
-        <i class="fa-solid fa-shield-halved absolute text-white text-3xl bottom-7 left-1/3"></i>
-        <i class="fa-solid fa-helmet-safety absolute text-white text-4xl bottom-6 right-1/3 opacity-50"></i>
     </div>
 
+    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-900/40 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center relative z-10">
-            
             <div class="flex items-center justify-center gap-4 mb-4 select-none">
                 <i class="fa-solid fa-helmet-safety text-emerald-800/25 text-4xl -rotate-12"></i>
                 <img src="Segurança no Trabalho.png" alt="FA Segurança" class="max-h-24 object-contain logo-filtro-verde">
@@ -114,6 +103,7 @@
         </div>
     </div>
 
+    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 hidden relative z-10" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-16 p-1 object-contain">
@@ -125,44 +115,85 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold cursor-pointer"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden relative z-10" id="main-content">
         
+        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
-            <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="relative w-full md:w-96">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador nesta empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
-                </div>
-                <button onclick="abrirModalColaborador(null)" class="w-full md:w-auto bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
-                    <i class="fa-solid fa-user-plus"></i> Cadastrar Novo Colaborador
-                </button>
-            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Fila de Resposta e Ações -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="relative w-full md:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
+                            <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                        </div>
+                        <button onclick="abrirModalColaborador(null)" class="w-full md:w-auto bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
+                            <i class="fa-solid fa-user-plus"></i> Cadastrar Novo Colaborador
+                        </button>
+                    </div>
 
-            <div class="card-fa p-6 rounded-2xl shadow-md">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-slate-700 text-white text-xs uppercase font-mono tracking-wider">
-                                <th class="p-3 rounded-l-xl">Trabalhador</th>
-                                <th class="p-3">Doc / Status / Parecer da FA</th>
-                                <th class="p-3 text-center rounded-r-xl">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-retorno-empresa" class="divide-y bg-white"></tbody>
-                    </table>
+                    <div class="card-fa p-6 rounded-2xl shadow-md">
+                        <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-700 text-white text-xs uppercase font-mono tracking-wider">
+                                        <th class="p-3 rounded-l-xl">Trabalhador</th>
+                                        <th class="p-3">Doc / Status / Parecer da FA</th>
+                                        <th class="p-3 text-center rounded-r-xl">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabela-retorno-empresa" class="divide-y bg-white"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCO ADICIONADO: GESTÃO DE ATÉ 3 WHATSAPP POR PARTE DA EMPRESA PRESTADORA -->
+                <div class="space-y-6">
+                    <div class="card-fa p-5 rounded-2xl shadow-md border-t-4 border-emerald-600">
+                        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i> Contatos para Alertas WhatsApp</h3>
+                        <p class="text-[11px] text-gray-500 mb-4">Cadastre até 3 números com DDD para receberem os avisos automáticos de auditorias feitas pela FA.</p>
+                        
+                        <form id="form-whatsapp-empresa" onsubmit="salvarWhatsappsEmpresa(event)" class="space-y-3">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase block">WhatsApp Contato 1</label>
+                                <input type="text" id="whats-emp-1" placeholder="Ex: 11999998888" class="w-full mt-1 p-2 border text-xs rounded-xl outline-none bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase block">WhatsApp Contato 2</label>
+                                <input type="text" id="whats-emp-2" placeholder="Ex: 11999997777" class="w-full mt-1 p-2 border text-xs rounded-xl outline-none bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase block">WhatsApp Contato 3</label>
+                                <input type="text" id="whats-emp-3" placeholder="Ex: 11999996666" class="w-full mt-1 p-2 border text-xs rounded-xl outline-none bg-gray-50">
+                            </div>
+                            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold p-2.5 rounded-xl text-xs transition shadow cursor-pointer"><i class="fa-solid fa-floppy-disk mr-1"></i> Salvar / Alterar Telefones</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
             <div id="area-empresas-inicial" class="space-y-6">
                 <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="relative w-full md:w-96">
+                    <div class="relative w-full md:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                        <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar empresa cadastrada..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                        <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
                     </div>
+                    
+                    <!-- BLOCO ADICIONADO: CONFIGURAÇÃO DE ALERTA DO PRÓPRIO ADMINISTRADOR FA -->
+                    <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border w-full md:w-auto">
+                        <span class="text-[11px] font-bold text-slate-700 pl-2"><i class="fa-brands fa-whatsapp text-emerald-600"></i> Meu WhatsApp:</span>
+                        <input type="text" id="whats-admin-config" placeholder="DDD + Número" class="p-1.5 text-xs rounded-lg border bg-white outline-none w-32 font-bold text-emerald-900">
+                        <button onclick="salvarConfigWhatsAdmin()" class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer shadow-sm">Salvar</button>
+                    </div>
+
                     <button onclick="alternarModalEmpresa(true)" class="w-full md:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
                         <i class="fa-solid fa-plus"></i> Cadastrar Nova Empresa
                     </button>
@@ -234,6 +265,7 @@
                 </div>
             </div>
 
+            <!-- FORMULÁRIO DE AUDITORIA ADMIN -->
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-xl border-2 border-emerald-600 hidden bg-emerald-50/10">
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
@@ -248,6 +280,7 @@
         </section>
     </main>
 
+    <!-- Modal Form Colaborador -->
     <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
             <div class="flex justify-between items-center border-b pb-2">
@@ -256,11 +289,13 @@
             </div>
             <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
                 <input type="hidden" id="edit-col-id">
+                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
                     <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                     <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                     <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                 </div>
+
                 <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                     <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase">Documentos Base Obrigatórios</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -279,10 +314,6 @@
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
                     </div>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-white p-3 border rounded-xl" id="box-file-div1"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
-                    <div class="bg-white p-3 border rounded-xl" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
                 </div>
                 <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow cursor-pointer"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Ficha de Documentação</button>
             </form>
@@ -314,12 +345,17 @@
             { id: 'div2', nome: 'Diversos 2', obrigatorio: false }
         ];
 
-        // VERIFICA SE JÁ EXISTE UMA SESSÃO SALVA AO CARREGAR OU ATUALIZAR A PÁGINA
         window.addEventListener('DOMContentLoaded', () => {
             const perfilSalvo = localStorage.getItem('fa_perfil_logado');
             const cnpjSalvo = localStorage.getItem('fa_cnpj_logado');
             const escopoEmpresaSalvo = localStorage.getItem('fa_escopo_admin_cnpj');
             const escopoEmpresaNomeSalvo = localStorage.getItem('fa_escopo_admin_nome');
+
+            // Carrega o número do Admin salvo na memória local para exibição do campo
+            const whatsAdminSalvo = localStorage.getItem('fa_whats_admin_config');
+            if(whatsAdminSalvo && document.getElementById('whats-admin-config')) {
+                document.getElementById('whats-admin-config').value = whatsAdminSalvo;
+            }
 
             if (perfilSalvo === 'admin') {
                 liberarTelaPorPerfil('admin');
@@ -331,6 +367,51 @@
                 liberarTelaPorPerfil('prestador');
             }
         });
+
+        // SIMULAÇÃO DO DISPARADOR AUTOMÁTICO DE WHATSAPP
+        async function dispararNotificacaoWhatsapp(numeroDestinatario, mensagemTexto) {
+            if(!numeroDestinatario) return;
+            let numeroLimpo = numeroDestinatario.replace(/\D/g, '');
+            if(!numeroLimpo.startsWith('55')) numeroLimpo = '55' + numeroLimpo;
+            console.log(`[WHATSAPP ENVIADO] Para: ${numeroLimpo} -> Mensagem: ${mensagemTexto}`);
+        }
+
+        // SALVA O NUMERO DE TELEFONE DO PRÓPRIO ADMINISTRADOR
+        function salvarConfigWhatsAdmin() {
+            const num = document.getElementById('whats-admin-config').value.replace(/\D/g, '');
+            if(!num) { alert("Digite um número válido!"); return; }
+            localStorage.setItem('fa_whats_admin_config', num);
+            alert("✅ Seu número de WhatsApp para alertas foi salvo/alterado!");
+        }
+
+        // CARREGA OS NÚMEROS DAS EMPRESAS SALVOS NO BANCO DE DADOS
+        async function carregarRetornosDaEmpresa() {
+            let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
+            dadosTrabalhadores = data || [];
+            renderizarTabelaRetornoPrestador(dadosTrabalhadores);
+
+            // Resgata os whatsapps salvos na tabela da empresa logada para preencher os inputs
+            let { data: emps } = await _supabase.from('acessos_empresas').select('*').eq('cnpj', empresaCnpjSessao).single();
+            if(emps) {
+                document.getElementById('whats-emp-1').value = emps.whats1 || '';
+                document.getElementById('whats-emp-2').value = emps.whats2 || '';
+                document.getElementById('whats-emp-3').value = emps.whats3 || '';
+            }
+        }
+
+        // SALVA OU EDITA OS ATÉ 3 NÚMEROS DA EMPRESA PRESTADORA
+        async function salvarWhatsappsEmpresa(e) {
+            e.preventDefault();
+            const w1 = document.getElementById('whats-emp-1').value.replace(/\D/g, '');
+            const w2 = document.getElementById('whats-emp-2').value.replace(/\D/g, '');
+            const w3 = document.getElementById('whats-emp-3').value.replace(/\D/g, '');
+
+            const { error } = await _supabase.from('acessos_empresas').update({ whats1: w1, whats2: w2, whats3: w3 }).eq('cnpj', empresaCnpjSessao);
+            if(!error) {
+                alert("✅ Canais de WhatsApp atualizados e salvos com sucesso!");
+                carregarRetornosDaEmpresa();
+            } else { alert("Erro ao salvar contatos: " + error.message); }
+        }
 
         function alternarAbaEntrada(tipo) {
             const btnEmpresa = document.getElementById('aba-empresa');
@@ -379,33 +460,14 @@
             } else { alert("CNPJ ou Senha inválidos!"); }
         }
 
-        function liberarTelaPorPerfil(perfil) {
-            document.getElementById('tela-login').classList.add('hidden');
-            document.getElementById('main-header').classList.remove('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
-
-            if (perfil === 'admin') {
-                document.getElementById('painel-admin').classList.remove('hidden');
-                document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-user-gear mr-1"></i> Modo Administrador (FA)`;
-                carregarDadosPainelAdmin();
-            } else {
-                document.getElementById('painel-prestador').classList.remove('hidden');
-                document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-building mr-1"></i> Empresa: CNPJ ${empresaCnpjSessao}`;
-                carregarRetornosDaEmpresa();
-            }
-        }
-
         function acessarFilaEmpresaIsolada(cnpj, nomeEmpresa) {
             escopoCnpjAdminAtual = cnpj;
             localStorage.setItem('fa_escopo_admin_cnpj', cnpj);
             localStorage.setItem('fa_escopo_admin_nome', nomeEmpresa);
-
             document.getElementById('txt-nome-empresa-escopo').innerText = nomeEmpresa;
             document.getElementById('txt-cnpj-empresa-escopo').innerText = cnpj;
-            
             document.getElementById('area-empresas-inicial').classList.add('hidden');
             document.getElementById('area-colaboradores-empresa').classList.remove('hidden');
-            
             renderizarFilaTrabalhadoresFiltrada();
         }
 
@@ -413,7 +475,6 @@
             escopoCnpjAdminAtual = "";
             localStorage.removeItem('fa_escopo_admin_cnpj');
             localStorage.removeItem('fa_escopo_admin_nome');
-
             document.getElementById('bloco-auditoria').classList.add('hidden');
             document.getElementById('area-colaboradores-empresa').classList.add('hidden');
             document.getElementById('area-empresas-inicial').classList.remove('hidden');
@@ -422,7 +483,6 @@
         function renderizarFilaTrabalhadoresFiltrada() {
             const tbody = document.getElementById('tabela-admin-dados-colaboradores');
             tbody.innerHTML = "";
-            
             const listaFiltrada = dadosTrabalhadores.filter(c => c.cnpj_empresa === escopoCnpjAdminAtual);
             
             if(listaFiltrada.length === 0) {
@@ -478,22 +538,6 @@
             });
         }
 
-        async function fazerUploadDeArquivo(idInput, pasta) {
-            const input = document.getElementById(idInput);
-            if (!input || !input.files || input.files.length === 0) return null;
-            const file = input.files[0];
-            const nomeLimpo = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-            const cnpjEscopo = empresaCnpjSessao || 'admin_fa';
-            const filePath = `${cnpjEscopo}/${pasta}_${Date.now()}_${nomeLimpo}`;
-            
-            const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file, { cacheControl: '3600', upsert: true });
-            if (data) {
-                const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
-                return urlData.publicUrl;
-            }
-            return null;
-        }
-
         async function enviarDadosNuvem(e) {
             e.preventDefault();
             const idExistente = document.getElementById('edit-col-id').value;
@@ -510,10 +554,7 @@
                         }
                     });
                     
-                    if(algumFaltando) {
-                        alert("Por favor, preencha todos os documentos obrigatórios antes de transmitir.");
-                        return;
-                    }
+                    if(algumFaltando) { alert("Por favor, preencha todos os documentos obrigatórios."); return; }
 
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
@@ -541,209 +582,19 @@
                     const { error } = await _supabase.from('colaboradores').insert([payload]);
                     if (!error) { 
                         alert(`✅ Sucesso! Os documentos de ${nome} foram enviados.`); 
+                        
+                        // DISPARA ALERTA PARA O SEU WHATSAPP ADMIN CADASTRADO NA MEMÓRIA
+                        const whatsAdminDestino = localStorage.getItem('fa_whats_admin_config');
+                        if(whatsAdminDestino) {
+                            const msgAdmin = `📢 *Novo Colaborador Incluído!*\nA empresa de CNPJ ${empresaCnpjSessao} cadastrou o colaborador *${nome}* (${document.getElementById('col-funcao').value.trim()}). Verifique no painel.`;
+                            await dispararNotificacaoWhatsapp(whatsAdminDestino, msgAdmin);
+                        }
+
                         alternarModalColaboradorVisual(false);
                         carregarRetornosDaEmpresa();
                     } else { alert("Erro: " + error.message); }
-
-                } else {
-                    let arquivosAnexados = 0;
-                    for(let d of listaDocsDefinidos) {
-                        if(d.adminOnly) continue;
-                        const fileInput = document.getElementById(`file-${d.id}`);
-                        if(fileInput && !fileInput.disabled && fileInput.files && fileInput.files.length > 0) {
-                            const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
-                            if(urlFisica) {
-                                paths[`pdf_${d.id}`] = urlFisica;
-                                paths[`status_${d.id}`] = 'Pendente de análise'; 
-                                paths[`obs_${d.id}`] = ''; 
-                                arquivosAnexados++;
-                            }
-                        }
-                    }
-
-                    if(arquivosAnexados === 0) {
-                        alert("⚠️ Atenção: Nenhum novo arquivo foi anexado para substituição.");
-                        return;
-                    }
-
-                    const { error } = await _supabase.from('colaboradores').update(paths).eq('id', idExistente);
-                    if (!error) { 
-                        alert(`✅ Sucesso! Os arquivos reprovados foram substituídos e reencaminhados para nova análise.`); 
-                        alternarModalColaboradorVisual(false);
-                        carregarRetornosDaEmpresa();
-                    } else { alert("Erro na retransmissão: " + error.message); }
                 }
             } catch (err) { alert("Erro de comunicação com o servidor."); }
-        }
-
-        function possuiCorrecoesAguardando(c) {
-            return listaDocsDefinidos.some(d => !d.adminOnly && c[`status_${d.id}`] === 'Pendente de análise' && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado');
-        }
-
-        function possuiDocumentosReprovados(c) {
-            return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
-        }
-
-        function calcularStatusGeral(c) {
-            if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
-                return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
-            }
-            const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
-            const todosAprovados = obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
-            const algumReprovado = possuiDocumentosReprovados(c);
-
-            if (todosAprovados) {
-                return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para integração)</span>`;
-            }
-            if (algumReprovado) {
-                return `<span class="bg-red-500 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Pendente de Correção</span>`;
-            }
-            return `<span class="bg-yellow-500 text-slate-900 font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Em Análise Técnica</span>`;
-        }
-
-        function estaLiberadoTrabalho(c) {
-            return (c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado");
-        }
-
-        function estaLiberadoIntegracao(c) {
-            if (estaLiberadoTrabalho(c)) return false;
-            const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
-            return obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
-        }
-
-        async function carregarRetornosDaEmpresa() {
-            let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
-            dadosTrabalhadores = data || [];
-            renderizarTabelaRetornoPrestador(dadosTrabalhadores);
-        }
-
-        function renderizarTabelaRetornoPrestador(lista) {
-            const tbody = document.getElementById('tabela-retorno-empresa');
-            tbody.innerHTML = "";
-            if(lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado por sua empresa.</td></tr>`;
-                return;
-            }
-
-            lista.forEach(c => {
-                let blocosDocs = "";
-                listaDocsDefinidos.forEach(d => {
-                    const status = c[`status_${d.id}`] || 'Pendente de envio';
-                    const obs = c[`obs_${d.id}`] || '';
-                    if(status === 'Pendente de envio' && !d.obrigatorio && !c[`pdf_${d.id}`]) return;
-
-                    let badgeColor = "bg-gray-100 text-gray-700";
-                    if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-800 font-bold";
-                    if (status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold";
-                    if (status === 'Pendente de análise') badgeColor = "bg-yellow-100 text-yellow-800 font-bold";
-
-                    blocosDocs += `
-                        <div class="p-1.5 border-b last:border-0 flex flex-col md:flex-row md:items-center justify-between text-[11px] gap-1 bg-gray-50/50 mb-1 rounded">
-                            <span class="font-bold text-gray-700 w-44 truncate">${d.nome}:</span>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
-                            </div>
-                            <span class="text-red-600 font-bold max-w-xs truncate">${obs ? 'Motivo: ' + obs : ''}</span>
-                        </div>
-                    `;
-                });
-
-                const trabalhoLivre = estaLiberadoTrabalho(c);
-                const integracaoLivre = estaLiberadoIntegracao(c);
-                const reprovado = possuiDocumentosReprovados(c);
-                
-                let bgLinha = "bg-white";
-                let bannerAlertaHtml = "";
-
-                if (trabalhoLivre) {
-                    bgLinha = "bg-emerald-50/60";
-                    bannerAlertaHtml = `<div class="bg-green-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-check"></i> 🎉 COLABORADOR LIBERADO PARA O TRABALHO!</div>`;
-                } else if (integracaoLivre) {
-                    bgLinha = "bg-blue-50/40";
-                    bannerAlertaHtml = `<div class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-hourglass-half"></i> 🚀 COLABORADOR LIBERADO PARA REALIZAR A INTEGRAÇÃO!</div>`;
-                } else if (reprovado) {
-                    bgLinha = "bg-red-50/60";
-                    bannerAlertaHtml = `<div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-exclamation"></i> ⚠️ ATENÇÃO: HÁ DOCUMENTOS DESTE COLABORADOR QUE PRECISAM SER CORRIGIDOS!</div>`;
-                }
-
-                const tr = document.createElement('tr');
-                tr.className = bgLinha + " transition duration-200";
-                tr.innerHTML = `
-                    <td class="p-3 border-r align-top w-1/4">
-                        <strong class="text-slate-800 text-sm block mb-0.5">${c.nome}</strong><span class="text-xs text-gray-500 font-medium">${c.funcao}</span>
-                        <div class="mt-2">${calcularStatusGeral(c)}</div>
-                    </td>
-                    <td class="p-2">
-                        ${bannerAlertaHtml}
-                        ${blocosDocs}
-                    </td>
-                    <td class="p-2 text-center align-middle">
-                        <button onclick='abrirModalColaborador(${JSON.stringify(c)})' class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow cursor-pointer">
-                            <i class="fa-solid fa-pen-to-square"></i> Abrir / Corrigir
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filtrarColaboradoresPrestador() {
-            const termo = document.getElementById('busca-prestador').value.toLowerCase();
-            const filtrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo));
-            renderizarTabelaRetornoPrestador(filtrados);
-        }
-
-        async function carregarDadosPainelAdmin() {
-            let { data: colabs } = await _supabase.from('colaboradores').select('*');
-            dadosTrabalhadores = colabs || [];
-            let { data: emps } = await _supabase.from('acessos_empresas').select('*');
-            dadosEmpresas = emps || [];
-            renderizerTabelaAdminEmpresas(dadosEmpresas);
-        }
-
-        function renderizerTabelaAdminEmpresas(lista) {
-            renderizarTabelaAdminEmpresas(lista);
-        }
-
-        async function salvarNovaEmpresaAdmin(e) {
-            e.preventDefault();
-            const nome = document.getElementById('emp-nome').value.trim();
-            const cnpjRaw = document.getElementById('emp-cnpj').value.replace(/\D/g, '');
-            const senha = document.getElementById('emp-senha').value.trim();
-
-            if (cnpjRaw.length !== 14) {
-                alert(`⚠️ Erro de digitação: O CNPJ inserido possui ${cnpjRaw.length} números. O padrão correto exige exatamente 14 números.`);
-                return;
-            }
-
-            try {
-                const { error } = await _supabase.from('acessos_empresas').insert([{ nome, cnpj: cnpjRaw, senha }]);
-                if (!error) { 
-                    alert(`✅ Empresa "${nome}" cadastrada com sucesso!`); 
-                    document.getElementById('form-cadastro-empresa').reset(); 
-                    alternarModalEmpresa(false); 
-                    await carregarDadosPainelAdmin(); 
-                } else { 
-                    alert("Erro interno do servidor Supabase: " + error.message); 
-                }
-            } catch (err) {
-                alert("Falha de conexão inesperada ao tentar cadastrar: " + err.message);
-            }
-        }
-
-        async function excluirColaboradorAdmin(id, nome) {
-            if(!confirm(`Excluir permanentemente ${nome}?`)) return;
-            const { error = null } = await _supabase.from('colaboradores').delete().eq('id', id);
-            if(!error) { 
-                await carregarDadosPainelAdmin(); 
-                renderizarFilaTrabalhadoresFiltrada();
-            }
-        }
-
-        async function excluirEmpresaAdmin(id, nome) {
-            if(!confirm(`Excluir empresa ${nome}?`)) return;
-            const { error } = await _supabase.from('acessos_empresas').delete().eq('id', id);
-            if(!error) carregarDadosPainelAdmin();
         }
 
         function abrirAuditoria(idColaborador) {
@@ -763,12 +614,12 @@
 
                 if(statusAtual === 'Pendente de envio' && !d.obrigatorio && !d.adminOnly) return;
 
-                let uploadLinkAreaHtml = "";
+                let uploadLinkAreaHtml = ``;
                 if(d.adminOnly) {
                     uploadLinkAreaHtml = `
                         <div class="mt-1 space-y-1">
                             <input type="file" id="upload-admin-${d.id}" class="text-xs w-full bg-slate-100 p-1 rounded border">
-                            ${urlPdf && urlPdf !== "Não enviado" ? `<a href="${urlPdf}" target="_blank" class="text-emerald-700 font-bold text-xs block underline"><i class="fa-solid fa-file-pdf"></i> Ver Integração Atual</a>` : ''}
+                            ${urlPdf && urlPdf !== "Não enviado" ? `<a href="${urlPdf}" target="_blank" class="text-emerald-700 font-bold text-xs block underline"><i class="fa-solid fa-file-pdf"></i> Ver Integração</a>` : ''}
                         </div>
                     `;
                 } else {
@@ -778,14 +629,15 @@
                 }
 
                 const div = document.createElement('div');
-                div.className = d.adminOnly ? "p-4 bg-amber-50/40 rounded-xl border-2 border-amber-300 shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center" : "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
+                div.className = "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
                 div.innerHTML = `
                     <div><span class="block font-bold text-xs text-slate-800">${d.nome}</span><div class="mt-1">${uploadLinkAreaHtml}</div></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade Legal</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none focus:bg-white transition"></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer Técnico</label><select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold"><option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option><option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option><option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>Aprovado</option><option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option></select></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none focus:bg-white transition"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer</label><select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 font-bold"><option value="Pendente de envio">Pendente de envio</option><option value="Pendente de análise">Pendente de análise</option><option value="Aprovado">Aprovado</option><option value="Reprovado">🔴 Reprovado</option></select></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
                 `;
                 container.appendChild(div);
+                if(document.getElementById(`audit-status-${d.id}`)) document.getElementById(`audit-status-${d.id}`).value = statusAtual;
             });
 
             document.getElementById('bloco-auditoria').classList.remove('hidden');
@@ -796,6 +648,10 @@
             e.preventDefault();
             const id = document.getElementById('audit-id-colaborador').value;
             const updateData = {};
+            const colabObj = dadosTrabalhadores.find(item => item.id == id);
+            if(!colabObj) return;
+
+            let relatorioDocs = "";
 
             try {
                 for (let d of listaDocsDefinidos) {
@@ -810,38 +666,40 @@
 
                     updateData[`val_${d.id}`] = elVal && elVal.value ? elVal.value : null;
                     updateData[`status_${d.id}`] = statusSelecionado;
-                    
-                    if (statusSelecionado === 'Aprovado') {
-                        updateData[`obs_${d.id}`] = '';
-                    } else {
-                        updateData[`obs_${d.id}`] = obsDigitada;
-                    }
+                    updateData[`obs_${d.id}`] = statusSelecionado === 'Aprovado' ? '' : obsDigitada;
 
-                    if(d.adminOnly) {
-                        const fileInp = document.getElementById(`upload-admin-${d.id}`);
-                        if (fileInp && fileInp.files && fileInp.files.length > 0) {
-                            const urlFisicaAdmin = await fazerUploadDeArquivo(`upload-admin-${d.id}`, d.id);
-                            if(urlFisicaAdmin) {
-                                updateData[`pdf_${d.id}`] = urlFisicaAdmin;
-                                updateData[`status_${d.id}`] = 'Aprovado';
-                                updateData[`obs_${d.id}`] = '';
-                            }
-                        }
-                    }
+                    relatorioDocs += `- *${d.nome}*: ${statusSelecionado === 'Aprovado' ? '✅ APROVADO' : '❌ REPROVADO'} ${obsDigitada ? '('+obsDigitada+')' : ''}\n`;
                 }
 
                 let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
                 if (!error) {
-                    alert("✅ Parecer salvo com sucesso! Os status e tabelas foram atualizados em tempo real.");
+                    alert("✅ Parecer salvo com sucesso!");
+                    
+                    // DISPARA O COMPARTILHAMENTO SIMULTÂNEO PARA ATÉ OS 3 WHATSAPPS CONFIGURADOS PELA EMPRESA
+                    const empRel = dadosEmpresas.find(emp => emp.cnpj === colabObj.cnpj_empresa);
+                    if(empRel) {
+                        const msgEmpresa = `⚠️ *Auditoria Atualizada - FA Segurança*\n\nDocumentos do colaborador *${colabObj.nome}* avaliados:\n\n${relatorioDocs}\nAcesse o portal para correções.`;
+                        if(empRel.whats1) await dispararNotificacaoWhatsapp(empRel.whats1, msgEmpresa);
+                        if(empRel.whats2) await dispararNotificacaoWhatsapp(empRel.whats2, msgEmpresa);
+                        if(empRel.whats3) await dispararNotificacaoWhatsapp(empRel.whats3, msgEmpresa);
+                    }
+
                     document.getElementById('bloco-auditoria').classList.add('hidden');
                     await carregarDadosPainelAdmin();
                     renderizarFilaTrabalhadoresFiltrada();
-                } else { 
-                    alert("Erro ao salvar no banco de dados: " + error.message); 
                 }
-            } catch (err) {
-                alert("Erro inesperado ao processar: " + err.message);
-            }
+            } catch (err) { alert("Erro ao salvar."); }
+        }
+
+        function possuiCorrecoesAguardando(c) { return listaDocsDefinidos.some(d => !d.adminOnly && c[`status_${d.id}`] === 'Pendente de análise' && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado'); }
+        function possuiDocumentosReprovados(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado'); }
+        function estaLiberadoTrabalho(c) { return (c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado"); }
+        function estaLiberadoIntegracao(c) { if (estaLiberadoTrabalho(c)) return false; const obrigatorios = ['aso', 'ficha', 'os', 'esocial']; return obrigatorios.every(id => c[`status_${id}`] === 'Aprovado'); }
+
+        function filtrarColaboradoresPrestador() {
+            const termo = document.getElementById('busca-prestador').value.toLowerCase();
+            const filtrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo));
+            renderizarTabelaRetornoPrestador(filtrados);
         }
 
         function filtrarGeralAdmin() {
@@ -850,11 +708,7 @@
             renderizarTabelaAdminEmpresas(empsFiltradas);
         }
 
-        // FAZ LOGOUT COMPLETO E LIMPA O HISTÓRICO DE GESTÃO DA SESSÃO LOCAL
-        function logout() { 
-            localStorage.clear(); 
-            window.location.reload(); 
-        }
+        function logout() { localStorage.clear(); window.location.reload(); }
     </script>
 </body>
 </html>
