@@ -502,7 +502,6 @@
             return listaDocsDefinidos.some(d => !d.adminOnly && c[`status_${d.id}`] === 'Pendente de análise' && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado');
         }
 
-        // Função auxiliar para verificar se o colaborador tem algum documento reprovado
         function possuiDocumentosReprovados(c) {
             return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
         }
@@ -568,7 +567,6 @@
                     `;
                 });
 
-                // LÓGICA DE ALERTAS VISUAIS DE DUPLO CANAL (Aprovação / Reprovação)
                 const liberado = estaLiberadoIntegracao(c);
                 const reprovado = possuiDocumentosReprovados(c);
                 
@@ -732,36 +730,43 @@
             const id = document.getElementById('audit-id-colaborador').value;
             const updateData = {};
 
-            for (let d of listaDocsDefinidos) {
-                const statusSelecionado = document.getElementById(`audit-status-${d.id}`).value;
-                const obsDigitada = document.getElementById(`audit-obs-${d.id}`).value.trim();
+            try {
+                for (let d of listaDocsDefinidos) {
+                    const statusSelecionado = document.getElementById(`audit-status-${d.id}`).value;
+                    const obsDigitada = document.getElementById(`audit-obs-${d.id}`).value.trim();
 
-                updateData[`val_${d.id}`] = document.getElementById(`audit-val-${d.id}`).value || null;
-                updateData[`status_${d.id}`] = statusSelecionado;
-                
-                if (statusSelecionado === 'Aprovado') {
-                    updateData[`obs_${d.id}`] = '';
-                } else {
-                    updateData[`obs_${d.id}`] = obsDigitada;
-                }
-
-                if(d.adminOnly) {
-                    const urlFisicaAdmin = await fazerUploadDeArquivo(`upload-admin-${d.id}`, d.id);
-                    if(urlFisicaAdmin) {
-                        updateData[`pdf_${d.id}`] = urlFisicaAdmin;
-                        updateData[`status_${d.id}`] = 'Aprovado';
+                    updateData[`val_${d.id}`] = document.getElementById(`audit-val-${d.id}`).value || null;
+                    updateData[`status_${d.id}`] = statusSelecionado;
+                    
+                    if (statusSelecionado === 'Aprovado') {
                         updateData[`obs_${d.id}`] = '';
+                    } else {
+                        updateData[`obs_${d.id}`] = obsDigitada;
+                    }
+
+                    if(d.adminOnly) {
+                        const fileInp = document.getElementById(`upload-admin-${d.id}`);
+                        if (fileInp && fileInp.files && fileInp.files.length > 0) {
+                            const urlFisicaAdmin = await fazerUploadDeArquivo(`upload-admin-${d.id}`, d.id);
+                            if(urlFisicaAdmin) {
+                                updateData[`pdf_${d.id}`] = urlFisicaAdmin;
+                                updateData[`status_${d.id}`] = 'Aprovado';
+                                updateData[`obs_${d.id}`] = '';
+                            }
+                        }
                     }
                 }
-            }
 
-            let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
-            if (!error) {
-                alert("✅ Parecer salvo com sucesso! Os status e tabelas foram atualizados em tempo real.");
-                document.getElementById('bloco-auditoria').classList.add('hidden');
-                await carregarDadosPainelAdmin();
-            } else { 
-                alert("Erro ao salvar auditoria: " + error.message); 
+                let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
+                if (!error) {
+                    alert("✅ Parecer salvo com sucesso! Os status e tabelas foram atualizados em tempo real.");
+                    document.getElementById('bloco-auditoria').classList.add('hidden');
+                    await carregarDadosPainelAdmin();
+                } else { 
+                    alert("Erro ao salvar no banco de dados: " + error.message); 
+                }
+            } catch (err) {
+                alert("Erro inesperado ao processar: " + err.message);
             }
         }
 
