@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -30,6 +33,7 @@
 </head>
 <body>
 
+    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-950 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center">
             <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain">
@@ -75,6 +79,7 @@
         </div>
     </div>
 
+    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-md flex flex-col sm:flex-row justify-between items-center gap-4 hidden" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-14 bg-white p-1 rounded-lg">
@@ -86,8 +91,10 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden" id="main-content">
         
+        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
             
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -100,6 +107,7 @@
                 </button>
             </div>
 
+            <!-- Modal Formulário Colaborador -->
             <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
                 <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -124,6 +132,7 @@
                             </div>
                         </div>
 
+                        <!-- Arquivos Obrigatórios Base -->
                         <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                             <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Documentos Base Obrigatórios</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,6 +143,7 @@
                             </div>
                         </div>
 
+                        <!-- NRs Opcionais -->
                         <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                             <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Treinamentos Normativos (NRs)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -145,6 +155,7 @@
                             </div>
                         </div>
 
+                        <!-- Diversos -->
                         <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div1"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
                             <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
@@ -155,6 +166,7 @@
                 </div>
             </div>
 
+            <!-- Retorno da Empresa -->
             <div class="card-fa p-6 rounded-2xl shadow-sm">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
                 <div class="overflow-x-auto">
@@ -172,6 +184,7 @@
             </div>
         </section>
 
+        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -184,6 +197,7 @@
                 </button>
             </div>
 
+            <!-- Modal Empresa Admin -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
                 <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -241,6 +255,7 @@
                 </div>
             </div>
 
+            <!-- FORMULÁRIO DE AUDITORIA ADMIN -->
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-lg border-2 border-emerald-600 hidden bg-emerald-50/10">
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
@@ -491,9 +506,10 @@
             return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
         }
 
+        // LÓGICA DE STATUS CORES INVERTIDAS (Azul para Integração, Verde para Trabalho)
         function calcularStatusGeral(c) {
             if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
-                return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
+                return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
             }
 
             const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
@@ -501,7 +517,7 @@
             const algumReprovado = possuiDocumentosReprovados(c);
 
             if (todosAprovados) {
-                return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para integração)</span>`;
+                return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para integração)</span>`;
             }
             if (algumReprovado) {
                 return `<span class="bg-red-500 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Pendente de Correção</span>`;
@@ -509,8 +525,12 @@
             return `<span class="bg-yellow-500 text-slate-900 font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Em Análise Técnica</span>`;
         }
 
+        function estaLiberadoTrabalho(c) {
+            return (c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado");
+        }
+
         function estaLiberadoIntegracao(c) {
-            if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") return true;
+            if (estaLiberadoTrabalho(c)) return false; // Se já está liberado pro trabalho, não está pendente de integração
             const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
             return obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
         }
@@ -552,15 +572,20 @@
                     `;
                 });
 
-                const liberado = estaLiberadoIntegracao(c);
+                // ATUALIZAÇÃO DOS BANNERS COM CORES CORRETAS INVERTIDAS
+                const trabalhoLivre = estaLiberadoTrabalho(c);
+                const integracaoLivre = estaLiberadoIntegracao(c);
                 const reprovado = possuiDocumentosReprovados(c);
                 
                 let bgLinha = "bg-white";
                 let bannerAlertaHtml = "";
 
-                if (liberado) {
-                    bgLinha = "bg-emerald-50/60";
-                    bannerAlertaHtml = `<div class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-check"></i> 🎉 COLABORADOR LIBERADO PARA REALIZAR A INTEGRAÇÃO!</div>`;
+                if (trabalhoLivre) {
+                    bgLinha = "bg-emerald-50/60"; // Fundo Verde sutil para Trabalho Completo
+                    bannerAlertaHtml = `<div class="bg-green-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-check"></i> 🎉 COLABORADOR LIBERADO PARA O TRABALHO!</div>`;
+                } else if (integracaoLivre) {
+                    bgLinha = "bg-blue-50/40"; // Fundo Azul sutil para Integração
+                    bannerAlertaHtml = `<div class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-hourglass-half"></i> 🚀 COLABORADOR LIBERADO PARA REALIZAR A INTEGRAÇÃO!</div>`;
                 } else if (reprovado) {
                     bgLinha = "bg-red-50/60";
                     bannerAlertaHtml = `<div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-exclamation"></i> ⚠️ ATENÇÃO: HÁ DOCUMENTOS DESTE COLABORADOR QUE PRECISAM SER CORRIGIDOS!</div>`;
@@ -638,7 +663,7 @@
             if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhuma empresa.</td></tr>`; return; }
             lista.forEach(e => {
                 const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
-                tr.innerHTML = `<td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td><td class="p-3 text-center"><button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px]"><i class="fa-solid fa-trash"></i></button></td>`;
+                tr.innerHTML = `<td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td><td class="p-3 text-center"><button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-50 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px]"><i class="fa-solid fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -717,12 +742,10 @@
 
             try {
                 for (let d of listaDocsDefinidos) {
-                    // Seleciona os elementos de forma preventiva
                     const elStatus = document.getElementById(`audit-status-${d.id}`);
                     const elObs = document.getElementById(`audit-obs-${d.id}`);
                     const elVal = document.getElementById(`audit-val-${d.id}`);
 
-                    // Se o elemento não existe no DOM atual, pula este documento para não quebrar com erro de 'null'
                     if (!elStatus) continue;
 
                     const statusSelecionado = elStatus.value;
@@ -752,7 +775,7 @@
 
                 let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
                 if (!error) {
-                    alert("✅ Parecer salvo com sucesso! Os status e tabelas foram atualizados em tempo real.");
+                    alert("✅ Parecer salvo com sucesso! Os status e tabelas foram updated em tempo real.");
                     document.getElementById('bloco-auditoria').classList.add('hidden');
                     await carregarDadosPainelAdmin();
                 } else { 
