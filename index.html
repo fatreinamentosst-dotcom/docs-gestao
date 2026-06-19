@@ -192,6 +192,7 @@
     </main>
 
     <script>
+        // URL E NOVA CHAVE MESTRA ATUALIZADAS DE ACORDO COM A MUDANÇA DE PALAVRA-PASSE
         const SUPABASE_URL = "https://kyqtxdxiwoplpujkwiwh.supabase.co"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -269,23 +270,20 @@
             e.preventDefault();
             const nova = document.getElementById('nova-senha-master').value;
             const { error } = await _supabase.from('config_admin').update({ senha: nova }).eq('id', 1);
-            if(!error) { alert("Sua senha Master foi atualizada permanentemente no banco de dados!"); document.getElementById('nova-senha-master').value = ""; }
+            if(!error) { alert("Sua senha Master foi updated com sucesso!"); document.getElementById('nova-senha-master').value = ""; }
             else { alert("Erro ao atualizar a senha master."); }
         }
 
-        // NOVA FUNÇÃO COM TRATAMENTO DE ERROS REESCRITO E APERFEIÇOADO
         async function gerarAcessoEmpresaNoSupabase(e) {
             e.preventDefault();
             const cnpj = document.getElementById('cad-cnpj').value.trim();
             const senha = document.getElementById('cad-senha').value.trim();
 
-            // Envia os dados para a nuvem
             const { data, error } = await _supabase
                 .from('acessos_empresas')
                 .insert([{ cnpj: cnpj, senha: senha }])
-                .select(); // Força o retorno do dado gerado
+                .select();
 
-            // Se o Supabase gravou com sucesso
             if (!error && data && data.length > 0) {
                 alert(`Acesso gerado com sucesso para a empresa ${cnpj}!`);
                 document.getElementById('cad-cnpj').value = "";
@@ -293,14 +291,12 @@
                 return;
             }
 
-            // Tratamento explícito caso o registro já conste no banco
             if (error && error.message && error.message.includes("unique")) {
                 alert(`Atenção: O CNPJ ${cnpj} já está cadastrado no sistema.`);
                 return;
             }
 
-            // Exibição do erro cru caso seja outra falha técnica de leitura
-            alert("Erro do Servidor Supabase: " + (error ? error.message : "Resposta inesperada."));
+            alert("Erro de Comunicação: " + (error ? error.message : "Resposta inesperada."));
         }
 
         async function enviarDadosNuvem(e) {
