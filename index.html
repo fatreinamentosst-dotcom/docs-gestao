@@ -121,6 +121,11 @@
                         </div>
                     </div>
 
+                    <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
+                    </div>
+
                     <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Documentos</button>
                 </form>
             </div>
@@ -142,26 +147,71 @@
         </section>
 
         <section id="painel-admin" class="space-y-6 hidden">
+            
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="campo-busca" oninput="filtrarPainelAdmin()" placeholder="Buscar trabalhador..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                    <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar trabalhador ou empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                </div>
+                <button onclick="alternarModalEmpresa(true)" class="w-full md:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-plus"></i> Cadastrar Nova Empresa
+                </button>
+            </div>
+
+            <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-building-user text-emerald-800 mr-1"></i> Nova Empresa Credenciada</h3>
+                        <button onclick="alternarModalEmpresa(false)" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                    </div>
+                    <form id="form-cadastro-empresa" onsubmit="salvarNovaEmpresaAdmin(event)" class="space-y-3 text-sm">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Razão Social / Nome Fantasia</label>
+                            <input type="text" id="emp-nome" required placeholder="Ex: Construções Jundiaí LTDA" class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">CNPJ (Apenas números)</label>
+                            <input type="text" id="emp-cnpj" required placeholder="Ex: 12345678000199" class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Senha de Acesso da Empresa</label>
+                            <input type="text" id="emp-senha" required placeholder="Ex: 123456" class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-800 text-white font-bold p-3 rounded-xl shadow hover:bg-emerald-900 transition">Salvar Empresa no Banco</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="card-fa p-6 rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Selecione um Colaborador para Auditoria técnica</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-emerald-800 text-white text-xs uppercase">
-                                <th class="p-4 rounded-l-xl">Trabalhador / Função</th>
-                                <th class="p-4">Empresa</th>
-                                <th class="p-4 rounded-r-xl">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-admin-dados" class="divide-y bg-white"></tbody>
-                    </table>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="card-fa p-6 rounded-2xl shadow-sm lg:col-span-2">
+                    <h2 class="text-base font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Fila de Auditoria de Colaboradores</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-emerald-800 text-white uppercase font-mono tracking-wider">
+                                    <th class="p-3 rounded-l-xl">Trabalhador</th>
+                                    <th class="p-3">CNPJ Prestador</th>
+                                    <th class="p-3 rounded-r-xl text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-admin-dados" class="divide-y bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-fa p-6 rounded-2xl shadow-sm">
+                    <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-building-shield"></i> Empresas Credenciadas</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-700 text-white uppercase font-mono tracking-wider">
+                                    <th class="p-3 rounded-l-xl">Empresa / CNPJ</th>
+                                    <th class="p-3 rounded-r-xl text-center">Remover</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-admin-empresas" class="divide-y bg-white"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -185,6 +235,7 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let dadosTrabalhadores = [];
+        let dadosEmpresas = [];
         let empresaCnpjSessao = "";
 
         const listaDocsDefinidos = [
@@ -207,6 +258,10 @@
             document.getElementById('form-login-admin').classList.toggle('hidden', tipo !== 'admin');
             document.getElementById('aba-empresa').className = tipo === 'empresa' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
             document.getElementById('aba-admin').className = tipo === 'admin' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-slate-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
+        }
+
+        function alternarModalEmpresa(abrir) {
+            document.getElementById('modal-empresa').classList.toggle('hidden', !abrir);
         }
 
         async function processarLoginAdmin(e) {
@@ -238,7 +293,7 @@
             if (perfil === 'admin') {
                 document.getElementById('painel-admin').classList.remove('hidden');
                 document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-user-gear mr-1"></i> Modo Administrador (FA)`;
-                carregarTrabalhadoresDoBanco();
+                carregarDadosPainelAdmin();
             } else {
                 document.getElementById('painel-prestador').classList.remove('hidden');
                 document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-building mr-1"></i> Empresa: CNPJ ${empresaCnpjSessao}`;
@@ -246,12 +301,110 @@
             }
         }
 
+        async function carregarDadosPainelAdmin() {
+            let { data: colabs } = await _supabase.from('colaboradores').select('*');
+            dadosTrabalhadores = colabs || [];
+            
+            let { data: emps } = await _supabase.from('acessos_empresas').select('*');
+            dadosEmpresas = emps || [];
+
+            renderizarTabelaAdminTrabalhadores(dadosTrabalhadores);
+            renderizarTabelaAdminEmpresas(dadosEmpresas);
+        }
+
+        function renderizarTabelaAdminTrabalhadores(lista) {
+            const tbody = document.getElementById('tabela-admin-dados'); tbody.innerHTML = "";
+            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum trabalhador na fila.</td></tr>`; return; }
+            
+            lista.forEach(c => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
+                tr.innerHTML = `
+                    <td class="p-3"><strong>${c.nome}</strong><br><span class="text-[10px] text-gray-500">${c.funcao}</span></td>
+                    <td class="p-3 font-mono text-gray-600">${c.cnpj_empresa}</td>
+                    <td class="p-3 flex justify-center gap-2">
+                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-1.5 rounded-lg transition text-[10px] flex items-center gap-1"><i class="fa-solid fa-gavel"></i> Auditar</button>
+                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1.5 rounded-lg transition text-[10px]" title="Excluir Trabalhador"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderizarTabelaAdminEmpresas(lista) {
+            const tbody = document.getElementById('tabela-admin-empresas'); tbody.innerHTML = "";
+            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhuma empresa cadastrada.</td></tr>`; return; }
+
+            lista.forEach(e => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
+                tr.innerHTML = `
+                    <td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td>
+                    <td class="p-3 text-center">
+                        <button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function salvarNovaEmpresaAdmin(e) {
+            e.preventDefault();
+            const nome = document.getElementById('emp-nome').value.trim();
+            const cnpj = document.getElementById('emp-cnpj').value.replace(/\D/g, '');
+            const senha = document.getElementById('emp-senha').value.trim();
+
+            const { error } = await _supabase.from('acessos_empresas').insert([{ nome, cnpj, senha }]);
+            if(!error) {
+                alert(`Empresa "${nome}" adicionada com sucesso!`);
+                document.getElementById('form-cadastro-empresa').reset();
+                alternarModalEmpresa(false);
+                carregarDadosPainelAdmin();
+            } else {
+                alert("Erro ao cadastrar empresa: " + error.message);
+            }
+        }
+
+        async function excluirColaboradorAdmin(id, nome) {
+            if(!confirm(`Tem certeza absoluta de que deseja excluir o colaborador "${nome}" do sistema de forma permanente?`)) return;
+            const { error } = await _supabase.from('colaboradores').delete().eq('id', id);
+            if(!error) {
+                alert("Colaborador removido com sucesso.");
+                document.getElementById('bloco-auditoria').classList.add('hidden');
+                carregarDadosPainelAdmin();
+            } else { alert("Erro ao excluir: " + error.message); }
+        }
+
+        async function excluirEmpresaAdmin(id, nome) {
+            if(!confirm(`Deseja revogar o acesso e excluir permanentemente a empresa "${nome}"?`)) return;
+            const { error } = await _supabase.from('acessos_empresas').delete().eq('id', id);
+            if(!error) {
+                alert("Empresa removida com sucesso.");
+                carregarDadosPainelAdmin();
+            } else { alert("Erro ao excluir empresa: " + error.message); }
+        }
+
+        function filtrarGeralAdmin() {
+            const termo = document.getElementById('campo-busca').value.toLowerCase();
+            
+            const colabsFiltrados = dadosTrabalhadores.filter(c => 
+                c.nome.toLowerCase().includes(termo) || 
+                c.funcao.toLowerCase().includes(termo) || 
+                c.cnpj_empresa.includes(termo)
+            );
+            
+            const empsFiltradas = dadosEmpresas.filter(e => 
+                e.nome.toLowerCase().includes(termo) || 
+                e.cnpj.includes(termo)
+            );
+
+            renderizarTabelaAdminTrabalhadores(colabsFiltrados);
+            renderizarTabelaAdminEmpresas(empsFiltradas);
+        }
+
         async function fazerUploadDeArquivo(idInput, pasta) {
             const input = document.getElementById(idInput);
-            if (!input || !input.files || input.files.length === 0) return null;
+            if (!input || !input.files || input.files.length === 0) return "Não enviado";
             const file = input.files[0];
             
-            // Gerar um nome único e seguro para o arquivo
             const nomeLimpo = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
             const filePath = `${empresaCnpjSessao}/${pasta}_${Date.now()}_${nomeLimpo}`;
             
@@ -259,18 +412,12 @@
                 cacheControl: '3600',
                 upsert: true
             });
-
-            if (error) {
-                console.error("Erro completo do upload no Supabase:", error);
-                alert(`Aviso: O arquivo do campo [${pasta.toUpperCase()}] não pôde ser enviado para a nuvem. Verifique as permissões de 'Policies' do seu Storage no Supabase. Detalhe: ${error.message}`);
-                return null;
-            }
-            
+            if (error) return "Não enviado";
             if (data) {
                 const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
                 return urlData.publicUrl;
             }
-            return null;
+            return "Não enviado";
         }
 
         async function enviarDadosNuvem(e) {
@@ -279,11 +426,13 @@
             try {
                 const paths = {};
                 for (let d of listaDocsDefinidos) {
-                    const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
-                    if(urlFisica) {
-                        paths[`pdf_${d.id}`] = urlFisica;
-                        paths[`status_${d.id}`] = 'Pendente de análise';
+                    const inputElement = document.getElementById(`file-${d.id}`);
+                    if (inputElement && inputElement.files && inputElement.files.length > 0) {
+                        const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
+                        paths[`pdf_${d.id}`] = urlFisica || "Não enviado";
+                        paths[`status_${d.id}`] = (urlFisica && urlFisica !== "Não enviado") ? 'Pendente de análise' : 'Pendente de envio';
                     } else {
+                        paths[`pdf_${d.id}`] = "Não enviado";
                         paths[`status_${d.id}`] = 'Pendente de envio';
                     }
                 }
@@ -298,30 +447,27 @@
 
                 const { error } = await _supabase.from('colaboradores').insert([payload]);
                 if (!error) { 
-                    alert(`Sucesso! Os documentos de ${nome} foram transmitidos.`); 
+                    alert(`✅ Sucesso! Os documentos de ${nome} foram transmitidos.`); 
                     document.getElementById('form-colaborador').reset();
                     carregarRetornosDaEmpresa();
-                } else { alert("Erro ao gravar na tabela: " + error.message); }
-            } catch (err) { alert("Erro no envio geral."); }
+                } else { alert("Erro técnico: " + error.message); }
+            } catch (err) { alert("Erro de rede."); }
         }
 
         async function carregarRetornosDaEmpresa() {
             let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
             const tbody = document.getElementById('tabela-retorno-empresa');
             tbody.innerHTML = "";
-            
             if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado por esta empresa.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado.</td></tr>`;
                 return;
             }
-
             data.forEach(c => {
                 let blocosDocs = "";
                 listaDocsDefinidos.forEach(d => {
                     const status = c[`status_${d.id}`] || 'Pendente de envio';
                     const validade = c[`val_${d.id}`] ? new Date(c[`val_${d.id}`]).toLocaleDateString('pt-BR') : 'Não analisada';
                     const obs = c[`obs_${d.id}`] || '';
-                    
                     let badgeColor = "bg-gray-100 text-gray-700";
                     if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-700 font-bold";
                     if (status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold";
@@ -338,33 +484,8 @@
                         </div>
                     `;
                 });
-
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-bold border-r align-top w-1/4 bg-white">${c.nome}<br><span class="text-xs font-normal text-gray-500">${c.funcao}</span></td>
-                    <td class="p-2 bg-white">${blocosDocs}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function carregarTrabalhadoresDoBanco() {
-            let { data } = await _supabase.from('colaboradores').select('*');
-            dadosTrabalhadores = data || [];
-            renderizarTabelaAdmin(dadosTrabalhadores);
-        }
-
-        function renderizarTabelaAdmin(lista) {
-            const tbody = document.getElementById('tabela-admin-dados'); tbody.innerHTML = "";
-            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum item na fila.</td></tr>`; return; }
-            
-            lista.forEach(c => {
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
-                tr.innerHTML = `
-                    <td class="p-4"><strong>${c.nome}</strong><br><span class="text-xs text-gray-500">${c.funcao}</span></td>
-                    <td class="p-4 text-xs text-gray-600 font-mono">${c.cnpj_empresa}</td>
-                    <td class="p-4"><button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-gavel"></i> Auditar Arquivos</button></td>
-                `;
+                tr.innerHTML = `<td class="p-3 font-bold border-r align-top w-1/4 bg-white">${c.nome}<br><span class="text-xs font-normal text-gray-500">${c.funcao}</span></td><td class="p-2 bg-white">${blocosDocs}</td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -375,7 +496,6 @@
 
             document.getElementById('audit-id-colaborador').value = c.id;
             document.getElementById('audit-nome-trabalhador').innerText = c.nome;
-            
             const container = document.getElementById('container-documentos-auditoria');
             container.innerHTML = "";
 
@@ -386,33 +506,16 @@
                 const obsAtual = c[`obs_${d.id}`] || '';
 
                 let linkHtml = (urlPdf && urlPdf !== "Não enviado") 
-                    ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs hover:bg-blue-700 inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-file-pdf"></i> Visualizar Anexo</a>`
-                    : `<span class="text-gray-400 italic text-xs bg-gray-100 px-2 py-1.5 rounded border border-dashed"><i class="fa-solid fa-ban"></i> Não enviado</span>`;
+                    ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs hover:bg-blue-700 inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-file-pdf"></i> Abrir Anexo</a>`
+                    : `<span class="text-gray-400 italic text-xs bg-gray-100 px-2 py-1.5 rounded border border-dashed"><i class="fa-solid fa-ban"></i> Vazio</span>`;
 
                 const div = document.createElement('div');
                 div.className = "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
                 div.innerHTML = `
-                    <div>
-                        <span class="block font-bold text-sm text-slate-800">${d.nome}</span>
-                        <div class="mt-1">${linkHtml}</div>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Validade Legal</label>
-                        <input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer Técnico</label>
-                        <select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold">
-                            <option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option>
-                            <option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option>
-                            <option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>🟢 Aprovado</option>
-                            <option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo</label>
-                        <input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none">
-                    </div>
+                    <div><span class="block font-bold text-xs text-slate-800">${d.nome}</span><div class="mt-1">${linkHtml}</div></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer</label><select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold"><option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option><option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option><option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>🟢 Aprovado</option><option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option></select></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Motivo de reprovação" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
                 `;
                 container.appendChild(div);
             });
@@ -425,7 +528,6 @@
             e.preventDefault();
             const id = document.getElementById('audit-id-colaborador').value;
             const updateData = {};
-
             listaDocsDefinidos.forEach(d => {
                 updateData[`val_${d.id}`] = document.getElementById(`audit-val-${d.id}`).value || null;
                 updateData[`status_${d.id}`] = document.getElementById(`audit-status-${d.id}`).value;
@@ -434,16 +536,10 @@
 
             let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
             if (!error) {
-                alert("Parecer técnico e validades salvas com sucesso!");
+                alert("Salvo com sucesso!");
                 document.getElementById('bloco-auditoria').classList.add('hidden');
-                carregarTrabalhadoresDoBanco();
+                carregarDadosPainelAdmin();
             } else { alert("Erro ao salvar: " + error.message); }
-        }
-
-        function filtrarPainelAdmin() {
-            const termo = document.getElementById('campo-busca').value.toLowerCase();
-            const filtrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo));
-            renderizarTabelaAdmin(filtrados);
         }
 
         function logout() { window.location.reload(); }
