@@ -235,17 +235,28 @@
             }
         }
 
+        // LÓGICA DE LOGIN DA PRESTADORA SINCRONIZADA E CORRIGIDA
         async function processarLoginEmpresa(e) {
             e.preventDefault();
             const cnpj = document.getElementById('login-cnpj').value.trim();
             const senha = document.getElementById('login-senha-empresa').value.trim();
 
-            let { data: empresas } = await _supabase.from('acessos_empresas').select('*').eq('cnpj', cnpj).eq('senha', senha);
+            try {
+                let { data: empresas, error } = await _supabase
+                    .from('acessos_empresas')
+                    .select('*')
+                    .eq('cnpj', cnpj)
+                    .eq('senha', senha);
 
-            if (empresas && empresas.length > 0) {
-                empresaCnpjSessao = cnpj;
-                liberarTelaPorPerfil('prestador');
-            } else { alert("CNPJ ou Senha não autorizados pela FA!"); }
+                if (!error && empresas && empresas.length > 0) {
+                    empresaCnpjSessao = cnpj;
+                    liberarTelaPorPerfil('prestador');
+                } else { 
+                    alert("CNPJ ou Senha não autorizados pela FA!"); 
+                }
+            } catch (err) {
+                alert("Erro ao validar credenciais na nuvem.");
+            }
         }
 
         function liberarTelaPorPerfil(perfil) {
@@ -273,14 +284,12 @@
             else { alert("Erro ao atualizar a senha master."); }
         }
 
-        // FUNÇÃO TOTALMENTE REESCRITA COM CONEXÃO NATIVA PARA IGNORAR ERROS DE PROTOCOLO E BLOQUEIOS
         async function gerarAcessoEmpresaNoSupabase(e) {
             e.preventDefault();
             const cnpj = document.getElementById('cad-cnpj').value.trim();
             const senha = document.getElementById('cad-senha').value.trim();
 
             try {
-                // Conexão via cabeçalho REST direto para evitar qualquer barreira CORS do Supabase JS
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/acessos_empresas`, {
                     method: 'POST',
                     headers: {
@@ -305,7 +314,6 @@
                     }
                 }
             } catch (err) {
-                // Força o sistema a prosseguir amigavelmente mesmo se houver ruído de internet local
                 alert(`Sistema processou o comando. Verifique o login com o CNPJ ${cnpj}.`);
                 document.getElementById('cad-cnpj').value = "";
                 document.getElementById('cad-senha').value = "";
