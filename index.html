@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -22,6 +25,7 @@
 </head>
 <body>
 
+    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-950 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center">
             <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain">
@@ -67,6 +71,7 @@
         </div>
     </div>
 
+    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-md flex flex-col sm:flex-row justify-between items-center gap-4 hidden" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-14 bg-white p-1 rounded-lg">
@@ -78,66 +83,91 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden" id="main-content">
         
+        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
-            <div class="card-fa p-6 rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 border-b pb-2 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Enviar Documentos do Colaborador (Apenas Anexar)</h2>
-                <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" id="col-nome" placeholder="Nome Completo do Trabalhador" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
-                        <input type="text" id="col-cpf" placeholder="CPF (Apenas números)" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
-                        <input type="text" id="col-funcao" placeholder="Função Técnica" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-medical text-emerald-700"></i> ASO</span><input type="file" id="file-aso" required class="text-xs w-full"></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-id-card text-emerald-700"></i> Ficha de Registro</span><input type="file" id="file-ficha" required class="text-xs w-full"></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-signature text-emerald-700"></i> Ordem de Serviço (OS)</span><input type="file" id="file-os" required class="text-xs w-full"></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-users-gear text-emerald-700"></i> Integração</span><input type="file" id="file-integ" required class="text-xs w-full"></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-passport text-emerald-700"></i> e-Social</span><input type="file" id="file-esocial" required class="text-xs w-full"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
-                        <div class="bg-white p-3 border rounded-xl shadow-sm">
-                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="document.getElementById('box-nr11').classList.toggle('hidden')"><span>NR-11</span></label>
-                            <div id="box-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div>
-                        </div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm">
-                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="document.getElementById('box-nr18').classList.toggle('hidden')"><span>NR-18</span></label>
-                            <div id="box-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div>
-                        </div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm">
-                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="document.getElementById('box-nr33').classList.toggle('hidden')"><span>NR-33</span></label>
-                            <div id="box-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div>
-                        </div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm">
-                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="document.getElementById('box-nr5').classList.toggle('hidden')"><span>NR-05</span></label>
-                            <div id="box-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div>
-                        </div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2">
-                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="document.getElementById('box-nr6').classList.toggle('hidden')"><span>NR-06</span></label>
-                            <div id="box-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Documentos</button>
-                </form>
+            
+            <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
+                    <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador nesta empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                </div>
+                <button onclick="abrirModalColaborador(null)" class="w-full md:w-auto bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-user-plus"></i> Cadastrar Novo Colaborador
+                </button>
             </div>
 
+            <!-- Modal Formulário Colaborador (Inclusão / Substituição) -->
+            <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h3 class="font-bold text-slate-800 text-base" id="titulo-modal-colab"><i class="fa-solid fa-user-gear text-emerald-800 mr-1"></i> Dados Ficha Trabalhador</h3>
+                        <button onclick="alternarModalColaboradorVisual(false)" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                    </div>
+                    
+                    <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
+                        <input type="hidden" id="edit-col-id">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label>
+                                <input type="text" id="col-nome" required placeholder="Nome do Trabalhador" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas números)</label>
+                                <input type="text" id="col-cpf" required placeholder="CPF" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label>
+                                <input type="text" id="col-funcao" required placeholder="Função" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Arquivos Obrigatórios Base -->
+                        <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
+                            <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Documentos Base Obrigatórios</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-aso"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-aso">ASO</span><input type="file" id="file-aso" class="text-xs w-full"></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-ficha"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-ficha">Ficha de Registro</span><input type="file" id="file-ficha" class="text-xs w-full"></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-os"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-os">Ordem de Serviço (OS)</span><input type="file" id="file-os" class="text-xs w-full"></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-esocial"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-esocial">e-Social / CTPS</span><input type="file" id="file-esocial" class="text-xs w-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- NRs Opcionais -->
+                        <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
+                            <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Treinamentos Normativos (NRs)</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Diversos -->
+                        <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div1"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
+                            <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Ficha de Documentação</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Retorno da Empresa -->
             <div class="card-fa p-6 rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Status de Retorno da Auditoria (FA)</h2>
+                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="bg-slate-700 text-white text-xs uppercase">
                                 <th class="p-3 rounded-l-xl">Trabalhador</th>
-                                <th class="p-3">Doc / Status / Validade / Observação da FA</th>
+                                <th class="p-3">Doc / Status / Parecer da FA</th>
+                                <th class="p-3 text-center rounded-r-xl">Ação</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-retorno-empresa" class="divide-y bg-white"></tbody>
@@ -146,6 +176,7 @@
             </div>
         </section>
 
+        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -158,6 +189,7 @@
                 </button>
             </div>
 
+            <!-- Modal Empresa Admin -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
                 <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -166,18 +198,18 @@
                     </div>
                     <form id="form-cadastro-empresa" onsubmit="salvarNovaEmpresaAdmin(event)" class="space-y-3 text-sm">
                         <div>
-                            <label class="block text-xs font-bold text-gray-600">Razão Social / Nome Fantasia</label>
-                            <input type="text" id="emp-nome" required placeholder="Ex: Construções Jundiaí LTDA" class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                            <label class="block text-xs font-bold text-gray-600">Razão Social</label>
+                            <input type="text" id="emp-nome" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600">CNPJ (Apenas números)</label>
-                            <input type="text" id="emp-cnpj" required placeholder="Ex: 12345678000199" class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                            <input type="text" id="emp-cnpj" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-600">Senha de Acesso da Empresa</label>
-                            <input type="text" id="emp-senha" required placeholder="Ex: 123456" class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                            <label class="block text-xs font-bold text-gray-600">Senha de Acesso</label>
+                            <input type="text" id="emp-senha" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
                         </div>
-                        <button type="submit" class="w-full bg-emerald-800 text-white font-bold p-3 rounded-xl shadow hover:bg-emerald-900 transition">Salvar Empresa no Banco</button>
+                        <button type="submit" class="w-full bg-emerald-800 text-white font-bold p-3 rounded-xl shadow hover:bg-emerald-900 transition">Salvar Empresa</button>
                     </form>
                 </div>
             </div>
@@ -191,7 +223,7 @@
                                 <tr class="bg-emerald-800 text-white uppercase font-mono tracking-wider">
                                     <th class="p-3 rounded-l-xl">Trabalhador</th>
                                     <th class="p-3">CNPJ Prestador</th>
-                                    <th class="p-3 rounded-r-xl text-center">Ações</th>
+                                    <th class="p-3 text-center rounded-r-xl">Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-admin-dados" class="divide-y bg-white"></tbody>
@@ -205,7 +237,7 @@
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-700 text-white uppercase font-mono tracking-wider">
-                                    <th class="p-3 rounded-l-xl">Empresa / CNPJ</th>
+                                    <th class="p-3 rounded-l-xl">Empresa</th>
                                     <th class="p-3 rounded-r-xl text-center">Remover</th>
                                 </tr>
                             </thead>
@@ -215,13 +247,14 @@
                 </div>
             </div>
 
+            <!-- FORMULÁRIO DE AUDITORIA ADMIN -->
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-lg border-2 border-emerald-600 hidden bg-emerald-50/10">
-                <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Auditando Documentos de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
+                <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
                     <input type="hidden" id="audit-id-colaborador">
                     <div id="container-documentos-auditoria" class="space-y-3"></div>
                     <div class="flex gap-4 pt-4 border-t">
-                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md"><i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Parecer e Validades no Sistema</button>
+                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md"><i class="fa-solid fa-floppy-disk mr-1"></i> Confirmar Parecer da Auditoria</button>
                         <button type="button" onclick="document.getElementById('bloco-auditoria').classList.add('hidden')" class="bg-gray-400 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-500 transition">Cancelar</button>
                     </div>
                 </form>
@@ -237,20 +270,21 @@
         let dadosTrabalhadores = [];
         let dadosEmpresas = [];
         let empresaCnpjSessao = "";
+        let colaboradorSelecionadoParaEditar = null;
 
         const listaDocsDefinidos = [
-            { id: 'aso', nome: 'ASO (Atestado de Saúde)' },
-            { id: 'ficha', nome: 'Ficha de Registro' },
-            { id: 'os', nome: 'Ordem de Serviço (OS)' },
-            { id: 'integ', nome: 'Integração' },
-            { id: 'esocial', nome: 'e-Social / CTPS' },
-            { id: 'nr11', nome: 'NR-11' },
-            { id: 'nr18', nome: 'NR-18' },
-            { id: 'nr33', nome: 'NR-33' },
-            { id: 'nr5', nome: 'NR-05 (CIPA)' },
-            { id: 'nr6', nome: 'NR-06 (EPI)' },
-            { id: 'div1', nome: 'Diversos 1' },
-            { id: 'div2', nome: 'Diversos 2' }
+            { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true },
+            { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true },
+            { id: 'os', nome: 'Ordem de Serviço (OS)', obrigatorio: true },
+            { id: 'esocial', nome: 'e-Social / CTPS', obrigatorio: true },
+            { id: 'integ', nome: 'Integração (Exclusivo Admin FA)', obrigatorio: false, adminOnly: true },
+            { id: 'nr11', nome: 'NR-11', obrigatorio: false },
+            { id: 'nr18', nome: 'NR-18', obrigatorio: false },
+            { id: 'nr33', nome: 'NR-33', obrigatorio: false },
+            { id: 'nr5', nome: 'NR-05 (CIPA)', obrigatorio: false },
+            { id: 'nr6', nome: 'NR-06 (EPI)', obrigatorio: false },
+            { id: 'div1', nome: 'Diversos 1', obrigatorio: false },
+            { id: 'div2', nome: 'Diversos 2', obrigatorio: false }
         ];
 
         function alternarAbaEntrada(tipo) {
@@ -260,9 +294,9 @@
             document.getElementById('aba-admin').className = tipo === 'admin' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-slate-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
         }
 
-        function alternarModalEmpresa(abrir) {
-            document.getElementById('modal-empresa').classList.toggle('hidden', !abrir);
-        }
+        function alternarModalEmpresa(abrir) { document.getElementById('modal-empresa').classList.toggle('hidden', !abrir); }
+        function alternarModalColaboradorVisual(abrir) { document.getElementById('modal-colaborador').classList.toggle('hidden', !abrir); }
+        function alternarAbaArquivoManual(id) { document.getElementById(`div-${id}`).classList.toggle('hidden', !document.getElementById(`chk-${id}`).checked); }
 
         async function processarLoginAdmin(e) {
             e.preventDefault();
@@ -301,13 +335,236 @@
             }
         }
 
+        // Abertura do Modal de Colaboradores da Empresa (Inclusão / Edição Parcial)
+        function abrirModalColaborador(colabObj = null) {
+            colaboradorSelecionadoParaEditar = colabObj;
+            document.getElementById('form-colaborador').reset();
+            
+            // Esconde todas as divs de NRs inicialmente
+            ['nr11','nr18','nr33','nr5','nr6'].forEach(id => document.getElementById(`div-${id}`).classList.add('hidden'));
+
+            if(!colabObj) {
+                // Modo Cadastro Puro do Zero
+                document.getElementById('titulo-modal-colab').innerText = "Cadastrar Novo Colaborador";
+                document.getElementById('edit-col-id').value = "";
+                document.getElementById('bloco-identificacao').classList.remove('hidden');
+                
+                // Reseta labels e torna arquivos obrigatórios obrigatórios
+                listaDocsDefinidos.forEach(d => {
+                    if(d.adminOnly) return;
+                    const lbl = document.getElementById(`lbl-${d.id}`);
+                    if(lbl) lbl.innerHTML = d.nome;
+                    const fileInput = document.getElementById(`file-${d.id}`);
+                    if(fileInput && d.obrigatorio) fileInput.required = true;
+                });
+            } else {
+                // Modo Substituição Técnica de Reprovados
+                document.getElementById('titulo-modal-colab').innerText = `Substituir Documentos de: ${colabObj.nome}`;
+                document.getElementById('edit-col-id').value = colabObj.id;
+                document.getElementById('bloco-identificacao').classList.add('hidden'); // Trava os campos de texto básicos
+
+                listaDocsDefinidos.forEach(d => {
+                    if(d.adminOnly) return;
+                    const status = colabObj[`status_${d.id}`] || 'Pendente de envio';
+                    const lbl = document.getElementById(`lbl-${d.id}`);
+                    const fileInput = document.getElementById(`file-${d.id}`);
+                    
+                    if(fileInput) fileInput.required = false; // Tira obrigatoriedade global
+
+                    if(status === 'Reprovado') {
+                        if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ${d.nome} (Reprovado - Insira o Novo Corrigido aqui)</span>`;
+                        if(fileInput) fileInput.disabled = false;
+                        if(['nr11','nr18','nr33','nr5','nr6'].includes(d.id)) {
+                            document.getElementById(`chk-${d.id}`).checked = true;
+                            document.getElementById(`div-${d.id}`).classList.remove('hidden');
+                        }
+                    } else if(status === 'Aprovado') {
+                        if(lbl) lbl.innerHTML = `<span class="text-green-700 font-bold"><i class="fa-solid fa-circle-check"></i> ${d.nome} (Aprovado)</span>`;
+                        if(fileInput) fileInput.disabled = true;
+                    } else if(status === 'Pendente de análise') {
+                        if(lbl) lbl.innerHTML = `<span class="text-yellow-600 italic"><i class="fa-solid fa-hourglass-start"></i> ${d.nome} (Aguardando Análise FA)</span>`;
+                        if(fileInput) fileInput.disabled = true;
+                    } else {
+                        if(lbl) lbl.innerHTML = `${d.nome} (Não enviado)`;
+                        if(fileInput) fileInput.disabled = false;
+                    }
+                });
+            }
+            alternarModalColaboradorVisual(true);
+        }
+
+        async function fazerUploadDeArquivo(idInput, pasta) {
+            const input = document.getElementById(idInput);
+            if (!input || !input.files || input.files.length === 0) return null;
+            const file = input.files[0];
+            const nomeLimpo = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+            const cnpjEscopo = empresaCnpjSessao || 'admin_fa';
+            const filePath = `${cnpjEscopo}/${pasta}_${Date.now()}_${nomeLimpo}`;
+            
+            const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file, { cacheControl: '3600', upsert: true });
+            if (data) {
+                const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
+                return urlData.publicUrl;
+            }
+            return null;
+        }
+
+        async function enviarDadosNuvem(e) {
+            e.preventDefault();
+            const idExistente = document.getElementById('edit-col-id').value;
+            const paths = {};
+
+            try {
+                if(!idExistente) {
+                    // CÓDIGO DE CADASTRO DO ZERO
+                    const nome = document.getElementById('col-nome').value.trim();
+                    for (let d of listaDocsDefinidos) {
+                        if(d.adminOnly) continue;
+                        const isNR = ['nr11','nr18','nr33','nr5','nr6'].includes(d.id);
+                        const inputCheck = isNR ? document.getElementById(`chk-${d.id}`).checked : true;
+                        
+                        if (inputCheck) {
+                            const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
+                            paths[`pdf_${d.id}`] = urlFisica || "Não enviado";
+                            paths[`status_${d.id}`] = urlFisica ? 'Pendente de análise' : 'Pendente de envio';
+                        } else {
+                            paths[`pdf_${d.id}`] = "Não enviado";
+                            paths[`status_${d.id}`] = 'Pendente de envio';
+                        }
+                    }
+
+                    const payload = {
+                        nome: nome,
+                        cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
+                        funcao: document.getElementById('col-funcao').value.trim(),
+                        cnpj_empresa: empresaCnpjSessao,
+                        ...paths
+                    };
+
+                    const { error } = await _supabase.from('colaboradores').insert([payload]);
+                    if (!error) { 
+                        alert(`✅ Sucesso! Os documentos de ${nome} foram enviados.`); 
+                        alternarModalColaboradorVisual(false);
+                        carregarRetornosDaEmpresa();
+                    } else { alert("Erro: " + error.message); }
+
+                } else {
+                    // CÓDIGO DE SUBSTITUIÇÃO TÉCNICA
+                    for(let d of listaDocsDefinidos) {
+                        if(d.adminOnly) continue;
+                        const fileInput = document.getElementById(`file-${d.id}`);
+                        if(fileInput && !fileInput.disabled && fileInput.files && fileInput.files.length > 0) {
+                            const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
+                            if(urlFisica) {
+                                paths[`pdf_${d.id}`] = urlFisica;
+                                paths[`status_${d.id}`] = 'Pendente de análise';
+                                paths[`obs_${d.id}`] = ''; // Limpa o motivo de reprovação antigo
+                            }
+                        }
+                    }
+
+                    if(Object.keys(paths).length === 0) {
+                        alert("Nenhum novo arquivo foi anexado para substituição.");
+                        return;
+                    }
+
+                    const { error } = await _supabase.from('colaboradores').update(paths).eq('id', idExistente);
+                    if (!error) { 
+                        alert(`✅ Sucesso! Os arquivos reprovados foram substituídos e reencaminhados.`); 
+                        alternarModalColaboradorVisual(false);
+                        carregarRetornosDaEmpresa();
+                    } else { alert("Erro na retransmissão: " + error.message); }
+                }
+            } catch (err) { alert("Erro de comunicação com o servidor."); }
+        }
+
+        // Gera o status dinâmico com base na lógica operacional descrita
+        function calcularStatusGeral(c) {
+            // Se possui documento de integração preenchido e aprovado -> Trabalho Liberado
+            if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
+                return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
+            }
+
+            // Documentos obrigatórios da empresa
+            const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
+            const todosAprovados = obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
+            const algumReprovado = listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
+
+            if (todosAprovados) {
+                return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para integração)</span>`;
+            }
+            if (algumReprovado) {
+                return `<span class="bg-red-500 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Pendente de Correção</span>`;
+            }
+            return `<span class="bg-yellow-500 text-slate-900 font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Em Análise Técnica</span>`;
+        }
+
+        async function carregarRetornosDaEmpresa() {
+            let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
+            dadosTrabalhadores = data || [];
+            renderizarTabelaRetornoPrestador(dadosTrabalhadores);
+        }
+
+        function renderizarTabelaRetornoPrestador(lista) {
+            const tbody = document.getElementById('tabela-retorno-empresa');
+            tbody.innerHTML = "";
+            if(lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado por sua empresa.</td></tr>`;
+                return;
+            }
+
+            lista.forEach(c => {
+                let blocosDocs = "";
+                listaDocsDefinidos.forEach(d => {
+                    const status = c[`status_${d.id}`] || 'Pendente de envio';
+                    const obs = c[`obs_${d.id}`] || '';
+                    if(status === 'Pendente de envio' && !d.obrigatorio && !c[`pdf_${d.id}`]) return; // Oculta NRs vazias
+
+                    let badgeColor = "bg-gray-100 text-gray-700";
+                    if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-800 font-bold";
+                    if (status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold";
+                    if (status === 'Pendente de análise') badgeColor = "bg-yellow-100 text-yellow-800 font-bold";
+
+                    blocosDocs += `
+                        <div class="p-1.5 border-b last:border-0 flex flex-col md:flex-row md:items-center justify-between text-[11px] gap-1 bg-gray-50/50 mb-1 rounded">
+                            <span class="font-bold text-gray-700 w-44 truncate">${d.nome}:</span>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
+                            </div>
+                            <span class="text-red-600 font-bold max-w-xs truncate">${obs ? 'Motivo: ' + obs : ''}</span>
+                        </div>
+                    `;
+                });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 border-r align-top w-1/4 bg-white">
+                        <strong class="text-slate-800">${c.nome}</strong><br><span class="text-xs text-gray-500">${c.funcao}</span>
+                        <div class="mt-2">${calcularStatusGeral(c)}</div>
+                    </td>
+                    <td class="p-2 bg-white">${blocosDocs}</td>
+                    <td class="p-2 text-center bg-white align-middle">
+                        <button onclick='abrirModalColaborador(${JSON.stringify(c)})' class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow">
+                            <i class="fa-solid fa-pen-to-square"></i> Abrir / Corrigir
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filtrarColaboradoresPrestador() {
+            const termo = document.getElementById('busca-prestador').value.toLowerCase();
+            const filtrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo));
+            renderizarTabelaRetornoPrestador(filtrados);
+        }
+
+        // ================= CÓDIGO DO ADMINISTRADOR =================
         async function carregarDadosPainelAdmin() {
             let { data: colabs } = await _supabase.from('colaboradores').select('*');
             dadosTrabalhadores = colabs || [];
-            
             let { data: emps } = await _supabase.from('acessos_empresas').select('*');
             dadosEmpresas = emps || [];
-
             renderizarTabelaAdminTrabalhadores(dadosTrabalhadores);
             renderizarTabelaAdminEmpresas(dadosEmpresas);
         }
@@ -319,11 +576,11 @@
             lista.forEach(c => {
                 const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
                 tr.innerHTML = `
-                    <td class="p-3"><strong>${c.nome}</strong><br><span class="text-[10px] text-gray-500">${c.funcao}</span></td>
+                    <td class="p-3"><strong>${c.nome}</strong><br><span class="text-[10px] text-gray-500">${c.funcao}</span><div class="w-48 mt-1">${calcularStatusGeral(c)}</div></td>
                     <td class="p-3 font-mono text-gray-600">${c.cnpj_empresa}</td>
-                    <td class="p-3 flex justify-center gap-2">
-                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-1.5 rounded-lg transition text-[10px] flex items-center gap-1"><i class="fa-solid fa-gavel"></i> Auditar</button>
-                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1.5 rounded-lg transition text-[10px]" title="Excluir Trabalhador"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="p-3 flex justify-center gap-2 align-middle">
+                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] flex items-center gap-1"><i class="fa-solid fa-gavel"></i> Analisar</button>
+                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px]"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -332,16 +589,10 @@
 
         function renderizarTabelaAdminEmpresas(lista) {
             const tbody = document.getElementById('tabela-admin-empresas'); tbody.innerHTML = "";
-            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhuma empresa cadastrada.</td></tr>`; return; }
-
+            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhuma empresa.</td></tr>`; return; }
             lista.forEach(e => {
                 const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
-                tr.innerHTML = `
-                    <td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td>
-                    <td class="p-3 text-center">
-                        <button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px]"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
+                tr.innerHTML = `<td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td><td class="p-3 text-center"><button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px]"><i class="fa-solid fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -351,143 +602,20 @@
             const nome = document.getElementById('emp-nome').value.trim();
             const cnpj = document.getElementById('emp-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('emp-senha').value.trim();
-
             const { error } = await _supabase.from('acessos_empresas').insert([{ nome, cnpj, senha }]);
-            if(!error) {
-                alert(`Empresa "${nome}" adicionada com sucesso!`);
-                document.getElementById('form-cadastro-empresa').reset();
-                alternarModalEmpresa(false);
-                carregarDadosPainelAdmin();
-            } else {
-                alert("Erro ao cadastrar empresa: " + error.message);
-            }
+            if(!error) { alert(`Empresa criada!`); document.getElementById('form-cadastro-empresa').reset(); alternarModalEmpresa(false); carregarDadosPainelAdmin(); }
         }
 
         async function excluirColaboradorAdmin(id, nome) {
-            if(!confirm(`Tem certeza absoluta de que deseja excluir o colaborador "${nome}" do sistema de forma permanente?`)) return;
+            if(!confirm(`Excluir permanentemente ${nome}?`)) return;
             const { error } = await _supabase.from('colaboradores').delete().eq('id', id);
-            if(!error) {
-                alert("Colaborador removido com sucesso.");
-                document.getElementById('bloco-auditoria').classList.add('hidden');
-                carregarDadosPainelAdmin();
-            } else { alert("Erro ao excluir: " + error.message); }
+            if(!error) { document.getElementById('bloco-auditoria').classList.add('hidden'); carregarDadosPainelAdmin(); }
         }
 
         async function excluirEmpresaAdmin(id, nome) {
-            if(!confirm(`Deseja revogar o acesso e excluir permanentemente a empresa "${nome}"?`)) return;
+            if(!confirm(`Excluir empresa ${nome}?`)) return;
             const { error } = await _supabase.from('acessos_empresas').delete().eq('id', id);
-            if(!error) {
-                alert("Empresa removida com sucesso.");
-                carregarDadosPainelAdmin();
-            } else { alert("Erro ao excluir empresa: " + error.message); }
-        }
-
-        function filtrarGeralAdmin() {
-            const termo = document.getElementById('campo-busca').value.toLowerCase();
-            
-            const colabsFiltrados = dadosTrabalhadores.filter(c => 
-                c.nome.toLowerCase().includes(termo) || 
-                c.funcao.toLowerCase().includes(termo) || 
-                c.cnpj_empresa.includes(termo)
-            );
-            
-            const empsFiltradas = dadosEmpresas.filter(e => 
-                e.nome.toLowerCase().includes(termo) || 
-                e.cnpj.includes(termo)
-            );
-
-            renderizarTabelaAdminTrabalhadores(colabsFiltrados);
-            renderizarTabelaAdminEmpresas(empsFiltradas);
-        }
-
-        async function fazerUploadDeArquivo(idInput, pasta) {
-            const input = document.getElementById(idInput);
-            if (!input || !input.files || input.files.length === 0) return "Não enviado";
-            const file = input.files[0];
-            
-            const nomeLimpo = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-            const filePath = `${empresaCnpjSessao}/${pasta}_${Date.now()}_${nomeLimpo}`;
-            
-            const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file, {
-                cacheControl: '3600',
-                upsert: true
-            });
-            if (error) return "Não enviado";
-            if (data) {
-                const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
-                return urlData.publicUrl;
-            }
-            return "Não enviado";
-        }
-
-        async function enviarDadosNuvem(e) {
-            e.preventDefault();
-            const nome = document.getElementById('col-nome').value;
-            try {
-                const paths = {};
-                for (let d of listaDocsDefinidos) {
-                    const inputElement = document.getElementById(`file-${d.id}`);
-                    if (inputElement && inputElement.files && inputElement.files.length > 0) {
-                        const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
-                        paths[`pdf_${d.id}`] = urlFisica || "Não enviado";
-                        paths[`status_${d.id}`] = (urlFisica && urlFisica !== "Não enviado") ? 'Pendente de análise' : 'Pendente de envio';
-                    } else {
-                        paths[`pdf_${d.id}`] = "Não enviado";
-                        paths[`status_${d.id}`] = 'Pendente de envio';
-                    }
-                }
-
-                const payload = {
-                    nome: nome,
-                    cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
-                    funcao: document.getElementById('col-funcao').value,
-                    cnpj_empresa: empresaCnpjSessao,
-                    ...paths
-                };
-
-                const { error } = await _supabase.from('colaboradores').insert([payload]);
-                if (!error) { 
-                    alert(`✅ Sucesso! Os documentos de ${nome} foram transmitidos.`); 
-                    document.getElementById('form-colaborador').reset();
-                    carregarRetornosDaEmpresa();
-                } else { alert("Erro técnico: " + error.message); }
-            } catch (err) { alert("Erro de rede."); }
-        }
-
-        async function carregarRetornosDaEmpresa() {
-            let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
-            const tbody = document.getElementById('tabela-retorno-empresa');
-            tbody.innerHTML = "";
-            if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado.</td></tr>`;
-                return;
-            }
-            data.forEach(c => {
-                let blocosDocs = "";
-                listaDocsDefinidos.forEach(d => {
-                    const status = c[`status_${d.id}`] || 'Pendente de envio';
-                    const validade = c[`val_${d.id}`] ? new Date(c[`val_${d.id}`]).toLocaleDateString('pt-BR') : 'Não analisada';
-                    const obs = c[`obs_${d.id}`] || '';
-                    let badgeColor = "bg-gray-100 text-gray-700";
-                    if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-700 font-bold";
-                    if (status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold";
-                    if (status === 'Pendente de análise') badgeColor = "bg-yellow-100 text-yellow-800 font-bold";
-
-                    blocosDocs += `
-                        <div class="p-2 border-b last:border-0 flex flex-col md:flex-row md:items-center justify-between text-xs gap-1 bg-gray-50/50 mb-1 rounded">
-                            <span class="font-bold text-gray-700 w-48">${d.nome}:</span>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
-                                <span class="text-gray-500">Validade: <strong>${validade}</strong></span>
-                            </div>
-                            <span class="text-red-600 font-medium max-w-xs truncate" title="${obs}">${obs ? 'Motivo: ' + obs : ''}</span>
-                        </div>
-                    `;
-                });
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-3 font-bold border-r align-top w-1/4 bg-white">${c.nome}<br><span class="text-xs font-normal text-gray-500">${c.funcao}</span></td><td class="p-2 bg-white">${blocosDocs}</td>`;
-                tbody.appendChild(tr);
-            });
+            if(!error) carregarDadosPainelAdmin();
         }
 
         function abrirAuditoria(idColaborador) {
@@ -505,17 +633,30 @@
                 const valAtual = c[`val_${d.id}`] || '';
                 const obsAtual = c[`obs_${d.id}`] || '';
 
-                let linkHtml = (urlPdf && urlPdf !== "Não enviado") 
-                    ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs hover:bg-blue-700 inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-file-pdf"></i> Abrir Anexo</a>`
-                    : `<span class="text-gray-400 italic text-xs bg-gray-100 px-2 py-1.5 rounded border border-dashed"><i class="fa-solid fa-ban"></i> Vazio</span>`;
+                if(statusAtual === 'Pendente de envio' && !d.obrigatorio && !d.adminOnly) return;
+
+                let uploadLinkAreaHtml = "";
+                if(d.adminOnly) {
+                    // Campo de inclusão de arquivo exclusivo para o Administrador FA (Integração)
+                    uploadLinkAreaHtml = `
+                        <div class="mt-1 space-y-1">
+                            <input type="file" id="upload-admin-${d.id}" class="text-xs w-full bg-slate-100 p-1 rounded border">
+                            ${urlPdf && urlPdf !== "Não enviado" ? `<a href="${urlPdf}" target="_blank" class="text-emerald-700 font-bold text-xs block underline"><i class="fa-solid fa-file-pdf"></i> Ver Integração Atual</a>` : ''}
+                        </div>
+                    `;
+                } else {
+                    uploadLinkAreaHtml = (urlPdf && urlPdf !== "Não enviado") 
+                        ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs hover:bg-blue-700 inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-file-pdf"></i> Abrir Anexo</a>`
+                        : `<span class="text-gray-400 italic text-xs bg-gray-100 px-2 py-1.5 rounded border border-dashed"><i class="fa-solid fa-ban"></i> Não enviado</span>`;
+                }
 
                 const div = document.createElement('div');
-                div.className = "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
+                div.className = d.adminOnly ? "p-4 bg-amber-50/40 rounded-xl border-2 border-amber-300 shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center" : "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
                 div.innerHTML = `
-                    <div><span class="block font-bold text-xs text-slate-800">${d.nome}</span><div class="mt-1">${linkHtml}</div></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer</label><select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold"><option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option><option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option><option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>🟢 Aprovado</option><option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option></select></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Motivo de reprovação" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
+                    <div><span class="block font-bold text-xs text-slate-800">${d.nome}</span><div class="mt-1">${uploadLinkAreaHtml}</div></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade Legal</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer Técnico</label><select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold"><option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option><option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option><option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>Aprovado</option><option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option></select></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
                 `;
                 container.appendChild(div);
             });
@@ -528,18 +669,36 @@
             e.preventDefault();
             const id = document.getElementById('audit-id-colaborador').value;
             const updateData = {};
-            listaDocsDefinidos.forEach(d => {
+
+            for (let d of listaDocsDefinidos) {
                 updateData[`val_${d.id}`] = document.getElementById(`audit-val-${d.id}`).value || null;
                 updateData[`status_${d.id}`] = document.getElementById(`audit-status-${d.id}`).value;
                 updateData[`obs_${d.id}`] = document.getElementById(`audit-obs-${d.id}`).value.trim();
-            });
+
+                if(d.adminOnly) {
+                    // Verifica se o Administrador anexou uma nova integração no momento do salvamento
+                    const urlFisicaAdmin = await fazerUploadDeArquivo(`upload-admin-${d.id}`, d.id);
+                    if(urlFisicaAdmin) {
+                        updateData[`pdf_${d.id}`] = urlFisicaAdmin;
+                        updateData[`status_${d.id}`] = 'Aprovado'; // Força aprovação automático ao incluir arquivo
+                    }
+                }
+            }
 
             let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
             if (!error) {
-                alert("Salvo com sucesso!");
+                alert("Parecer e documentos de integração salvos com sucesso!");
                 document.getElementById('bloco-auditoria').classList.add('hidden');
                 carregarDadosPainelAdmin();
             } else { alert("Erro ao salvar: " + error.message); }
+        }
+
+        function filtrarGeralAdmin() {
+            const termo = document.getElementById('campo-busca').value.toLowerCase();
+            const colabsFiltrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo) || c.cnpj_empresa.includes(termo));
+            const empsFiltradas = dadosEmpresas.filter(e => e.nome.toLowerCase().includes(termo) || e.cnpj.includes(termo));
+            renderizarTabelaAdminTrabalhadores(colabsFiltrados);
+            renderizarTabelaAdminEmpresas(empsFiltradas);
         }
 
         function logout() { window.location.reload(); }
