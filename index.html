@@ -22,12 +22,10 @@
         .header-fa { background-color: var(--verde-escuro); }
         .card-fa { background-color: var(--branco); border: 1px solid #F3F4F6; backdrop-filter: blur(8px); }
         
-        /* FILTRO PARA TRANSFORMAR A LOGO BRANCA EM VERDE NO FUNDO BRANCO */
         .logo-filtro-verde {
             filter: invert(53%) sepia(13%) saturate(1475%) hue-rotate(105deg) brightness(92%) contrast(85%);
         }
 
-        /* ANIMAÇÃO SUTIL PARA OS ELEMENTOS DE ALERTA */
         @keyframes piscarAlerta {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
@@ -39,30 +37,23 @@
 </head>
 <body class="relative min-h-screen text-slate-800">
 
-    <!-- MARCAS D'ÁGUA DE EPIS DISPERSAS DE FORMA TRANSPARENTE AO FUNDO (Z-0) -->
+    <!-- MARCAS D'ÁGUA DE EPIS AO FUNDO -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-40">
         <i class="fa-solid fa-helmet-safety absolute text-slate-300/40 text-[180px] -top-10 -left-10 rotate-12"></i>
         <i class="fa-solid fa-mitten absolute text-slate-300/30 text-[140px] top-1/3 -right-12 -rotate-12"></i>
         <i class="fa-solid fa-shield-halved absolute text-slate-300/30 text-[200px] bottom-10 left-10 -rotate-6"></i>
         <i class="fa-solid fa-kit-medical absolute text-slate-300/20 text-[130px] top-10 right-1/4 rotate-45"></i>
-        <i class="fa-solid fa-helmet-safety absolute text-slate-300/25 text-[160px] bottom-1/3 right-1/3 -rotate-45"></i>
-        <i class="fa-solid fa-square-poll-horizontal absolute text-slate-300/20 text-[150px] bottom-12 right-12 rotate-12"></i>
     </div>
 
     <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-950 flex items-center justify-center z-50 p-4">
-        <div class="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
-            <i class="fa-solid fa-helmet-safety absolute text-white text-[250px] -right-16 -top-16 rotate-45"></i>
-            <i class="fa-solid fa-mitten absolute text-white text-[180px] bottom-10 -left-10 -rotate-45"></i>
-        </div>
-
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center relative z-10">
             <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain logo-filtro-verde">
             <h2 class="text-xl font-bold text-slate-800 mb-1">Portal de Segurança e Auditoria</h2>
             <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrar na plataforma</p>
             
             <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6">
-                <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow-sm transition-all duration-200 cursor-pointer">
+                <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow shadow-emerald-900 cursor-pointer">
                     <i class="fa-solid fa-building mr-1"></i> Acesso Empresa
                 </button>
                 <button onclick="alternarAbaEntrada('admin')" id="aba-admin" class="w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-slate-800 transition-all duration-200 cursor-pointer">
@@ -73,11 +64,11 @@
             <form id="form-login-empresa" onsubmit="processarLoginEmpresa(event)" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-address-card mr-1"></i> CNPJ da Empresa</label>
-                    <input type="text" id="login-cnpj" required placeholder="00.000.000/0001-00" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-emerald-700 transition">
+                    <input type="text" id="login-cnpj" required placeholder="00.000.000/0001-00" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-key mr-1"></i> Senha de Acesso</label>
-                    <input type="password" id="login-senha-empresa" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-emerald-700 transition">
+                    <input type="password" id="login-senha-empresa" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold transition hover:bg-emerald-900 shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-right-to-bracket"></i> Entrar como Prestador
@@ -87,11 +78,11 @@
             <form id="form-login-admin" onsubmit="processarLoginAdmin(event)" class="space-y-4 text-left hidden">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-user mr-1"></i> Usuário Administrador</label>
-                    <input type="text" id="login-usuario-admin" required placeholder="Ex: admin" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-slate-700 transition">
+                    <input type="text" id="login-usuario-admin" required placeholder="Ex: admin" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-lock mr-1"></i> Chave Master</label>
-                    <input type="password" id="login-senha-admin" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-slate-700 transition">
+                    <input type="password" id="login-senha-admin" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <button type="submit" class="w-full bg-slate-800 text-white p-3 rounded-xl font-bold transition hover:bg-slate-900 shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-shield-halved"></i> Painel Geral FA
@@ -117,77 +108,17 @@
         
         <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
-            
             <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador nesta empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none focus:bg-white transition">
+                    <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador nesta empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
                 </div>
                 <button onclick="abrirModalColaborador(null)" class="w-full md:w-auto bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
                     <i class="fa-solid fa-user-plus"></i> Cadastrar Novo Colaborador
                 </button>
             </div>
 
-            <!-- Modal Formulário Colaborador -->
-            <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-                <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <h3 class="font-bold text-slate-800 text-base" id="titulo-modal-colab"><i class="fa-solid fa-user-gear text-emerald-800 mr-1"></i> Dados Ficha Trabalhador</h3>
-                        <button onclick="alternarModalColaboradorVisual(false)" class="text-gray-400 hover:text-gray-600 text-2xl cursor-pointer">&times;</button>
-                    </div>
-                    
-                    <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
-                        <input type="hidden" id="edit-col-id">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label>
-                                <input type="text" id="col-nome" placeholder="Nome do Trabalhador" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none focus:bg-white transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas números)</label>
-                                <input type="text" id="col-cpf" placeholder="CPF" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none focus:bg-white transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label>
-                                <input type="text" id="col-funcao" placeholder="Função" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none focus:bg-white transition">
-                            </div>
-                        </div>
-
-                        <!-- Arquivos Obrigatórios Base -->
-                        <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
-                            <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Documentos Base Obrigatórios</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-aso"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-aso">ASO</span><input type="file" id="file-aso" class="text-xs w-full"></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-ficha"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-ficha">Ficha de Registro</span><input type="file" id="file-ficha" class="text-xs w-full"></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-os"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-os">Ordem de Serviço (OS)</span><input type="file" id="file-os" class="text-xs w-full"></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-esocial"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-esocial">e-Social / CTPS</span><input type="file" id="file-esocial" class="text-xs w-full"></div>
-                            </div>
-                        </div>
-
-                        <!-- NRs Opcionais -->
-                        <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
-                            <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Treinamentos Normativos (NRs)</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
-                            </div>
-                        </div>
-
-                        <!-- Diversos -->
-                        <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div1"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
-                            <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow cursor-pointer"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Ficha de Documentação</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Retorno da Empresa -->
+            <!-- Tabela Retorno Prestador -->
             <div class="card-fa p-6 rounded-2xl shadow-md">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
                 <div class="overflow-x-auto">
@@ -208,17 +139,62 @@
         <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
-            <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="relative w-full md:w-96">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar trabalhador ou empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none focus:bg-white transition">
+            <!-- TELA PRINCIPAL DO ADMIN: APENAS EMPRESAS CREDENCIADAS -->
+            <div id="area-empresas-inicial" class="space-y-6">
+                <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="relative w-full md:w-96">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
+                        <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar empresa cadastrada..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                    </div>
+                    <button onclick="alternarModalEmpresa(true)" class="w-full md:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
+                        <i class="fa-solid fa-plus"></i> Cadastrar Nova Empresa
+                    </button>
                 </div>
-                <button onclick="alternarModalEmpresa(true)" class="w-full md:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
-                    <i class="fa-solid fa-plus"></i> Cadastrar Nova Empresa
-                </button>
+
+                <div class="card-fa p-6 rounded-2xl shadow-md">
+                    <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-building-shield text-emerald-800"></i> Empresas Credenciadas no Portal</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-700 text-white uppercase font-mono tracking-wider text-xs">
+                                    <th class="p-3 rounded-l-xl">Razão Social / Identificação</th>
+                                    <th class="p-3">CNPJ</th>
+                                    <th class="p-3 text-center rounded-r-xl">Ações de Gestão</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-admin-empresas" class="divide-y bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <!-- Modal Empresa Admin -->
+            <!-- TELA INTERNA ISOLADA DA EMPRESA (SÓ ABRE APÓS CLICAR) -->
+            <div id="area-colaboradores-empresa" class="space-y-6 hidden">
+                <button onclick="fecharFilaEmpresaIsolada()" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Voltar para Lista de Empresas
+                </button>
+
+                <div class="card-fa p-6 rounded-2xl shadow-md border-t-4 border-emerald-700">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold text-emerald-900 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Ficha de Auditoria Interna</h2>
+                        <p class="text-xs text-gray-500 mt-1">Empresa selecionada: <span id="txt-nome-empresa-escopo" class="font-bold text-slate-800"></span> (CNPJ: <span id="txt-cnpj-empresa-escopo" class="font-mono"></span>)</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-emerald-800 text-white uppercase font-mono tracking-wider">
+                                    <th class="p-3 rounded-l-xl">Trabalhador</th>
+                                    <th class="p-3 text-center rounded-r-xl">Ações Técnicas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-admin-dados-colaboradores" class="divide-y bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Nova Empresa -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
                 <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -228,51 +204,18 @@
                     <form id="form-cadastro-empresa" onsubmit="salvarNovaEmpresaAdmin(event)" class="space-y-3 text-sm">
                         <div>
                             <label class="block text-xs font-bold text-gray-600">Razão Social</label>
-                            <input type="text" id="emp-nome" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
+                            <input type="text" id="emp-nome" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600">CNPJ (Apenas números)</label>
-                            <input type="text" id="emp-cnpj" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
+                            <input type="text" id="emp-cnpj" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600">Senha de Acesso</label>
-                            <input type="text" id="emp-senha" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
+                            <input type="text" id="emp-senha" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
                         </div>
                         <button type="submit" class="w-full bg-emerald-800 text-white font-bold p-3 rounded-xl shadow hover:bg-emerald-900 transition cursor-pointer">Salvar Empresa</button>
                     </form>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="card-fa p-6 rounded-2xl shadow-md lg:col-span-2">
-                    <h2 class="text-base font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Fila de Auditoria de Colaboradores</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-emerald-800 text-white uppercase font-mono tracking-wider">
-                                    <th class="p-3 rounded-l-xl">Trabalhador</th>
-                                    <th class="p-3">CNPJ Prestador</th>
-                                    <th class="p-3 text-center rounded-r-xl">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-admin-dados" class="divide-y bg-white"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card-fa p-6 rounded-2xl shadow-md">
-                    <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-building-shield"></i> Empresas Credenciadas</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-slate-700 text-white uppercase font-mono tracking-wider">
-                                    <th class="p-3 rounded-l-xl">Empresa</th>
-                                    <th class="p-3 rounded-r-xl text-center">Remover</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-admin-empresas" class="divide-y bg-white"></tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
 
@@ -291,6 +234,48 @@
         </section>
     </main>
 
+    <!-- Modal Form Colaborador Prestador -->
+    <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-slate-800 text-base" id="titulo-modal-colab"><i class="fa-solid fa-user-gear text-emerald-800 mr-1"></i> Dados Ficha Trabalhador</h3>
+                <button onclick="alternarModalColaboradorVisual(false)" class="text-gray-400 hover:text-gray-600 text-2xl cursor-pointer">&times;</button>
+            </div>
+            <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
+                <input type="hidden" id="edit-col-id">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
+                    <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase">Documentos Base Obrigatórios</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-aso"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-aso">ASO</span><input type="file" id="file-aso" class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-ficha"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-ficha">Ficha de Registro</span><input type="file" id="file-ficha" class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-os"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-os">Ordem de Serviço (OS)</span><input type="file" id="file-os" class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-esocial"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-esocial">e-Social / CTPS</span><input type="file" id="file-esocial" class="text-xs w-full"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
+                    <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase">Treinamentos Normativos (NRs)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-3 border rounded-xl" id="box-file-div1"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
+                    <div class="bg-white p-3 border rounded-xl" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
+                </div>
+                <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow cursor-pointer"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Ficha de Documentação</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         const SUPABASE_URL = "https://kyqtxdxiyoplpujkwiwh.supabase.co"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
@@ -299,7 +284,7 @@
         let dadosTrabalhadores = [];
         let dadosEmpresas = [];
         let empresaCnpjSessao = "";
-        let colaboradorSelecionadoParaEditar = null;
+        let escopoCnpjAdminAtual = ""; 
 
         const listaDocsDefinidos = [
             { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true },
@@ -364,10 +349,87 @@
             }
         }
 
+        // NOVO DIRECIONAMENTO E ISOLAMENTO DE FILA DE TRABALHADORES POR EMPRESA
+        function acessarFilaEmpresaIsolada(cnpj, nomeEmpresa) {
+            escopoCnpjAdminAtual = cnpj;
+            document.getElementById('txt-nome-empresa-escopo').innerText = nomeEmpresa;
+            document.getElementById('txt-cnpj-empresa-escopo').innerText = cnpj;
+            
+            document.getElementById('area-empresas-inicial').classList.add('hidden');
+            document.getElementById('area-colaboradores-empresa').classList.remove('hidden');
+            
+            renderizarFilaTrabalhadoresFiltrada();
+        }
+
+        function fecharFilaEmpresaIsolada() {
+            escopoCnpjAdminAtual = "";
+            document.getElementById('bloco-auditoria').classList.add('hidden');
+            document.getElementById('area-colaboradores-empresa').classList.add('hidden');
+            document.getElementById('area-empresas-inicial').classList.remove('hidden');
+        }
+
+        function renderizarFilaTrabalhadoresFiltrada() {
+            const tbody = document.getElementById('tabela-admin-dados-colaboradores');
+            tbody.innerHTML = "";
+            
+            const listaFiltrada = dadosTrabalhadores.filter(c => c.cnpj_empresa === escopoCnpjAdminAtual);
+            
+            if(listaFiltrada.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum funcionário cadastrado por este cliente ainda.</td></tr>`;
+                return;
+            }
+            
+            listaFiltrada.forEach(c => {
+                let alertaCorrecaoHtml = "";
+                if(possuiCorrecoesAguardando(c)) {
+                    alertaCorrecaoHtml = `<span class="bg-red-600 text-white font-black text-[9px] px-1.5 py-0.5 rounded ml-1 tracking-wider piscar-alerta border border-white uppercase shadow-sm"><i class="fa-solid fa-bell"></i> Ajustado</span>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b transition duration-150";
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <div class="flex items-center">
+                            <strong class="text-slate-800">${c.nome}</strong>
+                            ${alertaCorrecaoHtml}
+                        </div>
+                        <span class="text-[10px] text-gray-500">${c.funcao}</span>
+                        <div class="w-48 mt-1">${calcularStatusGeral(c)}</div>
+                    </td>
+                    <td class="p-3 flex justify-center gap-2 align-middle">
+                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-2 rounded-xl transition text-[10px] flex items-center gap-1 cursor-pointer shadow-sm"><i class="fa-solid fa-gavel"></i> Analisar Ficha</button>
+                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] cursor-pointer shadow-sm"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderizarTabelaAdminEmpresas(lista) {
+            const tbody = document.getElementById('tabela-admin-empresas'); 
+            tbody.innerHTML = "";
+            if(lista.length === 0) { 
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhuma empresa credenciada localizada.</td></tr>`; 
+                return; 
+            }
+            lista.forEach(e => {
+                const tr = document.createElement('tr'); 
+                tr.className = "hover:bg-slate-50 border-b transition duration-150";
+                tr.innerHTML = `
+                    <td class="p-3 align-middle"><i class="fa-solid fa-building text-gray-400 mr-2"></i><strong>${e.nome}</strong></td>
+                    <td class="p-3 font-mono text-gray-600 align-middle">${e.cnpj}</td>
+                    <td class="p-3 text-center align-middle space-x-2">
+                        <button onclick="acessarFilaEmpresaIsolada('${e.cnpj}', '${e.nome}')" class="bg-emerald-800 hover:bg-emerald-900 text-white px-3 py-1.5 rounded-xl font-bold transition text-xs cursor-pointer shadow-sm"><i class="fa-solid fa-folder-open mr-1"></i> Entrar no Cadastro</button>
+                        <button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-xl transition text-xs cursor-pointer shadow-sm"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         function abrirModalColaborador(colabObj = null) {
             colaboradorSelecionadoParaEditar = colabObj;
             document.getElementById('form-colaborador').reset();
-            
             ['nr11','nr18','nr33','nr5','nr6'].forEach(id => document.getElementById(`div-${id}`).classList.add('hidden'));
 
             if(!colabObj) {
@@ -395,7 +457,6 @@
                     const status = colabObj[`status_${d.id}`] || 'Pendente de envio';
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     const fileInput = document.getElementById(`file-${d.id}`);
-                    
                     if(fileInput) fileInput.required = false;
 
                     if(status === 'Reprovado') {
@@ -444,7 +505,6 @@
             try {
                 if(!idExistente) {
                     const nome = document.getElementById('col-nome').value.trim();
-                    
                     let algumFaltando = false;
                     listaDocsDefinidos.forEach(d => {
                         if(d.obrigatorio && !d.adminOnly) {
@@ -531,10 +591,9 @@
             if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
                 return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
             }
-
             const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
             const todosAprovados = obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
-            const algumReprovado = document.getElementById ? possuiDocumentosReprovados(c) : false;
+            const algumReprovado = possuiDocumentosReprovados(c);
 
             if (todosAprovados) {
                 return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para integração)</span>`;
@@ -637,57 +696,18 @@
             renderizarTabelaRetornoPrestador(filtrados);
         }
 
-        // ================= CÓDIGO DO ADMINISTRADOR =================
         async function carregarDadosPainelAdmin() {
             let { data: colabs } = await _supabase.from('colaboradores').select('*');
             dadosTrabalhadores = colabs || [];
             let { data: emps } = await _supabase.from('acessos_empresas').select('*');
             dadosEmpresas = emps || [];
-            renderizarTabelaAdminTrabalhadores(dadosTrabalhadores);
-            renderizarTabelaAdminEmpresas(dadosEmpresas);
+            renderitarTabelaAdminEmpresas(dadosEmpresas);
         }
 
-        function renderizarTabelaAdminTrabalhadores(lista) {
-            const tbody = document.getElementById('tabela-admin-dados'); tbody.innerHTML = "";
-            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum trabalhador na fila.</td></tr>`; return; }
-            
-            lista.forEach(c => {
-                let alertaCorrecaoHtml = "";
-                if(possuiCorrecoesAguardando(c)) {
-                    alertaCorrecaoHtml = `<span class="bg-red-600 text-white font-black text-[9px] px-1.5 py-0.5 rounded ml-1 tracking-wider piscar-alerta border border-white uppercase shadow-sm"><i class="fa-solid fa-bell"></i> Ajustado</span>`;
-                }
-
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b transition duration-150";
-                tr.innerHTML = `
-                    <td class="p-3">
-                        <div class="flex items-center">
-                            <strong class="text-slate-800">${c.nome}</strong>
-                            ${alertaCorrecaoHtml}
-                        </div>
-                        <span class="text-[10px] text-gray-500">${c.funcao}</span>
-                        <div class="w-48 mt-1">${calcularStatusGeral(c)}</div>
-                    </td>
-                    <td class="p-3 font-mono text-gray-600 align-middle">${c.cnpj_empresa}</td>
-                    <td class="p-3 flex justify-center gap-2 align-middle">
-                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] flex items-center gap-1 cursor-pointer shadow-sm"><i class="fa-solid fa-gavel"></i> Analisar</button>
-                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] cursor-pointer shadow-sm"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+        function renderitarTabelaAdminEmpresas(lista) {
+            renderizarTabelaAdminEmpresas(lista);
         }
 
-        function renderizarTabelaAdminEmpresas(lista) {
-            const tbody = document.getElementById('tabela-admin-empresas'); tbody.innerHTML = "";
-            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhuma empresa.</td></tr>`; return; }
-            lista.forEach(e => {
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b transition duration-150";
-                tr.innerHTML = `<td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td><td class="p-3 text-center align-middle"><button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px] cursor-pointer"><i class="fa-solid fa-trash"></i></button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // FUNÇÃO DE SALVAMENTO DE EMPRESAS REFORMULADA COM ALERTA VISUAL SEGURO
         async function salvarNovaEmpresaAdmin(e) {
             e.preventDefault();
             const nome = document.getElementById('emp-nome').value.trim();
@@ -695,7 +715,7 @@
             const senha = document.getElementById('emp-senha').value.trim();
 
             if (cnpjRaw.length !== 14) {
-                alert(`⚠️ Erro de digitação: O CNPJ inserido possui ${cnpjRaw.length} números. O padrão correto exige exatamente 14 números (remova excessos ou adicione os que faltam).`);
+                alert(`⚠️ Erro de digitação: O CNPJ inserido possui ${cnpjRaw.length} números. O padrão correto exige exatamente 14 números.`);
                 return;
             }
 
@@ -717,7 +737,10 @@
         async function excluirColaboradorAdmin(id, nome) {
             if(!confirm(`Excluir permanentemente ${nome}?`)) return;
             const { error = null } = await _supabase.from('colaboradores').delete().eq('id', id);
-            if(!error) { document.getElementById('bloco-auditoria').classList.add('hidden'); carregarDadosPainelAdmin(); }
+            if(!error) { 
+                await carregarDadosPainelAdmin(); 
+                renderizarFilaTrabalhadoresFiltrada();
+            }
         }
 
         async function excluirEmpresaAdmin(id, nome) {
@@ -815,6 +838,7 @@
                     alert("✅ Parecer salvo com sucesso! Os status e tabelas foram atualizados em tempo real.");
                     document.getElementById('bloco-auditoria').classList.add('hidden');
                     await carregarDadosPainelAdmin();
+                    renderizarFilaTrabalhadoresFiltrada();
                 } else { 
                     alert("Erro ao salvar no banco de dados: " + error.message); 
                 }
@@ -825,10 +849,8 @@
 
         function filtrarGeralAdmin() {
             const termo = document.getElementById('campo-busca').value.toLowerCase();
-            const colabsFiltrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo) || c.cnpj_empresa.includes(termo));
             const empsFiltradas = dadosEmpresas.filter(e => e.nome.toLowerCase().includes(termo) || e.cnpj.includes(termo));
-            renderizarTabelaAdminTrabalhadores(colabsFiltrados);
-            renderizarTabelaAdminEmpresas(empsFiltradas);
+            renderitarTabelaAdminEmpresas(empsFiltradas);
         }
 
         function logout() { window.location.reload(); }
