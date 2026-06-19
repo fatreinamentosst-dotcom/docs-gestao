@@ -151,12 +151,12 @@
 
                 <div class="card-fa p-6 rounded-2xl shadow-sm border border-emerald-100 bg-emerald-50/20">
                     <h3 class="text-sm font-bold text-emerald-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-key text-emerald-700"></i> Gerar Login e Senha para Empresa Prestadora</h3>
-                    <form onsubmit="gerarAcessoEmpresaNoSupabase(event)" class="space-y-3">
+                    <form id="form-gerar-acesso" onsubmit="gerarAcessoEmpresaNoSupabase(event)" class="space-y-3">
                         <div class="grid grid-cols-2 gap-2">
                             <input type="text" id="cad-cnpj" placeholder="CNPJ da Prestadora" required class="p-2.5 border rounded-xl text-sm bg-white outline-none">
                             <input type="text" id="cad-senha" placeholder="Criar Senha" required class="p-2.5 border rounded-xl text-sm bg-white outline-none">
                         </div>
-                        <button type="submit" class="w-full bg-emerald-700 text-white font-bold p-2.5 rounded-xl text-sm hover:bg-emerald-800 transition shadow-sm">Ativar Conta da Empresa no Sistema</button>
+                        <button type="submit" id="btn-gerar-acesso" class="w-full bg-emerald-700 text-white font-bold p-2.5 rounded-xl text-sm hover:bg-emerald-800 transition shadow-sm">Ativar Conta da Empresa no Sistema</button>
                     </form>
                 </div>
             </div>
@@ -193,7 +193,10 @@
 
     <script>
         const SUPABASE_URL = "https://kyqtxdxiwoplpujkwiwh.supabase.co"; 
+        
+        // CHAVE PÚBLICA ATUALIZADA RE-VINCULADA COM SUCESSO
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
+        
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let dadosTrabalhadores = [];
@@ -235,34 +238,26 @@
             }
         }
 
-        // LOGIN DA PRESTADORA COM LIMPEZA AUTOMÁTICA DE PONTUAÇÃO (CNPJ FORMATADO)
         async function processarLoginEmpresa(e) {
             e.preventDefault();
-            // Remove pontos, traços e barras antes de enviar ao banco
             const cnpjLimpo = document.getElementById('login-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('login-senha-empresa').value.trim();
 
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/acessos_empresas?cnpj=eq.${cnpjLimpo}&senha=eq.${encodeURIComponent(senha)}`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                let { data: empresas, error } = await _supabase
+                    .from('acessos_empresas')
+                    .select('*')
+                    .eq('cnpj', cnpjLimpo)
+                    .eq('senha', senha);
 
-                if (response.ok) {
-                    const empresas = await response.json();
-                    if (empresas && empresas.length > 0) {
-                        empresaCnpjSessao = cnpjLimpo;
-                        liberarTelaPorPerfil('prestador');
-                        return;
-                    }
+                if (!error && empresas && empresas.length > 0) {
+                    empresaCnpjSessao = cnpjLimpo;
+                    liberarTelaPorPerfil('prestador');
+                } else { 
+                    alert("CNPJ ou Senha não autorizados pela FA!"); 
                 }
-                alert("CNPJ ou Senha não autorizados pela FA!");
             } catch (err) {
-                alert("Erro técnico de rede local ao tentar validar o login.");
+                alert("Erro ao validar credenciais na nuvem.");
             }
         }
 
@@ -291,38 +286,30 @@
             else { alert("Erro ao atualizar a senha master."); }
         }
 
-        // GERADOR DE ACESSO COM GRAVAÇÃO DIRETAMENTE LIMPA EM APENAS NÚMEROS
         async function gerarAcessoEmpresaNoSupabase(e) {
             e.preventDefault();
-            // Garante que o CNPJ gravado no banco terá apenas números
             const cnpjLimpo = document.getElementById('cad-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('cad-senha').value.trim();
 
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/acessos_empresas`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify({ cnpj: cnpjLimpo, senha: senha })
-                });
+                let { data, error } = await _supabase
+                    .from('acessos_empresas')
+                    .insert([{ cnpj: cnpjLimpo, senha: senha }])
+                    .select();
 
-                if (response.ok || response.status === 201) {
+                if (!error) {
                     alert(`Acesso gerado com sucesso para a empresa de CNPJ ${cnpjLimpo}!`);
                     document.getElementById('cad-cnpj').value = "";
                     document.getElementById('cad-senha').value = "";
                 } else {
-                    const errData = await response.json();
-                    if (errData && errData.message && errData.message.includes("unique")) {
+                    if (error.message && error.message.includes("unique")) {
                         alert(`Atenção: O CNPJ ${cnpjLimpo} já está cadastrado.`);
                     } else {
-                        alert("Aviso técnico do servidor: " + (errData ? errData.message : response.statusText));
+                        alert("Erro retornado pelo servidor: " + error.message);
                     }
                 }
             } catch (err) {
-                alert(`Erro de envio. Tente recarregar a página.`);
+                alert("Erro inesperado de envio.");
             }
         }
 
