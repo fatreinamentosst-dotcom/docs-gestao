@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Paleta de Cores Oficial FA Segurança */
         :root {
             --verde-escuro: #1B4332;
             --verde-musgo: #40916C;
@@ -18,8 +17,6 @@
         }
         body { background-color: var(--creme); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .header-fa { background-color: var(--verde-escuro); }
-        .bg-verde-musgo { background-color: var(--verde-musgo); }
-        .text-emerald-900 { color: #064e3b; }
         .card-fa { background-color: var(--branco); border: 1px solid #F3F4F6; }
     </style>
 </head>
@@ -43,11 +40,11 @@
             <form id="form-login-empresa" onsubmit="processarLoginEmpresa(event)" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-address-card mr-1"></i> CNPJ da Empresa</label>
-                    <input type="text" id="login-cnpj" required placeholder="00.000.000/0001-00" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none bg-gray-50 text-sm">
+                    <input type="text" id="login-cnpj" required placeholder="00.000.000/0001-00" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-key mr-1"></i> Senha de Acesso</label>
-                    <input type="password" id="login-senha-empresa" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none bg-gray-50 text-sm">
+                    <input type="password" id="login-senha-empresa" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold transition hover:bg-emerald-900 shadow-md flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket"></i> Entrar como Prestador
@@ -57,11 +54,11 @@
             <form id="form-login-admin" onsubmit="processarLoginAdmin(event)" class="space-y-4 text-left hidden">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-user mr-1"></i> Usuário Administrador</label>
-                    <input type="text" id="login-usuario-admin" required placeholder="Ex: admin" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none bg-gray-50 text-sm">
+                    <input type="text" id="login-usuario-admin" required placeholder="Ex: admin" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-lock mr-1"></i> Chave Master</label>
-                    <input type="password" id="login-senha-admin" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-emerald-600 outline-none bg-gray-50 text-sm">
+                    <input type="password" id="login-senha-admin" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
                 </div>
                 <button type="submit" class="w-full bg-slate-800 text-white p-3 rounded-xl font-bold transition hover:bg-slate-900 shadow-md flex items-center justify-center gap-2">
                     <i class="fa-solid fa-shield-halved"></i> Painel Geral FA
@@ -85,155 +82,148 @@
         
         <section id="painel-prestador" class="space-y-6 hidden">
             <div class="card-fa p-6 rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 border-b pb-2 flex items-center gap-2"><i class="fa-solid fa-building"></i> Documentos da Empresa Contratada</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-gray-50 rounded-xl border">
-                        <span class="block text-xs font-bold text-gray-700 mb-1">PGR (Upload + Validade)</span>
-                        <div class="flex gap-2"><input type="file" id="emp-pgr-file" class="text-xs w-full bg-white p-1.5 border rounded-lg"><input type="date" id="emp-pgr-val" class="text-xs border p-1.5 rounded-lg"></div>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-xl border">
-                        <span class="block text-xs font-bold text-gray-700 mb-1">PCMSO (Upload + Validade)</span>
-                        <div class="flex gap-2"><input type="file" id="emp-pcmso-file" class="text-xs w-full bg-white p-1.5 border rounded-lg"><input type="date" id="emp-pcmso-val" class="text-xs border p-1.5 rounded-lg"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-fa p-6 rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 border-b pb-2 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Enviar Documentos do Colaborador</h2>
+                <h2 class="text-lg font-bold text-emerald-900 mb-4 border-b pb-2 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Enviar Documentos do Colaborador (Apenas Anexar)</h2>
                 <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" id="col-nome" placeholder="Nome Completo do Trabalhador" required class="p-3 border rounded-xl text-sm w-full bg-gray-50">
-                        <input type="text" id="col-cpf" placeholder="CPF (Apenas números)" required class="p-3 border rounded-xl text-sm w-full bg-gray-50">
-                        <input type="text" id="col-funcao" placeholder="Função Técnica (Ex: Eletricista)" required class="p-3 border rounded-xl text-sm w-full bg-gray-50">
+                        <input type="text" id="col-nome" placeholder="Nome Completo do Trabalhador" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                        <input type="text" id="col-cpf" placeholder="CPF (Apenas números)" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                        <input type="text" id="col-funcao" placeholder="Função Técnica" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-medical text-emerald-700"></i> ASO (Atestado Saúde Ocupacional)</span><div class="flex gap-1"><input type="file" id="file-aso" required class="text-xs w-full"><input type="date" id="val-aso" required class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-id-card text-emerald-700"></i> Ficha de Registro de Empregado</span><div class="flex gap-1"><input type="file" id="file-ficha" required class="text-xs w-full"><input type="date" id="val-ficha" required class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-signature text-emerald-700"></i> Ordem de Serviço (OS SST)</span><div class="flex gap-1"><input type="file" id="file-os" required class="text-xs w-full"><input type="date" id="val-os" required class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-users-gear text-emerald-700"></i> Integração de Segurança Civil</span><div class="flex gap-1"><input type="file" id="file-integ" required class="text-xs w-full"><input type="date" id="val-integ" required class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-passport text-emerald-700"></i> e-Social / Comprovação de CTPS</span><div class="flex gap-1"><input type="file" id="file-esocial" required class="text-xs w-full"><input type="date" id="val-esocial" required class="text-xs border rounded-md"></div></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-medical text-emerald-700"></i> ASO</span><input type="file" id="file-aso" required class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-id-card text-emerald-700"></i> Ficha de Registro</span><input type="file" id="file-ficha" required class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-file-signature text-emerald-700"></i> Ordem de Serviço (OS)</span><input type="file" id="file-os" required class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-users-gear text-emerald-700"></i> Integração</span><input type="file" id="file-integ" required class="text-xs w-full"></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2"><span class="block text-xs font-bold text-gray-600 mb-1"><i class="fa-solid fa-passport text-emerald-700"></i> e-Social</span><input type="file" id="file-esocial" required class="text-xs w-full"></div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border">
                         <div class="bg-white p-3 border rounded-xl shadow-sm">
-                            <label class="text-xs font-bold flex items-center space-x-2 text-gray-700"><input type="checkbox" id="chk-nr11" onchange="document.getElementById('box-nr11').classList.toggle('hidden')" class="w-4 h-4 text-emerald-700"><span>NR-11 (Movimentação de Cargas)</span></label>
-                            <div id="box-nr11" class="hidden mt-2 space-y-2 border-t pt-2"><input type="text" id="eq-nr11" placeholder="Especificar Equipamento" class="text-xs p-2 border w-full rounded-lg"><div class="flex gap-1"><input type="file" id="file-nr11" class="text-xs w-full"><input type="date" id="val-nr11" class="text-xs border rounded-md"></div></div>
+                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="document.getElementById('box-nr11').classList.toggle('hidden')"><span>NR-11</span></label>
+                            <div id="box-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div>
                         </div>
                         <div class="bg-white p-3 border rounded-xl shadow-sm">
-                            <label class="text-xs font-bold flex items-center space-x-2 text-gray-700"><input type="checkbox" id="chk-nr18" onchange="document.getElementById('box-nr18').classList.toggle('hidden')" class="w-4 h-4 text-emerald-700"><span>NR-18 (Segurança Obras Civis)</span></label>
-                            <div id="box-nr18" class="hidden mt-2 space-y-2 border-t pt-2"><select id="tipo-nr18" class="text-xs p-2 border w-full rounded-lg"><option>Segurança Básica em Construção</option><option>Operação de Equipamento Específico</option></select><input type="text" id="eq-nr18" placeholder="Qual equipamento?" class="text-xs p-2 border w-full rounded-lg"><div class="flex gap-1"><input type="file" id="file-nr18" class="text-xs w-full"><input type="date" id="val-nr18" class="text-xs border rounded-md"></div></div>
+                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="document.getElementById('box-nr18').classList.toggle('hidden')"><span>NR-18</span></label>
+                            <div id="box-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div>
                         </div>
-                        <div class="bg-white p-2 border rounded-xl"><label class="text-xs font-bold flex items-center space-x-1"><input type="checkbox" id="chk-nr33" onchange="document.getElementById('box-nr33').classList.toggle('hidden')"><span>NR-33 (Espaço Confinado)</span></label><div id="box-nr33" class="hidden flex gap-1 mt-1"><input type="file" id="file-nr33" class="text-xs w-full"><input type="date" id="val-nr33" class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-2 border rounded-xl"><label class="text-xs font-bold flex items-center space-x-1"><input type="checkbox" id="chk-nr5" onchange="document.getElementById('box-nr5').classList.toggle('hidden')"><span>NR-05 (CIPA)</span></label><div id="box-nr5" class="hidden flex gap-1 mt-1"><input type="file" id="file-nr5" class="text-xs w-full"><input type="date" id="val-nr5" class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-2 border rounded-xl md:col-span-2"><label class="text-xs font-bold flex items-center space-x-1"><input type="checkbox" id="chk-nr6" onchange="document.getElementById('box-nr6').classList.toggle('hidden')"><span>NR-06 (EPI)</span></label><div id="box-nr6" class="hidden flex gap-1 mt-1"><input type="file" id="file-nr6" class="text-xs w-full"><input type="date" id="val-nr6" class="text-xs border rounded-md"></div></div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm">
+                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="document.getElementById('box-nr33').classList.toggle('hidden')"><span>NR-33</span></label>
+                            <div id="box-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div>
+                        </div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm">
+                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="document.getElementById('box-nr5').classList.toggle('hidden')"><span>NR-05</span></label>
+                            <div id="box-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div>
+                        </div>
+                        <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2">
+                            <label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="document.getElementById('box-nr6').classList.toggle('hidden')"><span>NR-06</span></label>
+                            <div id="box-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div>
+                        </div>
                     </div>
 
-                    <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white p-3 border rounded-xl"><input type="text" id="t-div1" placeholder="Título do Documento Diversos 1" class="text-xs font-bold w-full mb-2 outline-none border-b"><div class="flex gap-1"><input type="file" id="file-div1" class="text-xs w-full"><input type="date" id="val-div1" class="text-xs border rounded-md"></div></div>
-                        <div class="bg-white p-3 border rounded-xl"><input type="text" id="t-div2" placeholder="Título do Documento Diversos 2" class="text-xs font-bold w-full mb-2 outline-none border-b"><div class="flex gap-1"><input type="file" id="file-div2" class="text-xs w-full"><input type="date" id="val-div2" class="text-xs border rounded-md"></div></div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Dados da Empresa</button>
+                    <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Documentos</button>
                 </form>
-            </div>
-        </section>
-
-        <section id="painel-admin" class="space-y-6 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="card-fa p-6 rounded-2xl shadow-sm border border-slate-200 bg-slate-50/50">
-                    <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-user-lock text-emerald-800"></i> Alterar Minha Senha Master de Administrador</h3>
-                    <form onsubmit="alterarSenhaAdminNoBanco(event)" class="space-y-3">
-                        <input type="password" id="nova-senha-master" placeholder="Digite a nova senha master" required class="w-full p-2.5 border rounded-xl text-sm bg-white outline-none">
-                        <button type="submit" class="w-full bg-slate-800 text-white font-bold p-2.5 rounded-xl text-sm hover:bg-slate-900 transition">Salvar Nova Senha Master</button>
-                    </form>
-                </div>
-
-                <div class="card-fa p-6 rounded-2xl shadow-sm border border-emerald-100 bg-emerald-50/20">
-                    <h3 class="text-sm font-bold text-emerald-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-key text-emerald-700"></i> Gerar Login e Senha para Empresa Prestadora</h3>
-                    <form id="form-gerar-acesso" onsubmit="gerarAcessoEmpresaNoSupabase(event)" class="space-y-3">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="cad-cnpj" placeholder="CNPJ da Prestadora" required class="p-2.5 border rounded-xl text-sm bg-white outline-none">
-                            <input type="text" id="cad-senha" placeholder="Criar Senha" required class="p-2.5 border rounded-xl text-sm bg-white outline-none">
-                        </div>
-                        <button type="submit" id="btn-gerar-acesso" class="w-full bg-emerald-700 text-white font-bold p-2.5 rounded-xl text-sm hover:bg-emerald-800 transition shadow-sm">Ativar Conta da Empresa no Sistema</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="relative w-full md:w-96">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="campo-busca" oninput="filtrarPainelAdmin()" placeholder="Buscar trabalhador por Nome, CPF ou Função..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-emerald-800">
-                </div>
-                <button onclick="baixarRelatorioTXT()" class="bg-emerald-800 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow w-full md:w-auto flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-export"></i> Exportar Relatório Geral (.TXT)
-                </button>
             </div>
 
             <div class="card-fa p-6 rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> Triagem Geral de Conformidade de Terceiros</h2>
+                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Status de Retorno da Auditoria (FA)</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-emerald-800 text-white text-xs uppercase">
-                                <th class="p-4 rounded-l-xl">Trabalhador / Função</th>
-                                <th class="p-4">Empresa Vinculada</th>
-                                <th class="p-4">Prazos de Documentos (ASO)</th>
-                                <th class="p-4 rounded-r-xl">Status Final</th>
+                            <tr class="bg-slate-700 text-white text-xs uppercase">
+                                <th class="p-3 rounded-l-xl">Trabalhador</th>
+                                <th class="p-3">Doc / Status / Validade / Observação da FA</th>
                             </tr>
                         </thead>
-                        <tbody id="tabela-admin-dados" class="divide-y bg-white">
+                        <tbody id="tabela-retorno-empresa" class="divide-y bg-white">
                             </tbody>
                     </table>
                 </div>
             </div>
         </section>
+
+        <section id="painel-admin" class="space-y-6 hidden">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
+                    <input type="text" id="campo-busca" oninput="filtrarPainelAdmin()" placeholder="Buscar trabalhador..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                </div>
+            </div>
+
+            <div class="card-fa p-6 rounded-2xl shadow-sm">
+                <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Selecione um Colaborador para Auditoria técnica</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-emerald-800 text-white text-xs uppercase">
+                                <th class="p-4 rounded-l-xl">Trabalhador / Função</th>
+                                <th class="p-4">Empresa</th>
+                                <th class="p-4 rounded-r-xl">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-admin-dados" class="divide-y bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-lg border-2 border-emerald-600 hidden bg-emerald-50/10">
+                <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Auditando Documentos de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
+                <p class="text-xs text-gray-500 mb-6">Abra os anexos enviados pela empresa contratada, insira as respectivas validades legais, defina os status de conformidade técnica e adicione notas de reprovação se necessário.</p>
+                
+                <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
+                    <input type="hidden" id="audit-id-colaborador">
+                    
+                    <div id="container-documentos-auditoria" class="space-y-3">
+                        </div>
+
+                    <div class="flex gap-4 pt-4 border-t">
+                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md"><i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Parecer e Validades no Sistema</button>
+                        <button type="button" onclick="document.getElementById('bloco-auditoria').classList.add('hidden')" class="bg-gray-400 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-500 transition">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
     </main>
 
     <script>
-        // URL TOTALMENTE CORRIGIDA COM SUCESSO DE ACORDO COM SEU PROJETO REAL
         const SUPABASE_URL = "https://kyqtxdxiyoplpujkwiwh.supabase.co"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
-        
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let dadosTrabalhadores = [];
         let empresaCnpjSessao = "";
         let abaLoginAtiva = "empresa";
 
+        const listaDocsDefinidos = [
+            { id: 'aso', nome: 'ASO (Atestado de Saúde)' },
+            { id: 'ficha', nome: 'Ficha de Registro' },
+            { id: 'os', nome: 'Ordem de Serviço (OS)' },
+            { id: 'integ', nome: 'Integração' },
+            { id: 'esocial', nome: 'e-Social / CTPS' },
+            { id: 'nr11', nome: 'NR-11' },
+            { id: 'nr18', nome: 'NR-18' },
+            { id: 'nr33', nome: 'NR-33' },
+            { id: 'nr5', nome: 'NR-05 (CIPA)' },
+            { id: 'nr6', nome: 'NR-06 (EPI)' },
+            { id: 'div1', nome: 'Diversos 1' },
+            { id: 'div2', nome: 'Diversos 2' }
+        ];
+
         function alternarAbaEntrada(tipo) {
             abaLoginAtiva = tipo;
-            const btnEmpresa = document.getElementById('aba-empresa');
-            const btnAdmin = document.getElementById('aba-admin');
-            const formEmpresa = document.getElementById('form-login-empresa');
-            const formAdmin = document.getElementById('form-login-admin');
-
-            if (tipo === 'empresa') {
-                btnEmpresa.className = "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow-sm transition-all";
-                btnAdmin.className = "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-slate-800 transition-all";
-                formEmpresa.classList.remove('hidden');
-                formAdmin.classList.add('hidden');
-            } else {
-                btnAdmin.className = "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-slate-800 text-white shadow-sm transition-all";
-                btnEmpresa.className = "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-slate-800 transition-all";
-                formAdmin.classList.remove('hidden');
-                formEmpresa.classList.add('hidden');
-            }
+            document.getElementById('form-login-empresa').classList.toggle('hidden', tipo !== 'empresa');
+            document.getElementById('form-login-admin').classList.toggle('hidden', tipo !== 'admin');
+            document.getElementById('aba-empresa').className = tipo === 'empresa' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
+            document.getElementById('aba-admin').className = tipo === 'admin' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-slate-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
         }
 
         async function processarLoginAdmin(e) {
             e.preventDefault();
-            const usuario = document.getElementById('login-usuario-admin').value.trim();
-            const senha = document.getElementById('login-senha-admin').value.trim();
-
-            if (usuario === "admin") {
+            if (document.getElementById('login-usuario-admin').value.trim() === "admin") {
                 let { data: config } = await _supabase.from('config_admin').select('senha').eq('id', 1).single();
-                let senhaValidaAdmin = config ? config.senha : "fa2026";
-
-                if (senha === senhaValidaAdmin) {
+                if (document.getElementById('login-senha-admin').value.trim() === (config ? config.senha : "fa2026")) {
                     liberarTelaPorPerfil('admin');
-                } else { alert("Senha Master de Administrador Incorreta!"); }
+                } else { alert("Senha Master Incorreta!"); }
             }
         }
 
@@ -241,23 +231,11 @@
             e.preventDefault();
             const cnpjLimpo = document.getElementById('login-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('login-senha-empresa').value.trim();
-
-            try {
-                let { data: empresas, error } = await _supabase
-                    .from('acessos_empresas')
-                    .select('*')
-                    .eq('cnpj', cnpjLimpo)
-                    .eq('senha', senha);
-
-                if (!error && empresas && empresas.length > 0) {
-                    empresaCnpjSessao = cnpjLimpo;
-                    liberarTelaPorPerfil('prestador');
-                } else { 
-                    alert("CNPJ ou Senha não autorizados pela FA!"); 
-                }
-            } catch (err) {
-                alert("Erro ao validar credenciais na nuvem.");
-            }
+            let { data: empresas, error } = await _supabase.from('acessos_empresas').select('*').eq('cnpj', cnpjLimpo).eq('senha', senha);
+            if (!error && empresas && empresas.length > 0) {
+                empresaCnpjSessao = cnpjLimpo;
+                liberarTelaPorPerfil('prestador');
+            } else { alert("CNPJ ou Senha inválidos!"); }
         }
 
         function liberarTelaPorPerfil(perfil) {
@@ -267,48 +245,12 @@
 
             if (perfil === 'admin') {
                 document.getElementById('painel-admin').classList.remove('hidden');
-                document.getElementById('painel-prestador').classList.add('hidden');
-                document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-user-gear mr-1"></i> Modo Administrador`;
+                document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-user-gear mr-1"></i> Modo Administrador (FA)`;
                 carregarTrabalhadoresDoBanco();
             } else {
                 document.getElementById('painel-prestador').classList.remove('hidden');
-                document.getElementById('painel-admin').classList.add('hidden');
                 document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-building mr-1"></i> Empresa: CNPJ ${empresaCnpjSessao}`;
-            }
-        }
-
-        async function alterarSenhaAdminNoBanco(e) {
-            e.preventDefault();
-            const nova = document.getElementById('nova-senha-master').value;
-            const { error } = await _supabase.from('config_admin').update({ senha: nova }).eq('id', 1);
-            if(!error) { alert("Sua senha Master foi atualizada com sucesso!"); document.getElementById('nova-senha-master').value = ""; }
-            else { alert("Erro ao atualizar a senha master."); }
-        }
-
-        async function gerarAcessoEmpresaNoSupabase(e) {
-            e.preventDefault();
-            const cnpjLimpo = document.getElementById('cad-cnpj').value.replace(/\D/g, '');
-            const senha = document.getElementById('cad-senha').value.trim();
-
-            try {
-                let { data, error } = await _supabase
-                    .from('acessos_empresas')
-                    .insert([{ cnpj: cnpjLimpo, senha: senha }])
-                    .select();
-
-                if (!error) {
-                    alert(`Acesso gerado com sucesso para a empresa de CNPJ ${cnpjLimpo}!`);
-                    document.getElementById('cad-cnpj').value = "";
-                    document.getElementById('cad-senha').value = "";
-                } else {
-                    if (error.message && error.message.includes("unique")) {
-                        alert(`Atenção: O CNPJ ${cnpjLimpo} já está cadastrado.`);
-                    } else {
-                        alert("Erro retornado pelo servidor: " + error.message);
-                    }
-                }
-            } catch (err) {
-                alert("Erro inesperado de envio.");
+                carregarRetornosDaEmpresa();
             }
         }
 
@@ -316,96 +258,186 @@
             const input = document.getElementById(idInput);
             if (!input || !input.files || input.files.length === 0) return null;
             const file = input.files[0];
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${pasta}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}.${fileExt}`;
-            const filePath = `${empresaCnpjSessao}/${fileName}`;
-
+            const filePath = `${empresaCnpjSessao}/${pasta}_${Date.now()}_${file.name}`;
             const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file);
-            if (error) {
-                console.warn("Upload de arquivo ignorado ou pendente de bucket:", error.message);
-                return file.name;
+            if (!error && data) {
+                const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
+                return urlData.publicUrl;
             }
-            return data.path;
+            return null;
         }
 
         async function enviarDadosNuvem(e) {
             e.preventDefault();
             const nome = document.getElementById('col-nome').value;
-            
             try {
-                const pathAso = await fazerUploadDeArquivo('file-aso', 'aso');
-                const pathFicha = await fazerUploadDeArquivo('file-ficha', 'ficha');
-                const pathOs = await fazerUploadDeArquivo('file-os', 'os');
-                const pathInteg = await fazerUploadDeArquivo('file-integ', 'integ');
-                const pathEsocial = await fazerUploadDeArquivo('file-esocial', 'esocial');
+                const paths = {};
+                for (let d of listaDocsDefinidos) {
+                    const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
+                    if(urlFisica) {
+                        paths[`pdf_${d.id}`] = urlFisica;
+                        paths[`status_${d.id}`] = 'Pendente de análise';
+                    } else {
+                        paths[`status_${d.id}`] = 'Pendente de envio';
+                    }
+                }
 
                 const payload = {
                     nome: nome,
                     cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
                     funcao: document.getElementById('col-funcao').value,
-                    val_aso: document.getElementById('val-aso').value,
-                    val_ficha: document.getElementById('val-ficha').value,
                     cnpj_empresa: empresaCnpjSessao,
-                    status: "Pendente"
+                    ...paths
                 };
 
                 const { error } = await _supabase.from('colaboradores').insert([payload]);
                 if (!error) { 
-                    alert(`Sucesso! Os dados de ${nome} foram transmitidos.`); 
-                    document.getElementById('form-colaborador').reset(); 
-                } else {
-                    alert("Erro ao gravar dados na tabela: " + error.message);
-                }
-            } catch (err) {
-                alert("Erro geral durante o processamento do formulário.");
+                    alert(`Documentos de ${nome} enviados com sucesso!`); 
+                    document.getElementById('form-colaborador').reset();
+                    carregarRetornosDaEmpresa();
+                } else { alert("Erro ao gravar: " + error.message); }
+            } catch (err) { alert("Erro no envio."); }
+        }
+
+        async function carregarRetornosDaEmpresa() {
+            let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
+            const tbody = document.getElementById('tabela-retorno-empresa');
+            tbody.innerHTML = "";
+            
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhum retorno disponível.</td></tr>`;
+                return;
             }
-        }
 
-        async function carregarTrabalhadoresDoBanco() {
-            const tbody = document.getElementById('tabela-admin-dados');
-            let { data: colaboradores } = await _supabase.from('colaboradores').select('*');
-            if(!colaboradores || colaboradores.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">Nenhum colaborador na base.</td></tr>`; return; return; }
-            dadosTrabalhadores = colaboradores;
-            renderizarTabelaAdmin(dadosTrabalhadores);
-        }
+            data.forEach(c => {
+                let blocosDocs = "";
+                listaDocsDefinidos.forEach(d => {
+                    const status = c[`status_${d.id}`] || 'Pendente de envio';
+                    const validade = c[`val_${d.id}`] ? new Date(c[`val_${d.id}`]).toLocaleDateString('pt-BR') : 'Não informada';
+                    const obs = c[`obs_${d.id}`] || '';
+                    
+                    let badgeColor = "bg-gray-100 text-gray-700";
+                    if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-700 font-bold";
+                    if (status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold";
+                    if (status === 'Pendente de análise') badgeColor = "bg-yellow-100 text-yellow-800 font-bold";
 
-        function calcularAlerta(dataString) {
-            if(!dataString) return { t: "Pendente", c: "bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-lg" };
-            const diff = Math.ceil((new Date(dataString) - new Date()) / (1000 * 60 * 60 * 24));
-            if (diff < 0) return { t: "🔴 VENCIDO", c: "bg-red-100 text-red-700 font-bold text-xs px-2 py-0.5 rounded-lg", b: true };
-            if (diff <= 30) return { t: `🟡 VENCE EM ${diff} DIAS`, c: "bg-yellow-100 text-yellow-800 font-bold text-xs px-2 py-0.5 rounded-lg" };
-            return { t: "🟢 REGULAR", c: "bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-lg" };
-        }
+                    blocosDocs += `
+                        <div class="p-2 border-b last:border-0 flex flex-col md:flex-row md:items-center justify-between text-xs gap-1 bg-gray-50/50 mb-1 rounded">
+                            <span class="font-bold text-gray-700 w-48">${d.nome}:</span>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
+                                <span class="text-gray-500">Validade: <strong>${validade}</strong></span>
+                            </div>
+                            <span class="text-red-600 italic max-w-xs truncate" title="${obs}">${obs ? 'Motivo: ' + obs : ''}</span>
+                        </div>
+                    `;
+                });
 
-        function renderizarTabelaAdmin(lista) {
-            const tbody = document.getElementById('tabela-admin-dados'); tbody.innerHTML = "";
-            lista.forEach(c => {
-                const aso = calcularAlerta(c.val_aso);
-                let statusFinal = aso.b ? "🔴 BLOQUEADO" : "🟢 LIBERADO";
-                let classeFinal = aso.b ? "bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full" : "bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full";
-                
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
+                const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-4"><strong>${c.nome}</strong><br><span class="text-xs text-gray-500">${c.funcao}</span></td>
-                    <td class="p-4 font-mono text-xs text-gray-600">${c.cnpj_empresa || 'N/A'}</td>
-                    <td class="p-4"><span class="${aso.c}">${aso.t}</span></td>
-                    <td class="p-4"><span class="${classeFinal}">${statusFinal}</span></td>
+                    <td class="p-3 font-bold border-r align-top w-1/4 bg-white">${c.nome}<br><span class="text-xs font-normal text-gray-500">${c.funcao}</span></td>
+                    <td class="p-2 bg-white">${blocosDocs}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function filtrarPainelAdmin() {
-            const termo = document.getElementById('campo-busca').value.toLowerCase();
-            const filtrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo) || c.cnpj_empresa.includes(termo));
-            renderizarTabelaAdmin(filtrados);
+        async function carregarTrabalhadoresDoBanco() {
+            let { data } = await _supabase.from('colaboradores').select('*');
+            dadosTrabalhadores = data || [];
+            renderizarTabelaAdmin(dadosTrabalhadores);
         }
 
-        function baixarRelatorioTXT() {
-            let txt = "=== RELATÓRIO GERAL DE AUDITORIA - FA SST ===\n\n";
-            dadosTrabalhadores.forEach(c => txt += `Trabalhador: ${c.nome} | Função: ${c.funcao} | Empresa: ${c.cnpj_empresa} | Venc. ASO: ${c.val_aso}\n`);
-            const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
-            const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "Relatorio_FA_SST.txt"; a.click();
+        function renderizarTabelaAdmin(lista) {
+            const tbody = document.getElementById('tabela-admin-dados'); tbody.innerHTML = "";
+            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum item na fila.</td></tr>`; return; }
+            
+            lista.forEach(c => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
+                tr.innerHTML = `
+                    <td class="p-4"><strong>${c.nome}</strong><br><span class="text-xs text-gray-500">${c.funcao}</span></td>
+                    <td class="p-4 text-xs text-gray-600 font-mono">${c.cnpj_empresa}</td>
+                    <td class="p-4"><button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-gavel"></i> Auditar Arquivos</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function abrirAuditoria(idColaborador) {
+            const c = dadosTrabalhadores.find(item => item.id === idColaborador);
+            if(!c) return;
+
+            document.getElementById('audit-id-colaborador').value = c.id;
+            document.getElementById('audit-nome-trabalhador').innerText = c.nome;
+            
+            const container = document.getElementById('container-documentos-auditoria');
+            container.innerHTML = "";
+
+            listaDocsDefinidos.forEach(d => {
+                const urlPdf = c[`pdf_${d.id}`];
+                const statusAtual = c[`status_${d.id}`] || 'Pendente de envio';
+                const valAtual = c[`val_${d.id}`] || '';
+                const obsAtual = c[`obs_${d.id}`] || '';
+
+                let linkHtml = urlPdf 
+                    ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs hover:bg-blue-700 inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-file-pdf"></i> Visualizar Anexo</a>`
+                    : `<span class="text-gray-400 italic text-xs bg-gray-100 px-2 py-1.5 rounded border border-dashed"><i class="fa-solid fa-ban"></i> Não enviado</span>`;
+
+                const div = document.createElement('div');
+                div.className = "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
+                div.innerHTML = `
+                    <div>
+                        <span class="block font-bold text-sm text-slate-800">${d.nome}</span>
+                        <div class="mt-1">${linkHtml}</div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Validade Legal</label>
+                        <input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer Técnico</label>
+                        <select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold">
+                            <option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option>
+                            <option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option>
+                            <option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>🟢 Aprovado</option>
+                            <option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo Reprovação</label>
+                        <input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none">
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('bloco-auditoria').classList.remove('hidden');
+            window.scrollTo({ top: document.getElementById('bloco-auditoria').offsetTop - 20, behavior: 'smooth' });
+        }
+
+        async function salvarAuditoriaAdmin(e) {
+            e.preventDefault();
+            const id = document.getElementById('audit-id-colaborador').value;
+            const updateData = {};
+
+            listaDocsDefinidos.forEach(d => {
+                updateData[`val_${d.id}`] = document.getElementById(`audit-val-${d.id}`).value || null;
+                updateData[`status_${d.id}`] = document.getElementById(`audit-status-${d.id}`).value;
+                updateData[`obs_${d.id}`] = document.getElementById(`audit-obs-${d.id}`).value.trim();
+            });
+
+            let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
+            if (!error) {
+                alert("Parecer técnico e validades salvas com sucesso!");
+                document.getElementById('bloco-auditoria').classList.add('hidden');
+                carregarTrabalhadoresDoBanco();
+            } else { alert("Erro ao salvar: " + error.message); }
+        }
+
+        function filtrarPainelAdmin() {
+            const termo = document.getElementById('campo-busca').value.toLowerCase();
+            const filtrados = dadosTrabalhadores.filter(c => c.nome.toLowerCase().includes(termo) || c.funcao.toLowerCase().includes(termo));
+            renderizarTabelaAdmin(filtrados);
         }
 
         function logout() { window.location.reload(); }
