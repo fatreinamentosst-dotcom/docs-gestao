@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -21,11 +18,18 @@
         body { background-color: var(--creme); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .header-fa { background-color: var(--verde-escuro); }
         .card-fa { background-color: var(--branco); border: 1px solid #F3F4F6; }
+        
+        @keyframes piscarAlerta {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .piscar-alerta {
+            animation: piscarAlerta 1.5s infinite;
+        }
     </style>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-950 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center">
             <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain">
@@ -71,7 +75,6 @@
         </div>
     </div>
 
-    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-md flex flex-col sm:flex-row justify-between items-center gap-4 hidden" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-14 bg-white p-1 rounded-lg">
@@ -83,10 +86,8 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden" id="main-content">
         
-        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
             
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -99,7 +100,6 @@
                 </button>
             </div>
 
-            <!-- Modal Formulário Colaborador (Inclusão / Substituição) -->
             <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
                 <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -112,19 +112,18 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label>
-                                <input type="text" id="col-nome" required placeholder="Nome do Trabalhador" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                                <input type="text" id="col-nome" placeholder="Nome do Trabalhador" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas números)</label>
-                                <input type="text" id="col-cpf" required placeholder="CPF" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                                <input type="text" id="col-cpf" placeholder="CPF" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label>
-                                <input type="text" id="col-funcao" required placeholder="Função" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                                <input type="text" id="col-funcao" placeholder="Função" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
                             </div>
                         </div>
 
-                        <!-- Arquivos Obrigatórios Base -->
                         <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                             <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Documentos Base Obrigatórios</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -135,7 +134,6 @@
                             </div>
                         </div>
 
-                        <!-- NRs Opcionais -->
                         <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                             <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Treinamentos Normativos (NRs)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -147,7 +145,6 @@
                             </div>
                         </div>
 
-                        <!-- Diversos -->
                         <div class="bg-gray-50 p-4 rounded-xl border grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div1"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div1">Diversos 1</span><input type="file" id="file-div1" class="text-xs w-full"></div>
                             <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
@@ -158,7 +155,6 @@
                 </div>
             </div>
 
-            <!-- Retorno da Empresa -->
             <div class="card-fa p-6 rounded-2xl shadow-sm">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
                 <div class="overflow-x-auto">
@@ -176,7 +172,6 @@
             </div>
         </section>
 
-        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
             <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -189,7 +184,6 @@
                 </button>
             </div>
 
-            <!-- Modal Empresa Admin -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
                 <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -247,9 +241,8 @@
                 </div>
             </div>
 
-            <!-- FORMULÁRIO DE AUDITORIA ADMIN -->
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-lg border-2 border-emerald-600 hidden bg-emerald-50/10">
-                <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
+                <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Painel de Evaluation Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
                     <input type="hidden" id="audit-id-colaborador">
                     <div id="container-documentos-auditoria" class="space-y-3"></div>
@@ -335,33 +328,31 @@
             }
         }
 
-        // Abertura do Modal de Colaboradores da Empresa (Inclusão / Edição Parcial)
         function abrirModalColaborador(colabObj = null) {
             colaboradorSelecionadoParaEditar = colabObj;
             document.getElementById('form-colaborador').reset();
             
-            // Esconde todas as divs de NRs inicialmente
             ['nr11','nr18','nr33','nr5','nr6'].forEach(id => document.getElementById(`div-${id}`).classList.add('hidden'));
 
             if(!colabObj) {
-                // Modo Cadastro Puro do Zero
                 document.getElementById('titulo-modal-colab').innerText = "Cadastrar Novo Colaborador";
                 document.getElementById('edit-col-id').value = "";
                 document.getElementById('bloco-identificacao').classList.remove('hidden');
                 
-                // Reseta labels e torna arquivos obrigatórios obrigatórios
                 listaDocsDefinidos.forEach(d => {
                     if(d.adminOnly) return;
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     if(lbl) lbl.innerHTML = d.nome;
                     const fileInput = document.getElementById(`file-${d.id}`);
-                    if(fileInput && d.obrigatorio) fileInput.required = true;
+                    if(fileInput) {
+                        fileInput.disabled = false;
+                        if(d.obrigatorio) fileInput.required = true;
+                    }
                 });
             } else {
-                // Modo Substituição Técnica de Reprovados
                 document.getElementById('titulo-modal-colab').innerText = `Substituir Documentos de: ${colabObj.nome}`;
                 document.getElementById('edit-col-id').value = colabObj.id;
-                document.getElementById('bloco-identificacao').classList.add('hidden'); // Trava os campos de texto básicos
+                document.getElementById('bloco-identificacao').classList.add('hidden');
 
                 listaDocsDefinidos.forEach(d => {
                     if(d.adminOnly) return;
@@ -369,7 +360,7 @@
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     const fileInput = document.getElementById(`file-${d.id}`);
                     
-                    if(fileInput) fileInput.required = false; // Tira obrigatoriedade global
+                    if(fileInput) fileInput.required = false;
 
                     if(status === 'Reprovado') {
                         if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ${d.nome} (Reprovado - Insira o Novo Corrigido aqui)</span>`;
@@ -416,8 +407,22 @@
 
             try {
                 if(!idExistente) {
-                    // CÓDIGO DE CADASTRO DO ZERO
                     const nome = document.getElementById('col-nome').value.trim();
+                    
+                    // Validação manual de obrigatoriedade no cadastro do zero
+                    let algumFaltando = false;
+                    listaDocsDefinidos.forEach(d => {
+                        if(d.obrigatorio && !d.adminOnly) {
+                            const inp = document.getElementById(`file-${d.id}`);
+                            if(!inp || !inp.files || inp.files.length === 0) algumFaltando = true;
+                        }
+                    });
+                    
+                    if(algumFaltando) {
+                        alert("Por favor, preencha todos os documentos obrigatórios antes de transmitir.");
+                        return;
+                    }
+
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
                         const isNR = ['nr11','nr18','nr33','nr5','nr6'].includes(d.id);
@@ -449,7 +454,8 @@
                     } else { alert("Erro: " + error.message); }
 
                 } else {
-                    // CÓDIGO DE SUBSTITUIÇÃO TÉCNICA
+                    // SUBSTITUIÇÃO TÉCNICA COM RETORNO DE CONFIRMAÇÃO SEGURO
+                    let arquivosAnexados = 0;
                     for(let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
                         const fileInput = document.getElementById(`file-${d.id}`);
@@ -457,20 +463,22 @@
                             const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
                             if(urlFisica) {
                                 paths[`pdf_${d.id}`] = urlFisica;
-                                paths[`status_${d.id}`] = 'Pendente de análise';
+                                paths[`status_${d.id}`] = 'Pendente de análise'; // MUDA AUTOMATICAMENTE PARA PENDENTE DE ANÁLISE
                                 paths[`obs_${d.id}`] = ''; // Limpa o motivo de reprovação antigo
+                                arquivosAnexados++;
                             }
                         }
                     }
 
-                    if(Object.keys(paths).length === 0) {
-                        alert("Nenhum novo arquivo foi anexado para substituição.");
+                    if(arquivosAnexados === 0) {
+                        alert("⚠️ Atenção: Nenhum novo arquivo foi anexado para substituição.");
                         return;
                     }
 
                     const { error } = await _supabase.from('colaboradores').update(paths).eq('id', idExistente);
                     if (!error) { 
-                        alert(`✅ Sucesso! Os arquivos reprovados foram substituídos e reencaminhados.`); 
+                        // MENSAGEM DE CONFIRMAÇÃO EXPLICITA PARA A EMPRESA
+                        alert(`✅ Sucesso! Os arquivos reprovados foram substituídos e reencaminhados para nova análise.`); 
                         alternarModalColaboradorVisual(false);
                         carregarRetornosDaEmpresa();
                     } else { alert("Erro na retransmissão: " + error.message); }
@@ -478,14 +486,20 @@
             } catch (err) { alert("Erro de comunicação com o servidor."); }
         }
 
-        // Gera o status dinâmico com base na lógica operacional descrita
+        // Lógica de verificação para saber se o colaborador possui correções prontas aguardando reavaliação do admin
+        function possuiCorrecoesAguardando(c) {
+            // Se o status geral do documento base é "Pendente de análise" mas há histórico de preenchimento ou obs limpa,
+            // vamos cruzar se há alguma pendência resolvida pela empresa.
+            // Para simplificar e tornar 100% preciso: se o status individual de qualquer documento está como 'Pendente de análise' 
+            // e ele possui um arquivo válido anexado, o admin precisa ver o alerta de revisão.
+            return listaDocsDefinidos.some(d => !d.adminOnly && c[`status_${d.id}`] === 'Pendente de análise' && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado');
+        }
+
         function calcularStatusGeral(c) {
-            // Se possui documento de integração preenchido e aprovado -> Trabalho Liberado
             if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
                 return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
             }
 
-            // Documentos obrigatórios da empresa
             const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
             const todosAprovados = obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
             const algumReprovado = listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
@@ -518,7 +532,7 @@
                 listaDocsDefinidos.forEach(d => {
                     const status = c[`status_${d.id}`] || 'Pendente de envio';
                     const obs = c[`obs_${d.id}`] || '';
-                    if(status === 'Pendente de envio' && !d.obrigatorio && !c[`pdf_${d.id}`]) return; // Oculta NRs vazias
+                    if(status === 'Pendente de envio' && !d.obrigatorio && !c[`pdf_${d.id}`]) return;
 
                     let badgeColor = "bg-gray-100 text-gray-700";
                     if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-800 font-bold";
@@ -529,7 +543,7 @@
                         <div class="p-1.5 border-b last:border-0 flex flex-col md:flex-row md:items-center justify-between text-[11px] gap-1 bg-gray-50/50 mb-1 rounded">
                             <span class="font-bold text-gray-700 w-44 truncate">${d.nome}:</span>
                             <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
+                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status === 'Pendente de análise' ? 'Pendente de análise' : status}</span>
                             </div>
                             <span class="text-red-600 font-bold max-w-xs truncate">${obs ? 'Motivo: ' + obs : ''}</span>
                         </div>
@@ -574,9 +588,22 @@
             if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum trabalhador na fila.</td></tr>`; return; }
             
             lista.forEach(c => {
+                // Monta o Alerta Visual Piscante se a empresa realizou correções
+                let alertaCorrecaoHtml = "";
+                if(possuiCorrecoesAguardando(c)) {
+                    alertaCorrecaoHtml = `<span class="bg-red-600 text-white font-black text-[9px] px-1.5 py-0.5 rounded ml-1 tracking-wider piscar-alerta border border-white uppercase shadow-sm"><i class="fa-solid fa-bell"></i> Ajustado</span>`;
+                }
+
                 const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
                 tr.innerHTML = `
-                    <td class="p-3"><strong>${c.nome}</strong><br><span class="text-[10px] text-gray-500">${c.funcao}</span><div class="w-48 mt-1">${calcularStatusGeral(c)}</div></td>
+                    <td class="p-3">
+                        <div class="flex items-center">
+                            <strong class="text-slate-800">${c.nome}</strong>
+                            ${alertaCorrecaoHtml}
+                        </div>
+                        <span class="text-[10px] text-gray-500">${c.funcao}</span>
+                        <div class="w-48 mt-1">${calcularStatusGeral(c)}</div>
+                    </td>
                     <td class="p-3 font-mono text-gray-600">${c.cnpj_empresa}</td>
                     <td class="p-3 flex justify-center gap-2 align-middle">
                         <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] flex items-center gap-1"><i class="fa-solid fa-gavel"></i> Analisar</button>
@@ -637,7 +664,6 @@
 
                 let uploadLinkAreaHtml = "";
                 if(d.adminOnly) {
-                    // Campo de inclusão de arquivo exclusivo para o Administrador FA (Integração)
                     uploadLinkAreaHtml = `
                         <div class="mt-1 space-y-1">
                             <input type="file" id="upload-admin-${d.id}" class="text-xs w-full bg-slate-100 p-1 rounded border">
@@ -676,11 +702,10 @@
                 updateData[`obs_${d.id}`] = document.getElementById(`audit-obs-${d.id}`).value.trim();
 
                 if(d.adminOnly) {
-                    // Verifica se o Administrador anexou uma nova integração no momento do salvamento
                     const urlFisicaAdmin = await fazerUploadDeArquivo(`upload-admin-${d.id}`, d.id);
                     if(urlFisicaAdmin) {
                         updateData[`pdf_${d.id}`] = urlFisicaAdmin;
-                        updateData[`status_${d.id}`] = 'Aprovado'; // Força aprovação automático ao incluir arquivo
+                        updateData[`status_${d.id}`] = 'Aprovado';
                     }
                 }
             }
