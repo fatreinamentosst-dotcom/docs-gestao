@@ -192,7 +192,6 @@
     </main>
 
     <script>
-        // URL E NOVA CHAVE MESTRA ATUALIZADAS DE ACORDO COM A MUDANÇA DE PALAVRA-PASSE
         const SUPABASE_URL = "https://kyqtxdxiwoplpujkwiwh.supabase.co"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -270,7 +269,7 @@
             e.preventDefault();
             const nova = document.getElementById('nova-senha-master').value;
             const { error } = await _supabase.from('config_admin').update({ senha: nova }).eq('id', 1);
-            if(!error) { alert("Sua senha Master foi updated com sucesso!"); document.getElementById('nova-senha-master').value = ""; }
+            if(!error) { alert("Sua senha Master foi atualizada com sucesso!"); document.getElementById('nova-senha-master').value = ""; }
             else { alert("Erro ao atualizar a senha master."); }
         }
 
