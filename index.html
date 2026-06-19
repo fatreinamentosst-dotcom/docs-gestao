@@ -18,10 +18,16 @@
             --creme: #F8F7F4;
             --branco: #FFFFFF;
         }
-        body { background-color: var(--creme); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--creme); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: relative; min-height: 100vh; overflow-x: hidden; }
         .header-fa { background-color: var(--verde-escuro); }
-        .card-fa { background-color: var(--branco); border: 1px solid #F3F4F6; }
+        .card-fa { background-color: var(--branco); border: 1px solid #F3F4F6; backdrop-filter: blur(8px); }
         
+        /* FILTRO PARA TRANSFORMAR A LOGO BRANCA EM VERDE NO FUNDO BRANCO */
+        .logo-filtro-verde {
+            filter: invert(53%) sepia(13%) saturate(1475%) hue-rotate(105deg) brightness(92%) contrast(85%);
+        }
+
+        /* ANIMAÇÃO SUTIL PARA OS ELEMENTOS DE ALERTA */
         @keyframes piscarAlerta {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
@@ -31,20 +37,37 @@
         }
     </style>
 </head>
-<body>
+<body class="relative min-h-screen text-slate-800">
+
+    <!-- MARCAS D'ÁGUA DE EPIS DISPERSAS DE FORMA TRANSPARENTE AO FUNDO (Z-0) -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-40">
+        <i class="fa-solid fa-helmet-safety absolute text-slate-300/40 text-[180px] -top-10 -left-10 rotate-12"></i>
+        <i class="fa-solid fa-mitten absolute text-slate-300/30 text-[140px] top-1/3 -right-12 -rotate-12"></i>
+        <i class="fa-solid fa-shield-halved absolute text-slate-300/30 text-[200px] bottom-10 left-10 -rotate-6"></i>
+        <i class="fa-solid fa-kit-medical absolute text-slate-300/20 text-[130px] top-10 right-1/4 rotate-45"></i>
+        <i class="fa-solid fa-helmet-safety absolute text-slate-300/25 text-[160px] bottom-1/3 right-1/3 -rotate-45"></i>
+        <i class="fa-solid fa-square-poll-horizontal absolute text-slate-300/20 text-[150px] bottom-12 right-12 rotate-12"></i>
+    </div>
 
     <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-950 flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center">
-            <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain">
+        <!-- Detalhes de EPIs flutuando também no fundo do login escuro -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+            <i class="fa-solid fa-helmet-safety absolute text-white text-[250px] -right-16 -top-16 rotate-45"></i>
+            <i class="fa-solid fa-mitten absolute text-white text-[180px] bottom-10 -left-10 -rotate-45"></i>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center relative z-10">
+            <!-- SOBRE FUNDO BRANCO: Fica Verde utilizando o filtro CSS -->
+            <img src="Segurança no Trabalho.png" alt="FA Segurança" class="mx-auto max-h-24 mb-4 object-contain logo-filtro-verde">
             <h2 class="text-xl font-bold text-slate-800 mb-1">Portal de Segurança e Auditoria</h2>
             <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrar na plataforma</p>
             
             <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6">
-                <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow-sm transition-all duration-200">
+                <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow-sm transition-all duration-200 cursor-pointer">
                     <i class="fa-solid fa-building mr-1"></i> Acesso Empresa
                 </button>
-                <button onclick="alternarAbaEntrada('admin')" id="aba-admin" class="w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-slate-800 transition-all duration-200">
+                <button onclick="alternarAbaEntrada('admin')" id="aba-admin" class="w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 hover:text-slate-800 transition-all duration-200 cursor-pointer">
                     <i class="fa-solid fa-user-shield mr-1"></i> Administrador
                 </button>
             </div>
@@ -52,13 +75,13 @@
             <form id="form-login-empresa" onsubmit="processarLoginEmpresa(event)" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-address-card mr-1"></i> CNPJ da Empresa</label>
-                    <input type="text" id="login-cnpj" required placeholder="00.000.000/0001-00" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
+                    <input type="text" id="login-cnpj" required placeholder="00.000.000/0001-00" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-emerald-700 transition">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-key mr-1"></i> Senha de Acesso</label>
-                    <input type="password" id="login-senha-empresa" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
+                    <input type="password" id="login-senha-empresa" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-emerald-700 transition">
                 </div>
-                <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold transition hover:bg-emerald-900 shadow-md flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold transition hover:bg-emerald-900 shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-right-to-bracket"></i> Entrar como Prestador
                 </button>
             </form>
@@ -66,13 +89,13 @@
             <form id="form-login-admin" onsubmit="processarLoginAdmin(event)" class="space-y-4 text-left hidden">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-user mr-1"></i> Usuário Administrador</label>
-                    <input type="text" id="login-usuario-admin" required placeholder="Ex: admin" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
+                    <input type="text" id="login-usuario-admin" required placeholder="Ex: admin" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-slate-700 transition">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase"><i class="fa-solid fa-lock mr-1"></i> Chave Master</label>
-                    <input type="password" id="login-senha-admin" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none">
+                    <input type="password" id="login-senha-admin" required placeholder="••••••" class="w-full mt-1 p-3 border rounded-xl bg-gray-50 text-sm outline-none focus:bg-white focus:border-slate-700 transition">
                 </div>
-                <button type="submit" class="w-full bg-slate-800 text-white p-3 rounded-xl font-bold transition hover:bg-slate-900 shadow-md flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-slate-800 text-white p-3 rounded-xl font-bold transition hover:bg-slate-900 shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-shield-halved"></i> Painel Geral FA
                 </button>
             </form>
@@ -80,39 +103,40 @@
     </div>
 
     <!-- CABEÇALHO -->
-    <header class="header-fa text-white p-4 shadow-md flex flex-col sm:flex-row justify-between items-center gap-4 hidden" id="main-header">
+    <header class="header-fa text-white p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 hidden relative z-10" id="main-header">
         <div class="flex items-center space-x-4">
-            <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-14 bg-white p-1 rounded-lg">
+            <!-- SOBRE FUNDO VERDE ESCURO: Mantida Branca (Sem filtro), garantindo o contraste perfeito -->
+            <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-16 p-1 object-contain">
             <div>
                 <span class="text-xl font-bold tracking-wider block">FA SEGURANÇA DO TRABALHO</span>
                 <span class="text-xs text-emerald-300" id="subtitulo-painel"></span>
             </div>
         </div>
-        <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
+        <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold cursor-pointer"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto p-4 md:p-6 hidden" id="main-content">
+    <main class="max-w-7xl mx-auto p-4 md:p-6 hidden relative z-10" id="main-content">
         
         <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
             
-            <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador nesta empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                    <input type="text" id="busca-prestador" oninput="filtrarColaboradoresPrestador()" placeholder="Buscar colaborador nesta empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none focus:bg-white transition">
                 </div>
-                <button onclick="abrirModalColaborador(null)" class="w-full md:w-auto bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition">
+                <button onclick="abrirModalColaborador(null)" class="w-full md:w-auto bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
                     <i class="fa-solid fa-user-plus"></i> Cadastrar Novo Colaborador
                 </button>
             </div>
 
             <!-- Modal Formulário Colaborador -->
-            <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
-                <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+                <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
                     <div class="flex justify-between items-center border-b pb-2">
                         <h3 class="font-bold text-slate-800 text-base" id="titulo-modal-colab"><i class="fa-solid fa-user-gear text-emerald-800 mr-1"></i> Dados Ficha Trabalhador</h3>
-                        <button onclick="alternarModalColaboradorVisual(false)" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                        <button onclick="alternarModalColaboradorVisual(false)" class="text-gray-400 hover:text-gray-600 text-2xl cursor-pointer">&times;</button>
                     </div>
                     
                     <form id="form-colaborador" onsubmit="enviarDadosNuvem(event)" class="space-y-4">
@@ -120,15 +144,15 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label>
-                                <input type="text" id="col-nome" placeholder="Nome do Trabalhador" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                                <input type="text" id="col-nome" placeholder="Nome do Trabalhador" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none focus:bg-white transition">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas números)</label>
-                                <input type="text" id="col-cpf" placeholder="CPF" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                                <input type="text" id="col-cpf" placeholder="CPF" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none focus:bg-white transition">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label>
-                                <input type="text" id="col-funcao" placeholder="Função" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none">
+                                <input type="text" id="col-funcao" placeholder="Função" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none focus:bg-white transition">
                             </div>
                         </div>
 
@@ -147,11 +171,11 @@
                         <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                             <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase tracking-wider">Treinamentos Normativos (NRs)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
-                                <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
+                                <div class="bg-white p-3 border rounded-xl shadow-sm md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
                             </div>
                         </div>
 
@@ -161,18 +185,18 @@
                             <div class="bg-white p-3 border rounded-xl shadow-sm" id="box-file-div2"><span class="block text-xs font-bold text-gray-600 mb-1" id="lbl-div2">Diversos 2</span><input type="file" id="file-div2" class="text-xs w-full"></div>
                         </div>
 
-                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Ficha de Documentação</button>
+                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow cursor-pointer"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Transmitir Ficha de Documentação</button>
                     </form>
                 </div>
             </div>
 
             <!-- Retorno da Empresa -->
-            <div class="card-fa p-6 rounded-2xl shadow-sm">
+            <div class="card-fa p-6 rounded-2xl shadow-md">
                 <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-slate-700 text-white text-xs uppercase">
+                            <tr class="bg-slate-700 text-white text-xs uppercase font-mono tracking-wider">
                                 <th class="p-3 rounded-l-xl">Trabalhador</th>
                                 <th class="p-3">Doc / Status / Parecer da FA</th>
                                 <th class="p-3 text-center rounded-r-xl">Ação</th>
@@ -187,43 +211,43 @@
         <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
-            <div class="bg-white p-4 rounded-2xl shadow-sm border flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar trabalhador ou empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
+                    <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar trabalhador ou empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none focus:bg-white transition">
                 </div>
-                <button onclick="alternarModalEmpresa(true)" class="w-full md:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition">
+                <button onclick="alternarModalEmpresa(true)" class="w-full md:w-auto bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow flex items-center justify-center gap-2 transition cursor-pointer">
                     <i class="fa-solid fa-plus"></i> Cadastrar Nova Empresa
                 </button>
             </div>
 
             <!-- Modal Empresa Admin -->
-            <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
-                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+            <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+                <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border">
                     <div class="flex justify-between items-center border-b pb-2">
                         <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-building-user text-emerald-800 mr-1"></i> Nova Empresa Credenciada</h3>
-                        <button onclick="alternarModalEmpresa(false)" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                        <button onclick="alternarModalEmpresa(false)" class="text-gray-400 hover:text-gray-600 text-2xl cursor-pointer">&times;</button>
                     </div>
                     <form id="form-cadastro-empresa" onsubmit="salvarNovaEmpresaAdmin(event)" class="space-y-3 text-sm">
                         <div>
                             <label class="block text-xs font-bold text-gray-600">Razão Social</label>
-                            <input type="text" id="emp-nome" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                            <input type="text" id="emp-nome" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600">CNPJ (Apenas números)</label>
-                            <input type="text" id="emp-cnpj" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                            <input type="text" id="emp-cnpj" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600">Senha de Acesso</label>
-                            <input type="text" id="emp-senha" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50">
+                            <input type="text" id="emp-senha" required class="w-full mt-1 p-2.5 border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
                         </div>
-                        <button type="submit" class="w-full bg-emerald-800 text-white font-bold p-3 rounded-xl shadow hover:bg-emerald-900 transition">Salvar Empresa</button>
+                        <button type="submit" class="w-full bg-emerald-800 text-white font-bold p-3 rounded-xl shadow hover:bg-emerald-900 transition cursor-pointer">Salvar Empresa</button>
                     </form>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="card-fa p-6 rounded-2xl shadow-sm lg:col-span-2">
+                <div class="card-fa p-6 rounded-2xl shadow-md lg:col-span-2">
                     <h2 class="text-base font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Fila de Auditoria de Colaboradores</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
@@ -239,7 +263,7 @@
                     </div>
                 </div>
 
-                <div class="card-fa p-6 rounded-2xl shadow-sm">
+                <div class="card-fa p-6 rounded-2xl shadow-md">
                     <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-building-shield"></i> Empresas Credenciadas</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
@@ -256,14 +280,14 @@
             </div>
 
             <!-- FORMULÁRIO DE AUDITORIA ADMIN -->
-            <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-lg border-2 border-emerald-600 hidden bg-emerald-50/10">
+            <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-xl border-2 border-emerald-600 hidden bg-emerald-50/10">
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-check"></i> Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
                     <input type="hidden" id="audit-id-colaborador">
                     <div id="container-documentos-auditoria" class="space-y-3"></div>
                     <div class="flex gap-4 pt-4 border-t">
-                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md"><i class="fa-solid fa-floppy-disk mr-1"></i> Confirmar Parecer da Auditoria</button>
-                        <button type="button" onclick="document.getElementById('bloco-auditoria').classList.add('hidden')" class="bg-gray-400 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-500 transition">Cancelar</button>
+                        <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md cursor-pointer"><i class="fa-solid fa-floppy-disk mr-1"></i> Confirmar Parecer da Auditoria</button>
+                        <button type="button" onclick="document.getElementById('bloco-auditoria').classList.add('hidden')" class="bg-gray-400 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-500 transition cursor-pointer">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -298,8 +322,8 @@
         function alternarAbaEntrada(tipo) {
             document.getElementById('form-login-empresa').classList.toggle('hidden', tipo !== 'empresa');
             document.getElementById('form-login-admin').classList.toggle('hidden', tipo !== 'admin');
-            document.getElementById('aba-empresa').className = tipo === 'empresa' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
-            document.getElementById('aba-admin').className = tipo === 'admin' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-slate-800 text-white shadow" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500";
+            document.getElementById('aba-empresa').className = tipo === 'empresa' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow shadow-emerald-900 cursor-pointer" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 cursor-pointer";
+            document.getElementById('aba-admin').className = tipo === 'admin' ? "w-1/2 py-2.5 text-sm font-bold rounded-lg bg-slate-800 text-white shadow shadow-slate-950 cursor-pointer" : "w-1/2 py-2.5 text-sm font-bold rounded-lg text-gray-500 cursor-pointer";
         }
 
         function alternarModalEmpresa(abrir) { document.getElementById('modal-empresa').classList.toggle('hidden', !abrir); }
@@ -506,7 +530,6 @@
             return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
         }
 
-        // LÓGICA DE STATUS CORES INVERTIDAS (Azul para Integração, Verde para Trabalho)
         function calcularStatusGeral(c) {
             if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
                 return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
@@ -530,7 +553,7 @@
         }
 
         function estaLiberadoIntegracao(c) {
-            if (estaLiberadoTrabalho(c)) return false; // Se já está liberado pro trabalho, não está pendente de integração
+            if (estaLiberadoTrabalho(c)) return false;
             const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
             return obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
         }
@@ -572,7 +595,6 @@
                     `;
                 });
 
-                // ATUALIZAÇÃO DOS BANNERS COM CORES CORRETAS INVERTIDAS
                 const trabalhoLivre = estaLiberadoTrabalho(c);
                 const integracaoLivre = estaLiberadoIntegracao(c);
                 const reprovado = possuiDocumentosReprovados(c);
@@ -581,10 +603,10 @@
                 let bannerAlertaHtml = "";
 
                 if (trabalhoLivre) {
-                    bgLinha = "bg-emerald-50/60"; // Fundo Verde sutil para Trabalho Completo
+                    bgLinha = "bg-emerald-50/60";
                     bannerAlertaHtml = `<div class="bg-green-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-check"></i> 🎉 COLABORADOR LIBERADO PARA O TRABALHO!</div>`;
                 } else if (integracaoLivre) {
-                    bgLinha = "bg-blue-50/40"; // Fundo Azul sutil para Integração
+                    bgLinha = "bg-blue-50/40";
                     bannerAlertaHtml = `<div class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-hourglass-half"></i> 🚀 COLABORADOR LIBERADO PARA REALIZAR A INTEGRAÇÃO!</div>`;
                 } else if (reprovado) {
                     bgLinha = "bg-red-50/60";
@@ -592,10 +614,10 @@
                 }
 
                 const tr = document.createElement('tr');
-                tr.className = bgLinha;
+                tr.className = bgLinha + " transition duration-200";
                 tr.innerHTML = `
                     <td class="p-3 border-r align-top w-1/4">
-                        <strong class="text-slate-800">${c.nome}</strong><br><span class="text-xs text-gray-500">${c.funcao}</span>
+                        <strong class="text-slate-800 text-sm block mb-0.5">${c.nome}</strong><span class="text-xs text-gray-500 font-medium">${c.funcao}</span>
                         <div class="mt-2">${calcularStatusGeral(c)}</div>
                     </td>
                     <td class="p-2">
@@ -603,7 +625,7 @@
                         ${blocosDocs}
                     </td>
                     <td class="p-2 text-center align-middle">
-                        <button onclick='abrirModalColaborador(${JSON.stringify(c)})' class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow">
+                        <button onclick='abrirModalColaborador(${JSON.stringify(c)})' class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow cursor-pointer">
                             <i class="fa-solid fa-pen-to-square"></i> Abrir / Corrigir
                         </button>
                     </td>
@@ -638,7 +660,7 @@
                     alertaCorrecaoHtml = `<span class="bg-red-600 text-white font-black text-[9px] px-1.5 py-0.5 rounded ml-1 tracking-wider piscar-alerta border border-white uppercase shadow-sm"><i class="fa-solid fa-bell"></i> Ajustado</span>`;
                 }
 
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b transition duration-150";
                 tr.innerHTML = `
                     <td class="p-3">
                         <div class="flex items-center">
@@ -648,10 +670,10 @@
                         <span class="text-[10px] text-gray-500">${c.funcao}</span>
                         <div class="w-48 mt-1">${calcularStatusGeral(c)}</div>
                     </td>
-                    <td class="p-3 font-mono text-gray-600">${c.cnpj_empresa}</td>
+                    <td class="p-3 font-mono text-gray-600 align-middle">${c.cnpj_empresa}</td>
                     <td class="p-3 flex justify-center gap-2 align-middle">
-                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] flex items-center gap-1"><i class="fa-solid fa-gavel"></i> Analisar</button>
-                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px]"><i class="fa-solid fa-trash-can"></i></button>
+                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] flex items-center gap-1 cursor-pointer shadow-sm"><i class="fa-solid fa-gavel"></i> Analisar</button>
+                        <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-2 rounded-xl transition text-[10px] cursor-pointer shadow-sm"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -662,8 +684,8 @@
             const tbody = document.getElementById('tabela-admin-empresas'); tbody.innerHTML = "";
             if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-gray-400">Nenhuma empresa.</td></tr>`; return; }
             lista.forEach(e => {
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b";
-                tr.innerHTML = `<td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td><td class="p-3 text-center"><button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-50 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px]"><i class="fa-solid fa-trash"></i></button></td>`;
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b transition duration-150";
+                tr.innerHTML = `<td class="p-3"><strong>${e.nome}</strong><br><span class="text-[10px] font-mono text-gray-500">CNPJ: ${e.cnpj}</span></td><td class="p-3 text-center align-middle"><button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition text-[10px] cursor-pointer"><i class="fa-solid fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -724,9 +746,9 @@
                 div.className = d.adminOnly ? "p-4 bg-amber-50/40 rounded-xl border-2 border-amber-300 shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center" : "p-4 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center";
                 div.innerHTML = `
                     <div><span class="block font-bold text-xs text-slate-800">${d.nome}</span><div class="mt-1">${uploadLinkAreaHtml}</div></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade Legal</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade Legal</label><input type="date" id="audit-val-${d.id}" value="${valAtual}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none focus:bg-white transition"></div>
                     <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer Técnico</label><select id="audit-status-${d.id}" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none font-bold"><option value="Pendente de envio" ${statusAtual === 'Pendente de envio' ? 'selected' : ''}>Pendente de envio</option><option value="Pendente de análise" ${statusAtual === 'Pendente de análise' ? 'selected' : ''}>Pendente de análise</option><option value="Aprovado" ${statusAtual === 'Aprovado' ? 'selected' : ''}>Aprovado</option><option value="Reprovado" ${statusAtual === 'Reprovado' ? 'selected' : ''}>🔴 Reprovado</option></select></div>
-                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações / Motivo</label><input type="text" id="audit-obs-${d.id}" value="${obsAtual}" placeholder="Ex: Assinatura faltando" class="w-full mt-1 p-2 border text-xs rounded-lg bg-gray-50 outline-none focus:bg-white transition"></div>
                 `;
                 container.appendChild(div);
             });
@@ -775,7 +797,7 @@
 
                 let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
                 if (!error) {
-                    alert("✅ Parecer salvo com sucesso! Os status e tabelas foram updated em tempo real.");
+                    alert("✅ Parecer salvo com sucesso! Os status e tabelas foram atualizados em tempo real.");
                     document.getElementById('bloco-auditoria').classList.add('hidden');
                     await carregarDadosPainelAdmin();
                 } else { 
