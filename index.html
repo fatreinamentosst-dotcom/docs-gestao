@@ -235,27 +235,34 @@
             }
         }
 
-        // LÓGICA DE LOGIN DA PRESTADORA SINCRONIZADA E CORRIGIDA
+        // LOGIN DA PRESTADORA COM LIMPEZA AUTOMÁTICA DE PONTUAÇÃO (CNPJ FORMATADO)
         async function processarLoginEmpresa(e) {
             e.preventDefault();
-            const cnpj = document.getElementById('login-cnpj').value.trim();
+            // Remove pontos, traços e barras antes de enviar ao banco
+            const cnpjLimpo = document.getElementById('login-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('login-senha-empresa').value.trim();
 
             try {
-                let { data: empresas, error } = await _supabase
-                    .from('acessos_empresas')
-                    .select('*')
-                    .eq('cnpj', cnpj)
-                    .eq('senha', senha);
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/acessos_empresas?cnpj=eq.${cnpjLimpo}&senha=eq.${encodeURIComponent(senha)}`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                if (!error && empresas && empresas.length > 0) {
-                    empresaCnpjSessao = cnpj;
-                    liberarTelaPorPerfil('prestador');
-                } else { 
-                    alert("CNPJ ou Senha não autorizados pela FA!"); 
+                if (response.ok) {
+                    const empresas = await response.json();
+                    if (empresas && empresas.length > 0) {
+                        empresaCnpjSessao = cnpjLimpo;
+                        liberarTelaPorPerfil('prestador');
+                        return;
+                    }
                 }
+                alert("CNPJ ou Senha não autorizados pela FA!");
             } catch (err) {
-                alert("Erro ao validar credenciais na nuvem.");
+                alert("Erro técnico de rede local ao tentar validar o login.");
             }
         }
 
@@ -284,9 +291,11 @@
             else { alert("Erro ao atualizar a senha master."); }
         }
 
+        // GERADOR DE ACESSO COM GRAVAÇÃO DIRETAMENTE LIMPA EM APENAS NÚMEROS
         async function gerarAcessoEmpresaNoSupabase(e) {
             e.preventDefault();
-            const cnpj = document.getElementById('cad-cnpj').value.trim();
+            // Garante que o CNPJ gravado no banco terá apenas números
+            const cnpjLimpo = document.getElementById('cad-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('cad-senha').value.trim();
 
             try {
@@ -295,28 +304,25 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Prefer': 'return=representation'
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
                     },
-                    body: JSON.stringify({ cnpj: cnpj, senha: senha })
+                    body: JSON.stringify({ cnpj: cnpjLimpo, senha: senha })
                 });
 
                 if (response.ok || response.status === 201) {
-                    alert(`Acesso gerado com sucesso para a empresa ${cnpj}!`);
+                    alert(`Acesso gerado com sucesso para a empresa de CNPJ ${cnpjLimpo}!`);
                     document.getElementById('cad-cnpj').value = "";
                     document.getElementById('cad-senha').value = "";
                 } else {
                     const errData = await response.json();
                     if (errData && errData.message && errData.message.includes("unique")) {
-                        alert(`Atenção: O CNPJ ${cnpj} já está cadastrado.`);
+                        alert(`Atenção: O CNPJ ${cnpjLimpo} já está cadastrado.`);
                     } else {
                         alert("Aviso técnico do servidor: " + (errData ? errData.message : response.statusText));
                     }
                 }
             } catch (err) {
-                alert(`Sistema processou o comando. Verifique o login com o CNPJ ${cnpj}.`);
-                document.getElementById('cad-cnpj').value = "";
-                document.getElementById('cad-senha').value = "";
+                alert(`Erro de envio. Tente recarregar a página.`);
             }
         }
 
@@ -326,7 +332,7 @@
             
             const payload = {
                 nome: nome,
-                cpf: document.getElementById('col-cpf').value,
+                cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
                 funcao: document.getElementById('col-funcao').value,
                 val_aso: document.getElementById('val-aso').value,
                 val_ficha: document.getElementById('val-ficha').value,
