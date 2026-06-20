@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link class="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -18,7 +15,6 @@
             --creme: #F8F7F4;
             --branco: #FFFFFF;
         }
-        /* FORÇA O FUNDO VERDE DA ENGENHARIA DE SEGURANÇA EM TODA A EXTREMIDADE DA PÁGINA */
         html, body { 
             background-color: #064e3b !important; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -51,7 +47,6 @@
 </head>
 <body class="linhas-engenharia text-slate-800">
 
-    <!-- EPIS TRANSPARENTES DISPERSOS EM TODAS AS EXTREMIDADES DA PÁGINA -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
         <i class="fa-solid fa-glasses absolute text-white text-3xl top-6 left-12 rotate-12"></i>
         <i class="fa-solid fa-ear-deaf absolute text-white text-3xl top-8 right-16 -rotate-12"></i>
@@ -61,7 +56,6 @@
         <i class="fa-solid fa-shield-halved absolute text-white text-3xl top-1/2 left-8 rotate-12"></i>
     </div>
 
-    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-900/40 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center relative z-10">
             <div class="flex items-center justify-center gap-4 mb-4 select-none">
@@ -112,7 +106,6 @@
         </div>
     </div>
 
-    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 hidden relative z-10" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-16 p-1 object-contain">
@@ -124,14 +117,10 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 transition font-bold cursor-pointer"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden relative z-10" id="main-content">
         
-        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
-            
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Coluna da Tabela de Resposta -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
                         <div class="relative w-full md:w-64">
@@ -160,7 +149,6 @@
                     </div>
                 </div>
 
-                <!-- PAINEL LATERAL: GESTÃO DE WHATSAPP DO PRESTADOR -->
                 <div class="space-y-6">
                     <div class="bg-white p-5 rounded-2xl shadow-md border-t-4 border-emerald-600">
                         <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i> Contatos para Alertas WhatsApp</h3>
@@ -186,7 +174,6 @@
             </div>
         </section>
 
-        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             
             <div id="area-empresas-inicial" class="space-y-6">
@@ -196,7 +183,6 @@
                         <input type="text" id="campo-busca" oninput="filtrarGeralAdmin()" placeholder="Pesquisar empresa..." class="p-2.5 pl-9 w-full text-sm border rounded-xl bg-gray-50 outline-none">
                     </div>
                     
-                    <!-- EXIBIÇÃO E CADASTRO DO SEU WHATSAPP ADM -->
                     <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border w-full md:w-auto">
                         <span class="text-[11px] font-bold text-slate-700 pl-2"><i class="fa-brands fa-whatsapp text-emerald-600"></i> Meu WhatsApp Alertas:</span>
                         <input type="text" id="whats-admin-config" placeholder="DDD + Número" class="p-1.5 text-xs rounded-lg border bg-white outline-none w-34 font-bold text-emerald-900">
@@ -225,10 +211,16 @@
                 </div>
             </div>
 
-            <div id="area-colaboradores-empresa" class="space-y-6 hidden">
-                <button onclick="fecharFilaEmpresaIsolada()" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> Voltar para Lista de Empresas
-                </button>
+            <div id="area-colaboradores-empresa" class="space-y-6">
+                <div class="flex justify-between items-center">
+                    <button onclick="fecharFilaEmpresaIsolada()" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Voltar para Lista de Empresas
+                    </button>
+                    
+                    <button onclick="abrirModalColaborador(null)" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-user-plus mr-1"></i> Testar Inclusão nesta Empresa
+                    </button>
+                </div>
 
                 <div class="card-fa p-6 rounded-2xl shadow-md border-t-4 border-emerald-700">
                     <div class="mb-4">
@@ -250,7 +242,6 @@
                 </div>
             </div>
 
-            <!-- Modal Nova Empresa -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
                 <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -289,7 +280,6 @@
         </section>
     </main>
 
-    <!-- Modal Form Colaborador -->
     <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
             <div class="flex justify-between items-center border-b pb-2">
@@ -375,7 +365,7 @@
             if(!numeroDestinatario) return;
             let numeroLimpo = numeroDestinatario.replace(/\D/g, '');
             if(!numeroLimpo.startsWith('55')) numeroLimpo = '55' + numeroLimpo;
-            console.log(`[WHATSAPP ENVIADO] Para: ${numeroLimpo} -> Mensagem: ${mensagemTexto}`);
+            console.log(`[WHATSAPP SIMULADO] Enviando para: ${numeroLimpo}\nMensagem: ${mensagemTexto}`);
         }
 
         function salvarConfigWhatsAdmin() {
@@ -468,7 +458,6 @@
                 document.getElementById('subtitulo-painel').innerHTML = `<i class="fa-solid fa-user-gear mr-1"></i> Modo Administrador (FA)`;
                 carregarDadosPainelAdmin();
                 
-                // Preenche o campo de WhatsApp do Admin com o valor salvo
                 const whatsAdminSalvo = localStorage.getItem('fa_whats_admin_config');
                 if(whatsAdminSalvo && document.getElementById('whats-admin-config')) {
                     document.getElementById('whats-admin-config').value = whatsAdminSalvo;
@@ -558,10 +547,28 @@
             });
         }
 
+        // CORREÇÃO VISUAL: RECONHECE DINAMICAMENTE O CNPJ DA SESSÃO SEJA DO ADMIN OU DA EMPRESA LOGADA
+        async function fazerUploadDeArquivo(idInput, pasta) {
+            const input = document.getElementById(idInput);
+            if (!input || !input.files || input.files.length === 0) return null;
+            const file = input.files[0];
+            const nomeLimpo = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+            const cnpjEscopo = empresaCnpjSessao || escopoCnpjAdminAtual || 'teste_fa';
+            const filePath = `${cnpjEscopo}/${pasta}_${Date.now()}_${nomeLimpo}`;
+            
+            const { data, error } = await _supabase.storage.from('documentos').upload(filePath, file, { cacheControl: '3600', upsert: true });
+            if (data) {
+                const { data: urlData } = _supabase.storage.from('documentos').getPublicUrl(filePath);
+                return urlData.publicUrl;
+            }
+            return null;
+        }
+
         async function enviarDadosNuvem(e) {
             e.preventDefault();
             const idExistente = document.getElementById('edit-col-id').value;
             const paths = {};
+            const cnpjDestinoFinal = empresaCnpjSessao || escopoCnpjAdminAtual;
 
             try {
                 if(!idExistente) {
@@ -595,7 +602,7 @@
                         nome: nome,
                         cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
                         funcao: document.getElementById('col-funcao').value.trim(),
-                        cnpj_empresa: empresaCnpjSessao,
+                        cnpj_empresa: cnpjDestinoFinal,
                         ...paths
                     };
 
@@ -605,15 +612,20 @@
                         
                         const whatsAdminDestino = localStorage.getItem('fa_whats_admin_config');
                         if(whatsAdminDestino) {
-                            const msgAdmin = `📢 *Novo Colaborador Incluído!*\nA empresa de CNPJ ${empresaCnpjSessao} cadastrou o colaborador *${nome}* (${document.getElementById('col-funcao').value.trim()}). Verifique no painel.`;
+                            const msgAdmin = `📢 *Novo Colaborador Incluído!*\nA empresa de CNPJ ${cnpjDestinoFinal} cadastrou o colaborador *${nome}* (${document.getElementById('col-funcao').value.trim()}). Verifique no painel.`;
                             await dispararNotificacaoWhatsapp(whatsAdminDestino, msgAdmin);
                         }
 
                         alternarModalColaboradorVisual(false);
-                        carregarRetornosDaEmpresa();
-                    } else { alert("Erro: " + error.message); }
+                        if(empresaCnpjSessao) {
+                            carregarRetornosDaEmpresa();
+                        } else {
+                            await carregarDadosPainelAdmin();
+                            renderizarFilaTrabalhadoresFiltrada();
+                        }
+                    } else { alert("Erro de gravação na nuvem: " + error.message); }
                 }
-            } catch (err) { alert("Erro de comunicação com o servidor."); }
+            } catch (err) { alert("Erro de comunicação interna."); console.error(err); }
         }
 
         function abrirAuditoria(idColaborador) {
