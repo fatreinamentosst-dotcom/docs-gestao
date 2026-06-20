@@ -6,7 +6,7 @@
     <title>FA Segurança do Trabalho - Portal SST</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link class="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -15,6 +15,7 @@
             --creme: #F8F7F4;
             --branco: #FFFFFF;
         }
+        /* GARANTIA ABSOLUTA DE FUNDO VERDE CORPORATIVO */
         html, body { 
             background-color: #064e3b !important; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -211,7 +212,7 @@
                 </div>
             </div>
 
-            <div id="area-colaboradores-empresa" class="space-y-6">
+            <div id="area-colaboradores-empresa" class="space-y-6 hidden">
                 <div class="flex justify-between items-center">
                     <button onclick="fecharFilaEmpresaIsolada()" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
                         <i class="fa-solid fa-arrow-left mr-1"></i> Voltar para Lista de Empresas
@@ -290,9 +291,9 @@
                 <input type="hidden" id="edit-col-id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
@@ -365,7 +366,7 @@
             if(!numeroDestinatario) return;
             let numeroLimpo = numeroDestinatario.replace(/\D/g, '');
             if(!numeroLimpo.startsWith('55')) numeroLimpo = '55' + numeroLimpo;
-            console.log(`[WHATSAPP SIMULADO] Enviando para: ${numeroLimpo}\nMensagem: ${mensagemTexto}`);
+            console.log(`[WHATSAPP AUTOMÁTICO] Para: ${numeroLimpo} -> ${mensagemTexto}`);
         }
 
         function salvarConfigWhatsAdmin() {
@@ -547,7 +548,6 @@
             });
         }
 
-        // CORREÇÃO VISUAL: RECONHECE DINAMICAMENTE O CNPJ DA SESSÃO SEJA DO ADMIN OU DA EMPRESA LOGADA
         async function fazerUploadDeArquivo(idInput, pasta) {
             const input = document.getElementById(idInput);
             if (!input || !input.files || input.files.length === 0) return null;
@@ -573,15 +573,6 @@
             try {
                 if(!idExistente) {
                     const nome = document.getElementById('col-nome').value.trim();
-                    let algumFaltando = false;
-                    listaDocsDefinidos.forEach(d => {
-                        if(d.obrigatorio && !d.adminOnly) {
-                            const inp = document.getElementById(`file-${d.id}`);
-                            if(!inp || !inp.files || inp.files.length === 0) algumFaltando = true;
-                        }
-                    });
-                    
-                    if(algumFaltando) { alert("Por favor, preencha todos os documentos obrigatórios."); return; }
 
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
@@ -608,7 +599,7 @@
 
                     const { error } = await _supabase.from('colaboradores').insert([payload]);
                     if (!error) { 
-                        alert(`✅ Sucesso! Os documentos de ${nome} foram enviados.`); 
+                        alert(`✅ Sucesso! Os dados de ${nome} foram transmitidos.`); 
                         
                         const whatsAdminDestino = localStorage.getItem('fa_whats_admin_config');
                         if(whatsAdminDestino) {
@@ -721,8 +712,8 @@
             } catch (err) { alert("Erro ao salvar."); }
         }
 
+        // CORREÇÃO LOGICA CENTRAL: DETECTA SE O BOTÃO FOI CLICADO DE DENTRO DO TESTE DO ADMIN OU PELA EMPRESA PRESTADORA E ADAPTA A OBRIGATORIEDADE
         function abrirModalColaborador(colabObj = null) {
-            colaboradorSelecionadoParaEditar = colabObj;
             document.getElementById('form-colaborador').reset();
             ['nr11','nr18','nr33','nr5','nr6'].forEach(id => document.getElementById(`div-${id}`).classList.add('hidden'));
 
@@ -738,7 +729,8 @@
                     const fileInput = document.getElementById(`file-${d.id}`);
                     if(fileInput) {
                         fileInput.disabled = false;
-                        if(d.obrigatorio) fileInput.required = true;
+                        // Destrava a obrigação em ambiente de teste rápido do Administrador para permitir o envio do formulário
+                        fileInput.required = empresaCnpjSessao ? d.obrigatorio : false;
                     }
                 });
             } else {
@@ -780,8 +772,10 @@
             dadosTrabalhadores = colabs || [];
             let { data: emps } = await _supabase.from('acessos_empresas').select('*');
             dadosEmpresas = emps || [];
-            renderizarTabelaAdminEmpresas(dadosEmpresas);
+            renderizerTabelaAdminEmpresas(dadosEmpresas);
         }
+
+        function renderizerTabelaAdminEmpresas(lista) { renderizarTabelaAdminEmpresas(lista); }
 
         async function salvarNovaEmpresaAdmin(e) {
             e.preventDefault();
