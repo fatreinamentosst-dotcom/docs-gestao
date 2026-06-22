@@ -8,8 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Font Awesome Icons -->
-    <link class="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome Icons - CORRIGIDO DE class PARA rel -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -70,7 +70,7 @@
             </div>
 
             <h2 class="text-xl font-bold text-slate-800 mb-1">Portal de Segurança e Auditoria</h2>
-            <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrar na plataforma</p>
+            <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrou na plataforma</p>
             
             <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6">
                 <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow shadow-emerald-900 cursor-pointer">
@@ -795,8 +795,6 @@
 
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
-                        
-                        // CORREÇÃO: Verifica se o input de arquivo realmente existe na tela antes de ler seu valor
                         if(!document.getElementById(`file-${d.id}`)) continue;
 
                         const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
@@ -821,8 +819,6 @@
                 } else {
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
-                        
-                        // CORREÇÃO: Verifica se o input de arquivo realmente existe na tela antes de ler seu valor
                         if(!document.getElementById(`file-${d.id}`)) continue;
 
                         const fileInput = document.getElementById(`file-${d.id}`);
