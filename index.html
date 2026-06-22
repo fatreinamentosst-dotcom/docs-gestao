@@ -210,6 +210,18 @@
                     </button>
                 </div>
 
+                <!-- ADICIONADO: CONTAINER DE CONSULTA DE CREDENCIAIS (LOGIN/SENHA) CASO O CLIENTE PERCA -->
+                <div class="bg-slate-800 text-slate-200 p-4 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-4 border border-slate-700 font-mono text-xs">
+                    <div class="flex items-center gap-2 text-yellow-400">
+                        <i class="fa-solid fa-key text-sm"></i>
+                        <strong>Dados de Suporte / Acesso do Cliente:</strong>
+                    </div>
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <div>LOGIN (CNPJ): <span id="txt-suporte-cnpj" class="text-white font-bold tracking-wider"></span></div>
+                        <div>SENHA: <span id="txt-suporte-senha" class="text-emerald-400 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-700"></span></div>
+                    </div>
+                </div>
+
                 <div class="card-fa p-6 rounded-2xl shadow-md border-2 border-slate-700 bg-slate-50/50">
                     <h3 class="text-base font-bold text-slate-800 mb-3"><i class="fa-solid fa-shield-halved text-emerald-800"></i> Análise de PGR e PCMSO da Empresa</h3>
                     <form id="form-auditoria-empresa" onsubmit="salvarAuditoriaEmpresaAdmin(event)" class="space-y-4">
@@ -310,10 +322,7 @@
                     <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase">Treinamentos Normativos (NRs)</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
-                        
-                        <!-- ADICIONADO: CAMPO DA NR-12 EXATAMENTE NO MESMO PADRÃO -->
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr12"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr12" onchange="alternarAbaArquivoManual('nr12')"><span id="lbl-nr12">NR-12 (Máquinas)</span></label><div id="div-nr12" class="hidden mt-2"><input type="file" id="file-nr12" class="text-xs w-full"></div></div>
-                        
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
@@ -335,7 +344,6 @@
         let empresaCnpjSessao = "";
         let escopoCnpjAdminAtual = ""; 
 
-        // INCLUSÃO DA NR12 NA ESTRUTURA GLOBAL DE DOCUMENTOS
         const listaDocsDefinidos = [
             { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true },
             { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true },
@@ -417,7 +425,7 @@
                 div.innerHTML = `
                     <div class="flex justify-between items-start">
                         <strong class="text-xs text-slate-800 block">${d.nome}</strong>
-                        <span class="text class="text-[10px] uppercase px-2 py-0.5 rounded ${badgeColor}">${status}</span>
+                        <span class="text-[10px] uppercase px-2 py-0.5 rounded ${badgeColor}">${status}</span>
                     </div>
                     ${url && url !== "Não enviado" ? `<a href="${url}" target="_blank" class="text-xs text-blue-600 underline font-bold mt-1 inline-block"><i class="fa-solid fa-file-pdf"></i> Ver Arquivo Anexado</a>` : ''}
                     ${obs ? `<p class="text-[11px] text-red-600 font-bold mt-1">Motivo: ${obs}</p>` : ''}
@@ -438,7 +446,7 @@
 
             const { error } = await _supabase.from('acessos_empresas').update(paths).eq('cnpj', empresaCnpjSessao);
             if(!error) {
-                alert("✅ Documento corporativo transmitido com sucesso para auditoria da FA!");
+                alert("Campanha de documentação corporativa transmitida com sucesso!");
                 carregarRetornosDaEmpresa();
             }
         }
@@ -610,7 +618,12 @@
             document.getElementById('area-colaboradores-empresa').classList.remove('hidden');
             
             const empObj = dadosEmpresas.find(e => e.cnpj === cnpj);
-            if(empObj) renderiusAuditoriaEmpresaCorporativaAdmin(empObj);
+            if(empObj) {
+                // INJETA AS CREDENCIAIS NO CAMPO DE SUPORTE
+                document.getElementById('txt-suporte-cnpj').innerText = empObj.cnpj || '---';
+                document.getElementById('txt-suporte-senha').innerText = empObj.senha || '---';
+                renderiusAuditoriaEmpresaCorporativaAdmin(empObj);
+            }
 
             renderizarFilaTrabalhadoresFiltrada();
         }
@@ -850,8 +863,7 @@
             e.preventDefault();
             const id = document.getElementById('audit-id-colaborador').value;
             const updateData = {};
-            const colabObj = dadosTrabalhadores.find(item => item.id == id);
-            if(!colabObj) return;
+            if(!id) return;
 
             try {
                 for (let d of listaDocsDefinidos) {
