@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -50,7 +47,6 @@
 </head>
 <body class="linhas-engenharia text-slate-800">
 
-    <!-- EPIS TRANSPARENTES DISPERSOS EM TODAS AS EXTREMIDADES DA PÁGINA -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
         <i class="fa-solid fa-glasses absolute text-white text-3xl top-6 left-12 rotate-12"></i>
         <i class="fa-solid fa-ear-deaf absolute text-white text-3xl top-8 right-16 -rotate-12"></i>
@@ -60,10 +56,8 @@
         <i class="fa-solid fa-shield-halved absolute text-white text-3xl top-1/2 left-8 rotate-12"></i>
     </div>
 
-    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-900/40 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center relative z-10">
-            
             <div class="flex items-center justify-center gap-4 mb-4 select-none">
                 <i class="fa-solid fa-helmet-safety text-emerald-800/25 text-4xl -rotate-12"></i>
                 <img src="Segurança no Trabalho.png" alt="FA Segurança" class="max-h-24 object-contain logo-filtro-verde">
@@ -112,7 +106,6 @@
         </div>
     </div>
 
-    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 hidden relative z-10" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-16 p-1 object-contain">
@@ -124,12 +117,16 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 font-bold cursor-pointer">Sair</button>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden relative z-10" id="main-content">
         
-        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
             <div id="banner-alerta-empresa" class="hidden"></div>
+            
+            <div class="card-fa p-6 rounded-2xl shadow-md border-t-4 border-slate-700">
+                <h3 class="text-base font-bold text-emerald-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-folder-closed"></i> Documentação Técnica Obrigatória da Empresa</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="grid-docs-empresa-prestador">
+                    </div>
+            </div>
 
             <div class="space-y-6">
                 <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -160,7 +157,6 @@
             </div>
         </section>
 
-        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             <div id="banner-alerta-admin" class="hidden"></div>
 
@@ -202,6 +198,17 @@
                     </button>
                 </div>
 
+                <div class="card-fa p-6 rounded-2xl shadow-md border-2 border-slate-700 bg-slate-50/50">
+                    <h3 class="text-base font-bold text-slate-800 mb-3"><i class="fa-solid fa-shield-halved text-emerald-800"></i> Análise de PGR e PCMSO da Empresa</h3>
+                    <form id="form-auditoria-empresa" onsubmit="salvarAuditoriaEmpresaAdmin(event)" class="space-y-4">
+                        <div id="container-docs-corporativos-admin" class="space-y-3">
+                            </div>
+                        <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-md">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> Confirmar Parecer dos Docs da Empresa
+                        </button>
+                    </form>
+                </div>
+
                 <div class="card-fa p-6 rounded-2xl shadow-md border-t-4 border-emerald-700">
                     <div class="mb-4">
                         <h2 class="text-xl font-bold text-emerald-900 flex items-center gap-2"><i class="fa-solid fa-folder-open"></i> Ficha de Auditoria Interna</h2>
@@ -221,7 +228,6 @@
                 </div>
             </div>
 
-            <!-- Modal Nova Empresa -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
                 <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -246,7 +252,6 @@
                 </div>
             </div>
 
-            <!-- Painel de Auditoria -->
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-xl border-2 border-emerald-600 hidden bg-emerald-50/10">
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2">Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
@@ -261,7 +266,6 @@
         </section>
     </main>
 
-    <!-- Modal Form Colaborador -->
     <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
             <div class="flex justify-between items-center border-b pb-2">
@@ -345,7 +349,78 @@
             let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
             dadosTrabalhadores = data || [];
             renderizarTabelaRetornoPrestador(dadosTrabalhadores);
+
+            let { data: empData } = await _supabase.from('acessos_empresas').select('*').eq('cnpj', empresaCnpjSessao).single();
+            if(empData) {
+                dadosEmpresas = [empData];
+                renderizarDocsEmpresaPainelPrestador(empData);
+            }
             atualizarAlertasIniciaisVisual();
+        }
+
+        // MONTA OS CAMPOS DE ARQUIVOS PGR/PCMSO VISÍVEIS PARA O PRESTADOR CLIENTE
+        function renderizarDocsEmpresaPainelPrestador(emp) {
+            const container = document.getElementById('grid-docs-empresa-prestador');
+            if(!container) return;
+            container.innerHTML = "";
+
+            const corpDocs = [
+                { id: 'pgr', nome: 'PGR (Prog. Gerenciamento de Riscos)' },
+                { id: 'pcmso', nome: 'PCMSO (Controle Médico de Saúde)' }
+            ];
+
+            corpDocs.forEach(d => {
+                const url = emp[`pdf_${d.id}`];
+                const status = emp[`status_${d.id}`] || 'Pendente de envio';
+                const obs = emp[`obs_${d.id}`] || '';
+
+                let badgeColor = "bg-gray-100 text-gray-700";
+                if(status === 'Aprovado') badgeColor = "bg-green-100 text-green-800 font-bold";
+                if(status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold piscar-alerta";
+                if(status === 'Pendente de análise') badgeColor = "bg-yellow-100 text-yellow-800 font-bold";
+
+                let inputArea = "";
+                if(status === 'Pendente de envio' || status === 'Reprovado') {
+                    inputArea = `
+                        <div class="mt-2 flex gap-2">
+                            <input type="file" id="file-corp-${d.id}" class="text-xs bg-gray-100 p-1 rounded border w-full">
+                            <button onclick="transmitirDocCorporativoSupa('${d.id}')" class="bg-emerald-800 text-white font-bold text-[11px] px-2.5 py-1 rounded hover:bg-emerald-900 transition shrink-0">Transmitir</button>
+                        </div>
+                    `;
+                } else {
+                    inputArea = `<span class="text-xs text-gray-400 block mt-2 italic"><i class="fa-solid fa-lock mr-1"></i> Documento enviado para auditoria</span>`;
+                }
+
+                const div = document.createElement('div');
+                div.className = "bg-white p-4 rounded-xl border shadow-sm";
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <strong class="text-xs text-slate-800 block">${d.nome}</strong>
+                        <span class="text-[10px] uppercase px-2 py-0.5 rounded ${badgeColor}">${status}</span>
+                    </div>
+                    ${url && url !== "Não enviado" ? `<a href="${url}" target="_blank" class="text-xs text-blue-600 underline font-bold mt-1 inline-block"><i class="fa-solid fa-file-pdf"></i> Ver Arquivo Anexado</a>` : ''}
+                    ${obs ? `<p class="text-[11px] text-red-600 font-bold mt-1">Motivo: ${obs}</p>` : ''}
+                    ${inputArea}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // REALIZA O UPLOAD DOS DOCUMENTOS CORPORATIVOS (PGR/PCMSO) DA EMPRESA
+        async function transmitirDocCorporativoSupa(idDoc) {
+            const urlFisica = await fazerUploadDeArquivo(`file-corp-${idDoc}`, idDoc);
+            if(!urlFisica) { alert("Selecione um arquivo válido para transmitir!"); return; }
+
+            const paths = {};
+            paths[`pdf_${idDoc}`] = urlFisica;
+            paths[`status_${idDoc}`] = 'Pendente de análise';
+            paths[`obs_${idDoc}`] = '';
+
+            const { error } = await _supabase.from('acessos_empresas').update(paths).eq('cnpj', empresaCnpjSessao);
+            if(!error) {
+                alert("✅ Documento corporativo transmitido com sucesso para auditoria da FA!");
+                carregarRetornosDaEmpresa();
+            }
         }
 
         function renderizarTabelaRetornoPrestador(lista) {
@@ -412,6 +487,7 @@
             });
         }
 
+        // CONTROLA VISUALMENTE OS ALERTAS DE PGR/PCMSO DO CLIENTE E DO ADMIN NAS ENTRADAS
         function atualizarAlertasIniciaisVisual() {
             const bannerAdmin = document.getElementById('banner-alerta-admin');
             const bannerEmpresa = document.getElementById('banner-alerta-empresa');
@@ -425,13 +501,20 @@
             }
 
             if (bannerEmpresa) {
-                const reprovados = dadosTrabalhadores.filter(c => possuiDocumentosReprovados(c)).length;
-                if (reprovados > 0) {
+                const currentEmp = dadosEmpresas[0];
+                const pgrRep = currentEmp && currentEmp.status_pgr === 'Reprovado';
+                const pcmsoRep = currentEmp && currentEmp.status_pcmso === 'Reprovado';
+                const colabRep = dadosTrabalhadores.some(c => possuiDocumentosReprovados(c));
+
+                if (pgrRep || pcmsoRep || colabRep) {
                     bannerEmpresa.className = "bg-red-600 text-white p-4 rounded-2xl font-bold text-sm shadow flex items-center gap-3 mb-4";
-                    bannerEmpresa.innerHTML = `<i class="fa-solid fa-circle-exclamation text-xl animate-bounce"></i> <span>Aviso Crítico: Identificamos ${reprovados} colaborador(es) com documentos recusados pela FA. Regularize abaixo.</span>`;
+                    let msg = "Aviso Crítico: Identificamos pendências na auditoria técnica. ";
+                    if(pgrRep || pcmsoRep) msg += "⚠️ HÁ DOCUMENTAÇÕES CORPORATIVAS REPROVADAS DA SUA EMPRESA (PGR/PCMSO)! Regularize abaixo.";
+                    if(colabRep) msg += " Verifique e ajuste os dados dos colaboradores listados.";
+                    bannerEmpresa.innerHTML = `<i class="fa-solid fa-circle-exclamation text-xl animate-bounce"></i> <span>${msg}</span>`;
                 } else {
                     bannerEmpresa.className = "bg-green-600 text-white p-4 rounded-2xl font-bold text-sm shadow flex items-center gap-3 mb-4";
-                    bannerEmpresa.innerHTML = `<i class="fa-solid fa-circle-check text-xl"></i> <span>Sem pendências ou documentos reprovados no momento.</span>`;
+                    bannerEmpresa.innerHTML = `<i class="fa-solid fa-circle-check text-xl"></i> <span>Sua empresa e colaboradores estão em conformidade legal perante a FA Segurança.</span>`;
                 }
             }
         }
@@ -457,7 +540,6 @@
 
         function alternarModalEmpresa(abrir) { document.getElementById('modal-empresa').classList.toggle('hidden', !abrir); }
         function alternarModalColaboradorVisual(abrir) { document.getElementById('modal-colaborador').classList.toggle('hidden', !abrir); }
-        function alternarAbaArquivoManual(id) { document.getElementById(`div-${id}`).classList.toggle('hidden', !document.getElementById(`chk-${id}`).checked); }
 
         async function processarLoginAdmin(e) {
             e.preventDefault();
@@ -506,7 +588,69 @@
             document.getElementById('txt-nome-empresa-escopo').innerText = nomeEmpresa;
             document.getElementById('area-empresas-inicial').classList.add('hidden');
             document.getElementById('area-colaboradores-empresa').classList.remove('hidden');
+            
+            // Carrega os dados de auditoria da própria empresa selecionada
+            const empObj = dadosEmpresas.find(e => e.cnpj === cnpj);
+            if(empObj) renderizarAuditoriaEmpresaCorporativaAdmin(empObj);
+
             renderizarFilaTrabalhadoresFiltrada();
+        }
+
+        // GERA VISUALMENTE OS CAMPOS DE PARECER E VALIDADE DO PGR/PCMSO PARA O ADM VALIDAR
+        function renderizarAuditoriaEmpresaCorporativaAdmin(emp) {
+            const container = document.getElementById('container-docs-corporativos-admin');
+            if(!container) return;
+            container.innerHTML = "";
+
+            const corpDocs = [
+                { id: 'pgr', nome: 'PGR (Programa de Gerenciamento de Riscos)' },
+                { id: 'pcmso', nome: 'PCMSO (Prog. de Controle Médico de Saúde Ocupacional)' }
+            ];
+
+            corpDocs.forEach(d => {
+                const url = emp[`pdf_${d.id}`];
+                const status = emp[`status_${d.id}`] || 'Pendente de envio';
+                const val = emp[`val_${d.id}`] || '';
+                const obs = emp[`obs_${d.id}`] || '';
+
+                let anexoLinkHtml = (url && url !== "Não enviado")
+                    ? `<a href="${url}" target="_blank" class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] inline-block">Abrir Anexo</a>`
+                    : `<span class="text-gray-400 italic text-xs">Pendente de envio</span>`;
+
+                const div = document.createElement('div');
+                div.className = "p-3 bg-white rounded-xl border shadow-sm grid grid-cols-1 md:grid-cols-4 gap-3 items-center text-xs";
+                div.innerHTML = `
+                    <div><span class="block font-bold text-slate-700">${d.nome}</span><div class="mt-1">${anexoLinkHtml}</div></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Validade</label><input type="date" id="audit-emp-val-${d.id}" value="${val}" class="w-full mt-1 p-1.5 border rounded-lg bg-gray-50 outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Parecer</label><select id="audit-emp-status-${d.id}" class="w-full mt-1 p-1.5 border rounded-lg bg-gray-50 font-bold"><option value="Pendente de envio">Pendente de envio</option><option value="Pendente de análise">Pendente de análise</option><option value="Aprovado">Aprovado</option><option value="Reprovado">🔴 Reprovado</option></select></div>
+                    <div><label class="block text-[10px] font-bold text-gray-500 uppercase">Observações</label><input type="text" id="audit-emp-obs-${d.id}" value="${obs}" class="w-full mt-1 p-1.5 border rounded-lg bg-gray-50 outline-none"></div>
+                `;
+                container.appendChild(div);
+                if(document.getElementById(`audit-emp-status-${d.id}`)) document.getElementById(`audit-emp-status-${d.id}`).value = status;
+            });
+        }
+
+        // GRAVA OS PARECERES DE PGR / PCMSO DA EMPRESA NO SUPABASE
+        async function salvarAuditoriaEmpresaAdmin(e) {
+            e.preventDefault();
+            const updateData = {};
+            const fields = ['pgr', 'pcmso'];
+
+            fields.forEach(id => {
+                const st = document.getElementById(`audit-emp-status-${id}`).value;
+                const vl = document.getElementById(`audit-emp-val-${id}`).value;
+                const ob = document.getElementById(`audit-emp-obs-${id}`).value.trim();
+
+                updateData[`status_${id}`] = st;
+                updateData[`val_${id}`] = vl || null;
+                updateData[`obs_${id}`] = st === 'Aprovado' ? '' : ob;
+            });
+
+            const { error } = await _supabase.from('acessos_empresas').update(updateData).eq('cnpj', escopoCnpjAdminAtual);
+            if(!error) {
+                alert("✅ Parecer da documentação legal da empresa gravado!");
+                await carregarDadosPainelAdmin();
+            }
         }
 
         function fecharFilaEmpresaIsolada() {
@@ -516,6 +660,7 @@
             document.getElementById('bloco-auditoria').classList.add('hidden');
             document.getElementById('area-colaboradores-empresa').classList.add('hidden');
             document.getElementById('area-empresas-inicial').classList.remove('hidden');
+            carregarDadosPainelAdmin();
         }
 
         function renderizarFilaTrabalhadoresFiltrada() {
@@ -557,10 +702,16 @@
                 return; 
             }
             lista.forEach(e => {
+                const corpRep = e.status_pgr === 'Reprovado' || e.status_pcmso === 'Reprovado';
+                const estiloTr = corpRep ? "bg-red-50 hover:bg-red-100 border-l-4 border-red-600 font-bold" : "hover:bg-slate-50";
+
                 const tr = document.createElement('tr'); 
-                tr.className = "hover:bg-slate-50 border-b transition duration-150";
+                tr.className = `${estiloTr} border-b transition duration-150`;
                 tr.innerHTML = `
-                    <td class="p-3 align-middle"><strong>${e.nome}</strong></td>
+                    <td class="p-3 align-middle">
+                        <strong>${e.nome}</strong>
+                        ${corpRep ? `<span class="block text-[10px] text-red-600 uppercase tracking-tight piscar-alerta">PGR/PCMSO Pendente de Ajuste</span>` : ''}
+                    </td>
                     <td class="p-3 font-mono text-gray-600 align-middle">${e.cnpj}</td>
                     <td class="p-3 text-center align-middle space-x-2">
                         <button onclick="acessarFilaEmpresaIsolada('${e.cnpj}', '${e.nome}')" class="bg-emerald-800 hover:bg-emerald-900 text-white px-3 py-1.5 rounded-xl font-bold text-xs cursor-pointer"><i class="fa-solid fa-folder-open mr-1"></i> Acessar Ficha</button>
@@ -591,7 +742,6 @@
             e.preventDefault();
             const idExistente = document.getElementById('edit-col-id').value;
             const paths = {};
-            const cnpjDestinoFinal = empresaCnpjSessao || escopoCnpjAdminAtual;
 
             try {
                 if(!idExistente) {
@@ -608,7 +758,7 @@
                         nome: nome,
                         cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
                         funcao: document.getElementById('col-funcao').value.trim(),
-                        cnpj_empresa: cnpjDestinoFinal,
+                        cnpj_empresa: empresaCnpjSessao || escopoCnpjAdminAtual,
                         ...paths
                     };
 
@@ -617,7 +767,7 @@
                         alert(`✅ Sucesso! Os dados de ${nome} foram transmitidos.`); 
                         alternarModalColaboradorVisual(false);
                         if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
-                    } else { alert("Erro: " + error.message); }
+                    }
                 } else {
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
