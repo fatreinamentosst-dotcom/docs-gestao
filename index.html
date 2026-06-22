@@ -304,9 +304,9 @@
                 <input type="hidden" id="edit-col-id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas Números)</label><input type="text" id="col-cpf" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas Números)</label><input type="text" id="col-cpf" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
@@ -788,6 +788,7 @@
             e.preventDefault();
             const idExistente = document.getElementById('edit-col-id').value;
             const paths = {};
+            let enviouAlgo = false;
 
             try {
                 if(!idExistente) {
@@ -796,7 +797,6 @@
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
                         
-                        // CORREÇÃO: Se for uma NR opcional, só processa o upload se a caixinha correspondente estiver marcada
                         if (d.eNormativa) {
                             const chk = document.getElementById(`chk-${d.id}`);
                             if (!chk || !chk.checked) {
@@ -830,26 +830,35 @@
                         alert("Erro Supabase ao salvar ficha.");
                     }
                 } else {
+                    // === LOGA REANÁLISE CORRIGIDA ===
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
-                        if(!document.getElementById(`file-${d.id}`)) continue;
-
+                        
                         const fileInput = document.getElementById(`file-${d.id}`);
-                        if(fileInput && !fileInput.disabled && fileInput.files && fileInput.files.length > 0) {
-                            const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
-                            if(urlFisica) {
-                                paths[`pdf_${d.id}`] = urlFisica;
-                                paths[`status_${d.id}`] = 'Pendente de análise';
-                                paths[`obs_${d.id}`] = '';
-                            }
+                        // CORREÇÃO: Ignora inputs desabilitados (aprovados) ou sem arquivo novo selecionado
+                        if(!fileInput || fileInput.disabled || !fileInput.files || fileInput.files.length === 0) continue;
+
+                        const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
+                        if(urlFisica) {
+                            paths[`pdf_${d.id}`] = urlFisica;
+                            paths[`status_${d.id}`] = 'Pendente de análise';
+                            paths[`obs_${d.id}`] = ''; // Limpa o motivo da rejeição anterior
+                            enviouAlgo = true;
                         }
+                    }
+
+                    if(!enviouAlgo) {
+                        alert("Atenção: Você precisa selecionar um novo arquivo no campo reprovado para transmitir a correção!");
+                        return;
                     }
 
                     const { error } = await _supabase.from('colaboradores').update(paths).eq('id', idExistente);
                     if (!error) {
-                        alert("✅ Arquivos de reanálise retransmitidos com sucesso!");
+                        alert("✅ Documentação retificada com sucesso! Aguarde a nova análise da FA.");
                         alternarModalColaboradorVisual(false);
                         if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
+                    } else {
+                        alert("Erro técnico ao atualizar documento.");
                     }
                 }
             } catch (err) { alert("Erro técnico ao realizar o cadastro."); }
@@ -928,11 +937,16 @@
             document.getElementById('form-colaborador').reset();
             document.getElementById('edit-col-id').value = colabObj ? colabObj.id : "";
 
-            // Oculta todas as abas manuais de arquivos de NRs no reset
             listaDocsDefinidos.forEach(d => {
                 if(d.eNormativa) {
                     const divNR = document.getElementById(`div-${d.id}`);
                     if(divNR) divNR.classList.add('hidden');
+                }
+                // Limpa avisos de reprovações anteriores
+                const boxHtml = document.getElementById(`box-file-${d.id}`);
+                if(boxHtml) {
+                    const elAviso = boxHtml.querySelector('.txt-motivo-reprova');
+                    if(elAviso) elAviso.remove();
                 }
             });
 
@@ -953,13 +967,27 @@
                 listaDocsDefinidos.forEach(d => {
                     if(d.adminOnly) return;
                     const status = colabObj[`status_${d.id}`] || 'Pendente de envio';
+                    const motivoObs = colabObj[`obs_${d.id}`] || '';
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     const fileInput = document.getElementById(`file-${d.id}`);
+                    
                     if(fileInput) fileInput.required = false;
 
                     if(status === 'Reprovado') {
+                        // CORREÇÃO: Adiciona de forma limpa e visível o texto explicativo da rejeição
                         if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold">✕ ${d.nome} (Reprovado - Envie Novo)</span>`;
                         if(fileInput) fileInput.disabled = false;
+                        
+                        if(motivoObs) {
+                            const boxHtml = document.getElementById(`box-file-${d.id}`);
+                            if(boxHtml) {
+                                const pObs = document.createElement('p');
+                                pObs.className = "text-[11px] font-bold text-red-700 bg-red-50 p-1.5 rounded mt-1 border border-red-200 txt-motivo-reprova";
+                                pObs.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Motivo da Rejeição: ${motivoObs}`;
+                                boxHtml.appendChild(pObs);
+                            }
+                        }
+
                         if(d.eNormativa) {
                             const chk = document.getElementById(`chk-${d.id}`);
                             if(chk) chk.checked = true;
@@ -968,6 +996,11 @@
                     } else if(status === 'Aprovado') {
                         if(lbl) lbl.innerHTML = `<span class="text-green-700 font-bold">✓ ${d.nome} (Aprovado)</span>`;
                         if(fileInput) fileInput.disabled = true;
+                        if(d.eNormativa) {
+                            const chk = document.getElementById(`chk-${d.id}`);
+                            if(chk) chk.checked = true;
+                            alternarAbaArquivoManual(d.id);
+                        }
                     } else {
                         if(lbl) lbl.innerHTML = `${d.nome}`;
                         if(fileInput) fileInput.disabled = false;
@@ -1023,6 +1056,13 @@
             const empsFiltradas = dadosEmpresas.filter(e => e.nome.toLowerCase().includes(termo) || e.cnpj.includes(termo));
             renderizarTabelaAdminEmpresas(empsFiltradas);
         }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                alternarModalColaboradorVisual(false);
+                alternarModalEmpresa(false);
+            }
+        });
 
         function logout() { localStorage.clear(); window.location.reload(); }
     </script>
