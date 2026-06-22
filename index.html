@@ -210,7 +210,7 @@
                     </button>
                 </div>
 
-                <!-- CONTAINER DE CONSULTA DE CREDENCIAIS (LOGIN/SENHA) CASO O CLIENTE PERCA -->
+                <!-- CONTAINER DE CONSULTA DE CREDENCIAIS (LOGIN/SENHA) -->
                 <div class="bg-slate-800 text-slate-200 p-4 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-4 border border-slate-700 font-mono text-xs">
                     <div class="flex items-center gap-2 text-yellow-400">
                         <i class="fa-solid fa-key text-sm"></i>
@@ -723,7 +723,6 @@
             });
         }
 
-        // TABELA PRINCIPAL DO ADMINISTRADOR (CONFORME SOLICITADO E BASEADO NA image_9071de.png)
         function renderizarTabelaAdminEmpresas(lista) {
             const tbody = document.getElementById('tabela-admin-empresas'); 
             tbody.innerHTML = "";
@@ -733,7 +732,6 @@
             }
             
             lista.forEach(e => {
-                // Inteligência de Detecção Cruzada (PGR/PCMSO ou qualquer colaborador da empresa pendente)
                 const corporativoPendente = e.status_pgr === 'Pendente de análise' || e.status_pcmso === 'Pendente de análise';
                 const colaboradorPendente = dadosTrabalhadores.some(c => c.cnpj_empresa === e.cnpj && possuiCorrecoesAguardando(c));
                 const possuiPendenciaAnalise = corporativoPendente || colaboradorPendente;
@@ -742,7 +740,6 @@
                 const colaboradorReprovado = dadosTrabalhadores.some(c => c.cnpj_empresa === e.cnpj && possuiDocumentosReprovados(c));
                 const possuiReprovacao = corporativoReprovado || colaboradorReprovado;
 
-                // Define a estilização da linha baseado no nível crítico dos alertas
                 let estiloTr = "hover:bg-slate-50";
                 let badgeStatusHtml = "";
 
@@ -989,7 +986,6 @@
             renderizarTabelaRetornoPrestador(filtrados);
         }
 
-        UX / UI Filter Input Admin
         function filtrarGeralAdmin() {
             const termo = document.getElementById('campo-busca').value.toLowerCase();
             const empsFiltradas = dadosEmpresas.filter(e => e.nome.toLowerCase().includes(termo) || e.cnpj.includes(termo));
