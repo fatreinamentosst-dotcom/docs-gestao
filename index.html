@@ -9,7 +9,7 @@
     <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link class="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -621,13 +621,13 @@
             if(empObj) {
                 document.getElementById('txt-suporte-cnpj').innerText = empObj.cnpj || '---';
                 document.getElementById('txt-suporte-senha').innerText = empObj.senha || '---';
-                renderiusAuditoriaEmpresaCorporativaAdmin(empObj);
+                renderizarAuditoriaEmpresaCorporativaAdmin(empObj);
             }
 
             renderizarFilaTrabalhadoresFiltrada();
         }
 
-        function renderiusAuditoriaEmpresaCorporativaAdmin(emp) {
+        function renderizarAuditoriaEmpresaCorporativaAdmin(emp) {
             const container = document.getElementById('container-docs-corporativos-admin');
             if(!container) return;
             container.innerHTML = "";
@@ -795,6 +795,10 @@
 
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
+                        
+                        // CORREÇÃO: Verifica se o input de arquivo realmente existe na tela antes de ler seu valor
+                        if(!document.getElementById(`file-${d.id}`)) continue;
+
                         const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
                         paths[`pdf_${d.id}`] = urlFisica || "Não enviado";
                         paths[`status_${d.id}`] = urlFisica ? 'Pendente de análise' : 'Pendente de envio';
@@ -817,6 +821,10 @@
                 } else {
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
+                        
+                        // CORREÇÃO: Verifica se o input de arquivo realmente existe na tela antes de ler seu valor
+                        if(!document.getElementById(`file-${d.id}`)) continue;
+
                         const fileInput = document.getElementById(`file-${d.id}`);
                         if(fileInput && !fileInput.disabled && fileInput.files && fileInput.files.length > 0) {
                             const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
@@ -835,7 +843,7 @@
                         if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
                     }
                 }
-            } catch (err) { alert("Erro técnico."); }
+            } catch (err) { alert("Erro técnico ao realizar a transmissão."); }
         }
 
         function abrirAuditoria(idColaborador) {
@@ -915,6 +923,7 @@
                 document.getElementById('titulo-modal-colab').innerText = "Cadastrar Novo Colaborador";
                 document.getElementById('bloco-identificacao').classList.remove('hidden');
                 listaDocsDefinidos.forEach(d => {
+                    if(d.adminOnly) return;
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     if(lbl) lbl.innerHTML = d.nome;
                     const fileInput = document.getElementById(`file-${d.id}`);
@@ -925,6 +934,7 @@
                 document.getElementById('bloco-identificacao').classList.add('hidden');
 
                 listaDocsDefinidos.forEach(d => {
+                    if(d.adminOnly) return;
                     const status = colabObj[`status_${d.id}`] || 'Pendente de envio';
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     const fileInput = document.getElementById(`file-${d.id}`);
