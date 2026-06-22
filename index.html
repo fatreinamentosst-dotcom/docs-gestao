@@ -283,6 +283,30 @@
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2">Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
                     <input type="hidden" id="audit-id-colaborador">
+                    
+                    <!-- AREA DE UPLOAD DA INTEGRAÇÃO EXCLUSIVA DO ADMIN DA FA -->
+                    <div class="bg-slate-800 text-white p-4 rounded-xl border border-slate-700 space-y-3 mb-2">
+                        <div class="flex items-center gap-2 text-yellow-400 font-mono text-xs">
+                            <i class="fa-solid fa-file-signature text-sm"></i>
+                            <strong>ANEXAR DOCUMENTO DE INTEGRAÇÃO (FA):</strong>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-center text-xs">
+                            <div>
+                                <input type="file" id="file-admin-integ" class="bg-slate-900 p-2 rounded border border-slate-700 w-full text-slate-300">
+                                <span id="txt-link-integ-existente" class="block mt-1 text-[11px]"></span>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase">Parecer Integração</label>
+                                <select id="audit-status-integ" class="w-full mt-1 p-2 border text-xs rounded-lg bg-slate-900 font-bold text-white border-slate-700">
+                                    <option value="Pendente de envio">Pendente de envio</option>
+                                    <option value="Pendente de análise">Pendente de análise</option>
+                                    <option value="Aprovado">Aprovado (Liberado para Trabalho)</option>
+                                    <option value="Reprovado">🔴 Reprovado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="container-documentos-auditoria" class="space-y-3"></div>
                     <div class="flex gap-4 pt-4 border-t">
                         <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow-md">Confirmar Parecer da Auditoria</button>
@@ -349,7 +373,6 @@
             { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true, eNormativa: false },
             { id: 'os', nome: 'Ordem de Serviço (OS)', obrigatorio: true, eNormativa: false },
             { id: 'esocial', nome: 'e-Social / CTPS', obrigatorio: true, eNormativa: false },
-            { id: 'integ', nome: 'Integração (Exclusivo Admin FA)', obrigatorio: false, adminOnly: true, eNormativa: false },
             { id: 'nr11', nome: 'NR-11', obrigatorio: false, eNormativa: true },
             { id: 'nr12', nome: 'NR-12', obrigatorio: false, eNormativa: true },
             { id: 'nr18', nome: 'NR-18', obrigatorio: false, eNormativa: true },
@@ -451,6 +474,34 @@
             }
         }
 
+        // === CALCULO E RENDERIZAÇÃO DE STATUS LOGICOS (LIBERADO PARA INTEGRAÇÃO / TRABALHO) ===
+        function obterStatusLogicoTrabalhador(c) {
+            // Se algum documento enviado estiver Reprovado, trava tudo
+            const reprovado = listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado');
+            if (reprovado) return 'Reprovado';
+
+            // Se o Administrador anexou a integração e aprovou, está Liberado para Trabalho
+            if (c.status_integ === 'Aprovado' && c.pdf_integ && c.pdf_integ !== 'Não enviado') {
+                return 'Trabalho';
+            }
+
+            // Verifica se todos os documentos obrigatórios foram aprovados
+            const todosDocsObrigatoriosAprovados = listaDocsDefinidos
+                .filter(d => d.obrigatorio)
+                .every(d => c[`status_${d.id}`] === 'Aprovado');
+
+            // Verifica se as NRs marcadas (que possuem link válido) também foram aprovadas
+            const nrsEnviadasAprovadas = listaDocsDefinidos
+                .filter(d => d.eNormativa && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado')
+                .every(d => c[`status_${d.id}`] === 'Aprovado');
+
+            if (todosDocsObrigatoriosAprovados && nrsEnviadasAprovadas) {
+                return 'Integracao';
+            }
+
+            return 'Analise';
+        }
+
         function renderizarTabelaRetornoPrestador(lista) {
             const tbody = document.getElementById('tabela-retorno-empresa');
             if(!tbody) return;
@@ -462,14 +513,13 @@
             }
 
             lista.forEach(c => {
-                const reprovado = possuiDocumentosReprovados(c);
-                const analisando = possuiCorrecoesAguardando(c) || listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Pendente de análise');
+                const statusLogico = obterStatusLogicoTrabalhador(c);
                 
                 let estiloLinha = "bg-white hover:bg-slate-50";
                 let badgeStatus = "";
                 let acaoBotaoHtml = `<span class="text-gray-400 font-medium text-xs italic"><i class="fa-solid fa-lock"></i> Em Conformidade</span>`;
 
-                if (reprovado) {
+                if (statusLogico === 'Reprovado') {
                     estiloLinha = "bg-red-50/70 border-l-4 border-red-600 hover:bg-red-100/60 transition duration-150 animate-pulse";
                     badgeStatus = `<span class="bg-red-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-triangle-exclamation"></i> Regularizar Pendências</span>`;
                     acaoBotaoHtml = `
@@ -477,12 +527,18 @@
                             Regularizar
                         </button>
                     `;
-                } else if (analisando) {
+                } else if (statusLogico === 'Trabalho') {
+                    estiloLinha = "bg-emerald-50 border-l-4 border-emerald-600 hover:bg-emerald-100/60";
+                    badgeStatus = `<span class="bg-emerald-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-circle-check"></i> LIBERADO PARA TRABALHO</span>`;
+                    if (c.pdf_integ && c.pdf_integ !== 'Não enviado') {
+                        acaoBotaoHtml = `<a href="${c.pdf_integ}" target="_blank" class="bg-slate-700 hover:bg-slate-800 text-white font-mono text-[10px] px-2.5 py-1.5 rounded-xl shadow inline-block">Ficha Integração</a>`;
+                    }
+                } else if (statusLogico === 'Integracao') {
+                    estiloLinha = "bg-blue-50 border-l-4 border-blue-600 hover:bg-blue-100/60";
+                    badgeStatus = `<span class="bg-blue-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-user-shield"></i> LIBERADO PARA INTEGRAÇÃO</span>`;
+                } else {
                     estiloLinha = "bg-amber-50/50 border-l-4 border-amber-500 hover:bg-amber-50";
                     badgeStatus = `<span class="bg-amber-500 text-slate-900 font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-spinner animate-spin"></i> Em Análise na FA</span>`;
-                } else {
-                    estiloLinha = "bg-green-50/40 border-l-4 border-green-600 hover:bg-green-50";
-                    badgeStatus = `<span class="bg-green-700 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-circle-check"></i> Validado</span>`;
                 }
 
                 let resumoDocs = `<div class="flex flex-wrap gap-1 mt-1.5">`;
@@ -703,19 +759,21 @@
             }
             
             listaFiltrada.forEach(c => {
+                const statusLogico = obterStatusLogicoTrabalhador(c);
                 let statusAviso = "Em Análise";
-                if (possuiDocumentosReprovados(c)) statusAviso = "🔴 Reprovado";
-                if (!possuiDocumentosReprovados(c) && !possuiCorrecoesAguardando(c)) statusAviso = "🟢 Validado";
+                if (statusLogico === 'Reprovado') statusAviso = "🔴 Reprovado";
+                if (statusLogico === 'Integracao') statusAviso = "🔵 Liberado para Integração";
+                if (statusLogico === 'Trabalho') statusAviso = "🟢 LIBERADO PARA TRABALHO";
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 border-b transition duration-150";
                 tr.innerHTML = `
                     <td class="p-3">
                         <strong class="text-slate-800">${c.nome}</strong>
-                        <span class="text-[10px] text-gray-500 block">${c.funcao} | Status: ${statusAviso}</span>
+                        <span class="text-[10px] text-gray-500 block">${c.funcao} | Status Atual: <b class="text-slate-700">${statusAviso}</b></span>
                     </td>
                     <td class="p-3 flex justify-center gap-2 align-middle">
-                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-2 rounded-xl text-[10px] flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-gavel"></i> Analisar</button>
+                        <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-2 rounded-xl text-[10px] flex items-center gap-1 cursor-pointer"><i class="fa-solid fa-gavel"></i> Analisar / Integrar</button>
                         <button onclick="excluirColaboradorAdmin(${c.id}, '${c.nome}')" class="bg-red-600 hover:bg-red-700 text-white font-bold px-2.5 py-2 rounded-xl text-[10px] cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
@@ -818,6 +876,8 @@
                         cpf: document.getElementById('col-cpf').value.replace(/\D/g, ''),
                         funcao: document.getElementById('col-funcao').value.trim(),
                         cnpj_empresa: empresaCnpjSessao || escopoCnpjAdminAtual,
+                        status_integ: 'Pendente de envio',
+                        pdf_integ: 'Não enviado',
                         ...paths
                     };
 
@@ -830,19 +890,18 @@
                         alert("Erro Supabase ao salvar ficha.");
                     }
                 } else {
-                    // === LOGA REANÁLISE CORRIGIDA ===
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
-                        
+                        if(!document.getElementById(`file-${d.id}`)) continue;
+
                         const fileInput = document.getElementById(`file-${d.id}`);
-                        // CORREÇÃO: Ignora inputs desabilitados (aprovados) ou sem arquivo novo selecionado
                         if(!fileInput || fileInput.disabled || !fileInput.files || fileInput.files.length === 0) continue;
 
                         const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
                         if(urlFisica) {
                             paths[`pdf_${d.id}`] = urlFisica;
                             paths[`status_${d.id}`] = 'Pendente de análise';
-                            paths[`obs_${d.id}`] = ''; // Limpa o motivo da rejeição anterior
+                            paths[`obs_${d.id}`] = ''; 
                             enviouAlgo = true;
                         }
                     }
@@ -870,6 +929,18 @@
 
             document.getElementById('audit-id-colaborador').value = c.id;
             document.getElementById('audit-nome-trabalhador').innerText = c.nome;
+            
+            // Gerencia campo exclusivo da Integração (Admin)
+            document.getElementById('file-admin-integ').value = "";
+            const urlInteg = c.pdf_integ;
+            const txtExistente = document.getElementById('txt-link-integ-existente');
+            if (urlInteg && urlInteg !== 'Não enviado') {
+                txtExistente.innerHTML = `<a href="${urlInteg}" target="_blank" class="text-blue-400 underline font-bold"><i class="fa-solid fa-file-pdf"></i> Visualizar Integração Atual</a>`;
+            } else {
+                txtExistente.innerText = "Nenhuma ficha anexada.";
+            }
+            document.getElementById('audit-status-integ').value = c.status_integ || 'Pendente de envio';
+
             const container = document.getElementById('container-documentos-auditoria');
             container.innerHTML = "";
 
@@ -879,7 +950,7 @@
                 const valAtual = c[`val_${d.id}`] || '';
                 const obsAtual = c[`obs_${d.id}`] || '';
 
-                if(statusAtual === 'Pendente de envio' && !d.obrigatorio && !d.adminOnly) return;
+                if(statusAtual === 'Pendente de envio' && !d.obrigatorio) return;
 
                 let uploadLinkAreaHtml = (urlPdf && urlPdf !== "Não enviado") 
                     ? `<a href="${urlPdf}" target="_blank" class="bg-blue-600 text-white font-bold px-2.5 py-1.5 rounded text-xs inline-flex items-center gap-1 shadow-sm">Abrir Anexo</a>`
@@ -904,10 +975,19 @@
         async function salvarAuditoriaAdmin(e) {
             e.preventDefault();
             const id = document.getElementById('audit-id-colaborador').value;
-            const updateData = {};
             if(!id) return;
 
+            const updateData = {};
+
             try {
+                // Trata upload da Integração se houver arquivo anexado
+                const urlIntegNova = await fazerUploadDeArquivo('file-admin-integ', 'integ');
+                if (urlIntegNova) {
+                    updateData['pdf_integ'] = urlIntegNova;
+                }
+                updateData['status_integ'] = document.getElementById('audit-status-integ').value;
+
+                // Trata as demais auditorias de documentos base/NRs
                 for (let d of listaDocsDefinidos) {
                     const elStatus = document.getElementById(`audit-status-${d.id}`);
                     const elObs = document.getElementById(`audit-obs-${d.id}`);
@@ -925,12 +1005,12 @@
 
                 let { error } = await _supabase.from('colaboradores').update(updateData).eq('id', id);
                 if (!error) {
-                    alert("✅ Parecer salvo com sucesso!");
+                    alert("✅ Processo de Parecer Técnico gravado com sucesso!");
                     document.getElementById('bloco-auditoria').classList.add('hidden');
                     await carregarDadosPainelAdmin();
                     renderizarFilaTrabalhadoresFiltrada();
                 }
-            } catch (err) { alert("Erro ao salvar."); }
+            } catch (err) { alert("Erro ao salvar auditoria."); }
         }
 
         function abrirModalColaborador(colabObj = null) {
@@ -942,7 +1022,6 @@
                     const divNR = document.getElementById(`div-${d.id}`);
                     if(divNR) divNR.classList.add('hidden');
                 }
-                // Limpa avisos de reprovações anteriores
                 const boxHtml = document.getElementById(`box-file-${d.id}`);
                 if(boxHtml) {
                     const elAviso = boxHtml.querySelector('.txt-motivo-reprova');
@@ -954,7 +1033,6 @@
                 document.getElementById('titulo-modal-colab').innerText = "Cadastrar Novo Colaborador";
                 document.getElementById('bloco-identificacao').classList.remove('hidden');
                 listaDocsDefinidos.forEach(d => {
-                    if(d.adminOnly) return;
                     const lbl = document.getElementById(`lbl-${d.id}`);
                     if(lbl) lbl.innerHTML = d.nome;
                     const fileInput = document.getElementById(`file-${d.id}`);
@@ -965,7 +1043,6 @@
                 document.getElementById('bloco-identificacao').classList.add('hidden');
 
                 listaDocsDefinidos.forEach(d => {
-                    if(d.adminOnly) return;
                     const status = colabObj[`status_${d.id}`] || 'Pendente de envio';
                     const motivoObs = colabObj[`obs_${d.id}`] || '';
                     const lbl = document.getElementById(`lbl-${d.id}`);
@@ -974,7 +1051,6 @@
                     if(fileInput) fileInput.required = false;
 
                     if(status === 'Reprovado') {
-                        // CORREÇÃO: Adiciona de forma limpa e visível o texto explicativo da rejeição
                         if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold">✕ ${d.nome} (Reprovado - Envie Novo)</span>`;
                         if(fileInput) fileInput.disabled = false;
                         
@@ -1042,8 +1118,8 @@
             carregarDadosPainelAdmin();
         }
 
-        function possuiCorrecoesAguardando(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Pendente de análise' && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado'); }
-        function possuiDocumentosReprovados(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado'); }
+        function possuiCorrecoesAguardando(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Pendente de analysis' || c.status_integ === 'Pendente de análise'); }
+        function possuiDocumentosReprovados(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado') || c.status_integ === 'Reprovado'; }
 
         function filtrarColaboradoresPrestador() {
             const termo = document.getElementById('busca-prestador').value.toLowerCase();
