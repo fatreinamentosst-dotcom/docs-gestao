@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Font Awesome Icons - CORRIGIDO DE class PARA rel -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -70,7 +70,7 @@
             </div>
 
             <h2 class="text-xl font-bold text-slate-800 mb-1">Portal de Segurança e Auditoria</h2>
-            <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrou na plataforma</p>
+            <p class="text-xs text-gray-500 mb-6">Escolha o seu tipo de acesso para entrar na plataforma</p>
             
             <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6">
                 <button onclick="alternarAbaEntrada('empresa')" id="aba-empresa" class="w-1/2 py-2.5 text-sm font-bold rounded-lg bg-emerald-800 text-white shadow shadow-emerald-900 cursor-pointer">
@@ -206,7 +206,7 @@
                         <i class="fa-solid fa-arrow-left mr-1"></i> Voltar para Lista de Empresas
                     </button>
                     <button onclick="abrirModalColaborador(null)" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-user-plus mr-1"></i> Testar Inclusão nesta Empresa
+                        <i class="fa-solid fa-user-plus mr-1"></i> Cadastrar Novo Trabalhador
                     </button>
                 </div>
 
@@ -304,9 +304,9 @@
                 <input type="hidden" id="edit-col-id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Apenas Números)</label><input type="text" id="col-cpf" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
@@ -321,15 +321,15 @@
                 <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
                     <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase">Treinamentos Normativos (NRs)</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
-                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr12"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr12" onchange="alternarAbaArquivoManual('nr12')"><span id="lbl-nr12">NR-12 (Máquinas)</span></label><div id="div-nr12" class="hidden mt-2"><input type="file" id="file-nr12" class="text-xs w-full"></div></div>
-                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
-                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
-                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
-                        <div class="bg-white p-3 border rounded-xl md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr12"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr12" onchange="alternarAbaArquivoManual('nr12')"><span id="lbl-nr12">NR-12 (Máquinas)</span></label><div id="div-nr12" class="hidden mt-2"><input type="file" id="file-nr12" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow cursor-pointer">Transmitir Ficha de Documentação</button>
+                <button type="submit" class="w-full bg-emerald-800 text-white p-3 rounded-xl font-bold hover:bg-emerald-900 transition shadow cursor-pointer text-sm">Transmitir Ficha de Documentação</button>
             </form>
         </div>
     </div>
@@ -345,17 +345,17 @@
         let escopoCnpjAdminAtual = ""; 
 
         const listaDocsDefinidos = [
-            { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true },
-            { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true },
-            { id: 'os', nome: 'Ordem de Serviço (OS)', obrigatorio: true },
-            { id: 'esocial', nome: 'e-Social / CTPS', obrigatorio: true },
-            { id: 'integ', nome: 'Integração (Exclusivo Admin FA)', obrigatorio: false, adminOnly: true },
-            { id: 'nr11', nome: 'NR-11', obrigatorio: false },
-            { id: 'nr12', nome: 'NR-12', obrigatorio: false },
-            { id: 'nr18', nome: 'NR-18', obrigatorio: false },
-            { id: 'nr33', nome: 'NR-33', obrigatorio: false },
-            { id: 'nr5', nome: 'NR-05 (CIPA)', obrigatorio: false },
-            { id: 'nr6', nome: 'NR-06 (EPI)', obrigatorio: false }
+            { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true, eNormativa: false },
+            { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true, eNormativa: false },
+            { id: 'os', nome: 'Ordem de Serviço (OS)', obrigatorio: true, eNormativa: false },
+            { id: 'esocial', nome: 'e-Social / CTPS', obrigatorio: true, eNormativa: false },
+            { id: 'integ', nome: 'Integração (Exclusivo Admin FA)', obrigatorio: false, adminOnly: true, eNormativa: false },
+            { id: 'nr11', nome: 'NR-11', obrigatorio: false, eNormativa: true },
+            { id: 'nr12', nome: 'NR-12', obrigatorio: false, eNormativa: true },
+            { id: 'nr18', nome: 'NR-18', obrigatorio: false, eNormativa: true },
+            { id: 'nr33', nome: 'NR-33', obrigatorio: false, eNormativa: true },
+            { id: 'nr5', nome: 'NR-05 (CIPA)', obrigatorio: false, eNormativa: true },
+            { id: 'nr6', nome: 'NR-06 (EPI)', obrigatorio: false, eNormativa: true }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -795,6 +795,17 @@
 
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
+                        
+                        // CORREÇÃO: Se for uma NR opcional, só processa o upload se a caixinha correspondente estiver marcada
+                        if (d.eNormativa) {
+                            const chk = document.getElementById(`chk-${d.id}`);
+                            if (!chk || !chk.checked) {
+                                paths[`pdf_${d.id}`] = "Não enviado";
+                                paths[`status_${d.id}`] = 'Pendente de envio';
+                                continue;
+                            }
+                        }
+
                         if(!document.getElementById(`file-${d.id}`)) continue;
 
                         const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
@@ -812,9 +823,11 @@
 
                     const { error } = await _supabase.from('colaboradores').insert([payload]);
                     if (!error) { 
-                        alert(`✅ Sucesso! Os dados de ${nome} foram transmitidos.`); 
+                        alert(`✅ Sucesso! Os dados de ${nome} foram cadastrados no sistema.`); 
                         alternarModalColaboradorVisual(false);
                         if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
+                    } else {
+                        alert("Erro Supabase ao salvar ficha.");
                     }
                 } else {
                     for (let d of listaDocsDefinidos) {
@@ -839,7 +852,7 @@
                         if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
                     }
                 }
-            } catch (err) { alert("Erro técnico ao realizar a transmissão."); }
+            } catch (err) { alert("Erro técnico ao realizar o cadastro."); }
         }
 
         function abrirAuditoria(idColaborador) {
@@ -915,6 +928,14 @@
             document.getElementById('form-colaborador').reset();
             document.getElementById('edit-col-id').value = colabObj ? colabObj.id : "";
 
+            // Oculta todas as abas manuais de arquivos de NRs no reset
+            listaDocsDefinidos.forEach(d => {
+                if(d.eNormativa) {
+                    const divNR = document.getElementById(`div-${d.id}`);
+                    if(divNR) divNR.classList.add('hidden');
+                }
+            });
+
             if(!colabObj) {
                 document.getElementById('titulo-modal-colab').innerText = "Cadastrar Novo Colaborador";
                 document.getElementById('bloco-identificacao').classList.remove('hidden');
@@ -939,6 +960,11 @@
                     if(status === 'Reprovado') {
                         if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold">✕ ${d.nome} (Reprovado - Envie Novo)</span>`;
                         if(fileInput) fileInput.disabled = false;
+                        if(d.eNormativa) {
+                            const chk = document.getElementById(`chk-${d.id}`);
+                            if(chk) chk.checked = true;
+                            alternarAbaArquivoManual(d.id);
+                        }
                     } else if(status === 'Aprovado') {
                         if(lbl) lbl.innerHTML = `<span class="text-green-700 font-bold">✓ ${d.nome} (Aprovado)</span>`;
                         if(fileInput) fileInput.disabled = true;
