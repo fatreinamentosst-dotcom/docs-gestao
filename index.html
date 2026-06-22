@@ -15,7 +15,6 @@
             --creme: #F8F7F4;
             --branco: #FFFFFF;
         }
-        /* GARANTIA ABSOLUTA DE FUNDO VERDE CORPORATIVO */
         html, body { 
             background-color: #064e3b !important; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -38,8 +37,8 @@
         }
 
         @keyframes piscarAlerta {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            0%, 100__ { opacity: 1; }
+            50__ { opacity: 0.4; }
         }
         .piscar-alerta {
             animation: piscarAlerta 1.5s infinite;
@@ -53,8 +52,6 @@
         <i class="fa-solid fa-ear-deaf absolute text-white text-3xl top-8 right-16 -rotate-12"></i>
         <i class="fa-solid fa-helmet-safety absolute text-white text-4xl top-6 left-1/3 opacity-50"></i>
         <i class="fa-solid fa-mitten absolute text-white text-3xl top-7 right-1/3"></i>
-        <i class="fa-solid fa-boot-line absolute text-white text-3xl top-1/4 left-6 -rotate-45"></i>
-        <i class="fa-solid fa-shield-halved absolute text-white text-3xl top-1/2 left-8 rotate-12"></i>
     </div>
 
     <div id="tela-login" class="fixed inset-0 bg-emerald-900/40 flex items-center justify-center z-50 p-4">
@@ -121,6 +118,9 @@
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden relative z-10" id="main-content">
         
         <section id="painel-prestador" class="space-y-6 hidden">
+            
+            <div id="banner-alerta-empresa" class="hidden"></div>
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-6">
                     <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
@@ -177,6 +177,8 @@
 
         <section id="painel-admin" class="space-y-6 hidden">
             
+            <div id="banner-alerta-admin" class="hidden"></div>
+
             <div id="area-empresas-inicial" class="space-y-6">
                 <div class="bg-white p-4 rounded-2xl shadow-md border flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="relative w-full md:w-64">
@@ -217,7 +219,6 @@
                     <button onclick="fecharFilaEmpresaIsolada()" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
                         <i class="fa-solid fa-arrow-left mr-1"></i> Voltar para Lista de Empresas
                     </button>
-                    
                     <button onclick="abrirModalColaborador(null)" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
                         <i class="fa-solid fa-user-plus mr-1"></i> Testar Inclusão nesta Empresa
                     </button>
@@ -291,9 +292,9 @@
                 <input type="hidden" id="edit-col-id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="bloco-identificacao">
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
-                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" required class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nome Completo</label><input type="text" id="col-nome" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">CPF (Números)</label><input type="text" id="col-cpf" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Função Técnica</label><input type="text" id="col-funcao" class="p-3 border rounded-xl text-sm w-full bg-gray-50 outline-none"></div>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
@@ -330,6 +331,9 @@
         let empresaCnpjSessao = "";
         let escopoCnpjAdminAtual = ""; 
 
+        // INSIRA AQUI A URL DE DISPARO DA SUA INSTÂNCIA (EX: EVOLUTION API OU Z-API)
+        const WHATSAPP_GATEWAY_URL = "https://api.seumediador.com/message/sendText"; 
+
         const listaDocsDefinidos = [
             { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true },
             { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true },
@@ -362,11 +366,19 @@
             }
         });
 
+        // ENVIO HTTP POST DIRETO PARA REDE CELULAR
         async function dispararNotificacaoWhatsapp(numeroDestinatario, mensagemTexto) {
             if(!numeroDestinatario) return;
             let numeroLimpo = numeroDestinatario.replace(/\D/g, '');
             if(!numeroLimpo.startsWith('55')) numeroLimpo = '55' + numeroLimpo;
-            console.log(`[WHATSAPP AUTOMÁTICO] Para: ${numeroLimpo} -> ${mensagemTexto}`);
+
+            try {
+                await fetch(WHATSAPP_GATEWAY_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ number: numeroLimpo, message: mensagemTexto })
+                });
+            } catch(e) { console.warn("Modo simulação ativado ou Gateway Offline.", mensagemTexto); }
         }
 
         function salvarConfigWhatsAdmin() {
@@ -380,6 +392,7 @@
             let { data } = await _supabase.from('colaboradores').select('*').eq('cnpj_empresa', empresaCnpjSessao);
             dadosTrabalhadores = data || [];
             renderizarTabelaRetornoPrestador(dadosTrabalhadores);
+            atualizarAlertasIniciaisVisual();
 
             let { data: emps } = await _supabase.from('acessos_empresas').select('*').eq('cnpj', empresaCnpjSessao).single();
             if(emps) {
@@ -400,6 +413,31 @@
                 alert("✅ Canais de WhatsApp atualizados e salvos com sucesso!");
                 carregarRetornosDaEmpresa();
             } else { alert("Erro ao salvar contatos: " + error.message); }
+        }
+
+        // CONTROLADOR DE BANNERS NAS TELAS INICIAIS DE ENTRADA
+        function atualizarAlertasIniciaisVisual() {
+            const bannerAdmin = document.getElementById('banner-alerta-admin');
+            const bannerEmpresa = document.getElementById('banner-alerta-empresa');
+
+            if (bannerAdmin) {
+                const pendentesAnalisar = dadosTrabalhadores.filter(c => possuiCorrecoesAguardando(c)).length;
+                if (pendentesAnalisar > 0) {
+                    bannerAdmin.className = "bg-amber-500 text-slate-900 p-4 rounded-2xl font-bold text-sm shadow flex items-center gap-3 piscar-alerta mb-4";
+                    bannerAdmin.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-xl"></i> <span>Atenção: Existem ${pendentesAnalisar} fichas com atualizações ou reenvios aguardando a sua validação técnica!</span>`;
+                } else { bannerAdmin.classList.add('hidden'); }
+            }
+
+            if (bannerEmpresa) {
+                const reprovados = dadosTrabalhadores.filter(c => possuiDocumentosReprovados(c)).length;
+                if (reprovados > 0) {
+                    bannerEmpresa.className = "bg-red-600 text-white p-4 rounded-2xl font-bold text-sm shadow flex items-center gap-3 mb-4";
+                    bannerEmpresa.innerHTML = `<i class="fa-solid fa-circle-exclamation text-xl animate-bounce"></i> <span>Aviso Crítico: Identificamos ${reprovados} colaborador(es) com documentos recusados pela auditoria FA. Abra a ficha para regularizar.</span>`;
+                } else {
+                    bannerEmpresa.className = "bg-green-600 text-white p-4 rounded-2xl font-bold text-sm shadow flex items-center gap-3 mb-4";
+                    bannerEmpresa.innerHTML = `<i class="fa-solid fa-circle-check text-xl"></i> <span>Parabéns! Sua empresa não possui pendências ou documentos reprovados no momento.</span>`;
+                }
+            }
         }
 
         function alternarAbaEntrada(tipo) {
@@ -564,6 +602,7 @@
             return null;
         }
 
+        // CORREÇÃO E DESTRAVAMENTO CENTRAL DO FORMULÁRIO DE TRANSMISSÃO
         async function enviarDadosNuvem(e) {
             e.preventDefault();
             const idExistente = document.getElementById('edit-col-id').value;
@@ -603,20 +642,46 @@
                         
                         const whatsAdminDestino = localStorage.getItem('fa_whats_admin_config');
                         if(whatsAdminDestino) {
-                            const msgAdmin = `📢 *Novo Colaborador Incluído!*\nA empresa de CNPJ ${cnpjDestinoFinal} cadastrou o colaborador *${nome}* (${document.getElementById('col-funcao').value.trim()}). Verifique no painel.`;
+                            const msgAdmin = `📢 *Novo Colaborador Incluído!*\nA empresa de CNPJ ${cnpjDestinoFinal} cadastrou o colaborador *${nome}* (${document.getElementById('col-funcao').value.trim()}). Verifique no painel técnico.`;
                             await dispararNotificacaoWhatsapp(whatsAdminDestino, msgAdmin);
                         }
 
                         alternarModalColaboradorVisual(false);
-                        if(empresaCnpjSessao) {
-                            carregarRetornosDaEmpresa();
-                        } else {
-                            await carregarDadosPainelAdmin();
-                            renderizarFilaTrabalhadoresFiltrada();
-                        }
+                        if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
                     } else { alert("Erro de gravação na nuvem: " + error.message); }
+                } else {
+                    // FLUXO DE RECORREÇÃO DE DOCUMENTOS REPROVADOS DESTRAVADO
+                    let contagemSubstituida = 0;
+                    for (let d of listaDocsDefinidos) {
+                        if(d.adminOnly) continue;
+                        const fileInput = document.getElementById(`file-${d.id}`);
+                        if(fileInput && !fileInput.disabled && fileInput.files && fileInput.files.length > 0) {
+                            const urlFisica = await fazerUploadDeArquivo(`file-${d.id}`, d.id);
+                            if(urlFisica) {
+                                paths[`pdf_${d.id}`] = urlFisica;
+                                paths[`status_${d.id}`] = 'Pendente de análise';
+                                paths[`obs_${d.id}`] = '';
+                                contagemSubstituida++;
+                            }
+                        }
+                    }
+
+                    const { error } = await _supabase.from('colaboradores').update(paths).eq('id', idExistente);
+                    if (!error) {
+                        alert("✅ Arquivos de reanálise retransmitidos com sucesso para a FA!");
+                        
+                        // ALERTA WHATSAPP REAL DISPARADO PARA O SEU CELULAR AVISANDO DA CORREÇÃO
+                        const whatsAdminDestino = localStorage.getItem('fa_whats_admin_config');
+                        if(whatsAdminDestino) {
+                            const msgAdmin = `🔄 *Ajuste Realizado!*\nA empresa de CNPJ ${cnpjDestinoFinal} reenviou novos documentos corrigidos para a ficha analisada.`;
+                            await dispararNotificacaoWhatsapp(whatsAdminDestino, msgAdmin);
+                        }
+
+                        alternarModalColaboradorVisual(false);
+                        if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
+                    } else { alert("Erro ao atualizar dados: " + error.message); }
                 }
-            } catch (err) { alert("Erro de comunicação interna."); console.error(err); }
+            } catch (err) { alert("Erro de processamento técnico."); console.error(err); }
         }
 
         function abrirAuditoria(idColaborador) {
@@ -699,7 +764,7 @@
                     
                     const empRel = dadosEmpresas.find(emp => emp.cnpj === colabObj.cnpj_empresa);
                     if(empRel) {
-                        const msgEmpresa = `⚠️ *Auditoria Atualizada - FA Segurança*\n\nDocumentos do colaborador *${colabObj.nome}* avaliados:\n\n${relatorioDocs}\nAcesse o portal para correções.`;
+                        const msgEmpresa = `⚠️ *Auditoria Atualizada - FA Segurança*\n\nDocumentos do colaborador *${colabObj.nome}* avaliados:\n\n${relatorioDocs}\nAcesse o portal para conferir.`;
                         if(empRel.whats1) await dispararNotificacaoWhatsapp(empRel.whats1, msgEmpresa);
                         if(empRel.whats2) await dispararNotificacaoWhatsapp(empRel.whats2, msgEmpresa);
                         if(empRel.whats3) await dispararNotificacaoWhatsapp(empRel.whats3, msgEmpresa);
@@ -712,14 +777,13 @@
             } catch (err) { alert("Erro ao salvar."); }
         }
 
-        // CORREÇÃO LOGICA CENTRAL: DETECTA SE O BOTÃO FOI CLICADO DE DENTRO DO TESTE DO ADMIN OU PELA EMPRESA PRESTADORA E ADAPTA A OBRIGATORIEDADE
         function abrirModalColaborador(colabObj = null) {
             document.getElementById('form-colaborador').reset();
+            document.getElementById('edit-col-id').value = colabObj ? colabObj.id : "";
             ['nr11','nr18','nr33','nr5','nr6'].forEach(id => document.getElementById(`div-${id}`).classList.add('hidden'));
 
             if(!colabObj) {
                 document.getElementById('titulo-modal-colab').innerText = "Cadastrar Novo Colaborador";
-                document.getElementById('edit-col-id').value = "";
                 document.getElementById('bloco-identificacao').classList.remove('hidden');
                 
                 listaDocsDefinidos.forEach(d => {
@@ -729,13 +793,11 @@
                     const fileInput = document.getElementById(`file-${d.id}`);
                     if(fileInput) {
                         fileInput.disabled = false;
-                        // Destrava a obrigação em ambiente de teste rápido do Administrador para permitir o envio do formulário
                         fileInput.required = empresaCnpjSessao ? d.obrigatorio : false;
                     }
                 });
             } else {
                 document.getElementById('titulo-modal-colab').innerText = `Substituir Documentos de: ${colabObj.nome}`;
-                document.getElementById('edit-col-id').value = colabObj.id;
                 document.getElementById('bloco-identificacao').classList.add('hidden');
 
                 listaDocsDefinidos.forEach(d => {
@@ -746,20 +808,13 @@
                     if(fileInput) fileInput.required = false;
 
                     if(status === 'Reprovado') {
-                        if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ${d.nome} (Reprovado - Insira o Novo Corrigido aqui)</span>`;
+                        if(lbl) lbl.innerHTML = `<span class="text-red-600 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ${d.nome} (Reprovado - Envie Novo)</span>`;
                         if(fileInput) fileInput.disabled = false;
-                        if(['nr11','nr18','nr33','nr5','nr6'].includes(d.id)) {
-                            document.getElementById(`chk-${d.id}`).checked = true;
-                            document.getElementById(`div-${d.id}`).classList.remove('hidden');
-                        }
                     } else if(status === 'Aprovado') {
                         if(lbl) lbl.innerHTML = `<span class="text-green-700 font-bold"><i class="fa-solid fa-circle-check"></i> ${d.nome} (Aprovado)</span>`;
                         if(fileInput) fileInput.disabled = true;
-                    } else if(status === 'Pendente de análise') {
-                        if(lbl) lbl.innerHTML = `<span class="text-yellow-600 italic"><i class="fa-solid fa-hourglass-start"></i> ${d.nome} (Aguardando Análise FA)</span>`;
-                        if(fileInput) fileInput.disabled = true;
                     } else {
-                        if(lbl) lbl.innerHTML = `${d.nome} (Não enviado)`;
+                        if(lbl) lbl.innerHTML = `${d.nome}`;
                         if(fileInput) fileInput.disabled = false;
                     }
                 });
@@ -772,21 +827,15 @@
             dadosTrabalhadores = colabs || [];
             let { data: emps } = await _supabase.from('acessos_empresas').select('*');
             dadosEmpresas = emps || [];
-            renderizerTabelaAdminEmpresas(dadosEmpresas);
+            renderizarTabelaAdminEmpresas(dadosEmpresas);
+            atualizarAlertasIniciaisVisual();
         }
-
-        function renderizerTabelaAdminEmpresas(lista) { renderizarTabelaAdminEmpresas(lista); }
 
         async function salvarNovaEmpresaAdmin(e) {
             e.preventDefault();
             const nome = document.getElementById('emp-nome').value.trim();
             const cnpjRaw = document.getElementById('emp-cnpj').value.replace(/\D/g, '');
             const senha = document.getElementById('emp-senha').value.trim();
-
-            if (cnpjRaw.length !== 14) {
-                alert(`⚠️ Erro de digitação: O CNPJ inserido possui ${cnpjRaw.length} números. O padrão correto exige exatamente 14 números.`);
-                return;
-            }
 
             try {
                 const { error } = await _supabase.from('acessos_empresas').insert([{ nome, cnpj: cnpjRaw, senha }]);
@@ -795,17 +844,14 @@
                     document.getElementById('form-cadastro-empresa').reset(); 
                     alternarModalEmpresa(false); 
                     await carregarDadosPainelAdmin(); 
-                } else { alert("Erro interno do servidor Supabase: " + error.message); }
-            } catch (err) { alert("Falha de conexão inesperada ao tentar cadastrar: " + err.message); }
+                }
+            } catch (err) { alert("Falha ao cadastrar."); }
         }
 
         async function excluirColaboradorAdmin(id, nome) {
             if(!confirm(`Excluir permanentemente ${nome}?`)) return;
             const { error = null } = await _supabase.from('colaboradores').delete().eq('id', id);
-            if(!error) { 
-                await carregarDadosPainelAdmin(); 
-                renderizarFilaTrabalhadoresFiltrada();
-            }
+            if(!error) { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
         }
 
         async function excluirEmpresaAdmin(id, nome) {
@@ -818,96 +864,6 @@
         function possuiDocumentosReprovados(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado'); }
         function estaLiberadoTrabalho(c) { return (c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado"); }
         function estaLiberadoIntegracao(c) { if (estaLiberadoTrabalho(c)) return false; const obrigatorios = ['aso', 'ficha', 'os', 'esocial']; return obrigatorios.every(id => c[`status_${id}`] === 'Aprovado'); }
-
-        function renderizarTabelaRetornoPrestador(lista) {
-            const tbody = document.getElementById('tabela-retorno-empresa');
-            tbody.innerHTML = "";
-            if(lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum trabalhador enviado por sua empresa.</td></tr>`;
-                return;
-            }
-
-            lista.forEach(c => {
-                let blocosDocs = "";
-                listaDocsDefinidos.forEach(d => {
-                    const status = c[`status_${d.id}`] || 'Pendente de envio';
-                    const obs = c[`obs_${d.id}`] || '';
-                    if(status === 'Pendente de envio' && !d.obrigatorio && !c[`pdf_${d.id}`]) return;
-
-                    let badgeColor = "bg-gray-100 text-gray-700";
-                    if (status === 'Aprovado') badgeColor = "bg-green-100 text-green-800 font-bold";
-                    if (status === 'Reprovado') badgeColor = "bg-red-100 text-red-700 font-bold";
-                    if (status === 'Pendente de análise') badgeColor = "bg-yellow-100 text-yellow-800 font-bold";
-
-                    blocosDocs += `
-                        <div class="p-1.5 border-b last:border-0 flex flex-col md:flex-row md:items-center justify-between text-[11px] gap-1 bg-gray-50/50 mb-1 rounded">
-                            <span class="font-bold text-gray-700 w-44 truncate">${d.nome}:</span>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded ${badgeColor}">${status}</span>
-                            </div>
-                            <span class="text-red-600 font-bold max-w-xs truncate">${obs ? 'Motivo: ' + obs : ''}</span>
-                        </div>
-                    `;
-                });
-
-                const trabalhoLivre = estaLiberadoTrabalho(c);
-                const integracaoLivre = estaLiberadoIntegracao(c);
-                const reprovado = possuiDocumentosReprovados(c);
-                
-                let bgLinha = "bg-white";
-                let bannerAlertaHtml = "";
-
-                if (trabalhoLivre) {
-                    bgLinha = "bg-emerald-50/60";
-                    bannerAlertaHtml = `<div class="bg-green-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-check"></i> 🎉 COLABORADOR LIBERADO PARA O TRABALHO!</div>`;
-                } else if (integracaoLivre) {
-                    bgLinha = "bg-blue-50/40";
-                    bannerAlertaHtml = `<div class="bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-hourglass-half"></i> 🚀 COLABORADOR LIBERADO PARA REALIZAR A INTEGRAÇÃO!</div>`;
-                } else if (reprovado) {
-                    bgLinha = "bg-red-50/60";
-                    bannerAlertaHtml = `<div class="bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs mb-2 flex items-center gap-2 shadow-sm animate-pulse"><i class="fa-solid fa-circle-exclamation"></i> ⚠️ ATENÇÃO: HÁ DOCUMENTOS DESTE COLABORADOR QUE PRECISAM SER CORRIGIDOS!</div>`;
-                }
-
-                const tr = document.createElement('tr');
-                tr.className = bgLinha + " transition duration-200";
-                tr.innerHTML = `
-                    <td class="p-3 border-r align-top w-1/4">
-                        <strong class="text-slate-800 text-sm block mb-0.5">${c.nome}</strong><span class="text-xs text-gray-500 font-medium">${c.funcao}</span>
-                        <div class="mt-2">${calcularStatusGeral(c)}</div>
-                    </td>
-                    <td class="p-2">
-                        ${bannerAlertaHtml}
-                        ${blocosDocs}
-                    </td>
-                    <td class="p-2 text-center align-middle">
-                        <button onclick='abrirModalColaborador(${JSON.stringify(c)})' class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow cursor-pointer">
-                            <i class="fa-solid fa-pen-to-square"></i> Abrir / Corrigir
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function calcularStatusGeral(c) {
-            if(c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado") {
-                return `<span class="bg-green-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para Trabalho)</span>`;
-            }
-            const obrigatorios = ['aso', 'ficha', 'os', 'esocial'];
-            const todosAprovados = obrigatorios.every(id => c[`status_${id}`] === 'Aprovado');
-            const algumReprovado = possuiDocumentosReprovados(c);
-
-            if (todosAprovados) {
-                return `<span class="bg-blue-600 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Aprovado (Liberado para integração)</span>`;
-            }
-            if (algumReprovado) {
-                return `<span class="bg-red-500 text-white font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Pendente de Correção</span>`;
-            }
-            return `<span class="bg-yellow-500 text-slate-900 font-bold px-2 py-1 rounded text-[11px] block text-center shadow-sm">Em Análise Técnica</span>`;
-        }
-
-        function alternarModalColaboradorVisual(abrir) { document.getElementById('modal-colaborador').classList.toggle('hidden', !abrir); }
-        function alternarAbaArquivoManual(id) { document.getElementById(`div-${id}`).classList.toggle('hidden', !document.getElementById(`chk-${id}`).checked); }
 
         function filtrarColaboradoresPrestador() {
             const termo = document.getElementById('busca-prestador').value.toLowerCase();
