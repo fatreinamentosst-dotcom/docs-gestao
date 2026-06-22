@@ -210,7 +210,7 @@
                     </button>
                 </div>
 
-                <!-- ADICIONADO: CONTAINER DE CONSULTA DE CREDENCIAIS (LOGIN/SENHA) CASO O CLIENTE PERCA -->
+                <!-- CONTAINER DE CONSULTA DE CREDENCIAIS (LOGIN/SENHA) CASO O CLIENTE PERCA -->
                 <div class="bg-slate-800 text-slate-200 p-4 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-4 border border-slate-700 font-mono text-xs">
                     <div class="flex items-center gap-2 text-yellow-400">
                         <i class="fa-solid fa-key text-sm"></i>
@@ -619,7 +619,6 @@
             
             const empObj = dadosEmpresas.find(e => e.cnpj === cnpj);
             if(empObj) {
-                // INJETA AS CREDENCIAIS NO CAMPO DE SUPORTE
                 document.getElementById('txt-suporte-cnpj').innerText = empObj.cnpj || '---';
                 document.getElementById('txt-suporte-senha').innerText = empObj.senha || '---';
                 renderiusAuditoriaEmpresaCorporativaAdmin(empObj);
@@ -724,6 +723,7 @@
             });
         }
 
+        // TABELA PRINCIPAL DO ADMINISTRADOR (CONFORME SOLICITADO E BASEADO NA image_9071de.png)
         function renderizarTabelaAdminEmpresas(lista) {
             const tbody = document.getElementById('tabela-admin-empresas'); 
             tbody.innerHTML = "";
@@ -731,21 +731,40 @@
                 tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhuma empresa localizada.</td></tr>`; 
                 return; 
             }
+            
             lista.forEach(e => {
-                const corpRep = e.status_pgr === 'Reprovado' || e.status_pcmso === 'Reprovado';
-                const estiloTr = corpRep ? "bg-red-50 hover:bg-red-100 border-l-4 border-red-600 font-bold" : "hover:bg-slate-50";
+                // Inteligência de Detecção Cruzada (PGR/PCMSO ou qualquer colaborador da empresa pendente)
+                const corporativoPendente = e.status_pgr === 'Pendente de análise' || e.status_pcmso === 'Pendente de análise';
+                const colaboradorPendente = dadosTrabalhadores.some(c => c.cnpj_empresa === e.cnpj && possuiCorrecoesAguardando(c));
+                const possuiPendenciaAnalise = corporativoPendente || colaboradorPendente;
+
+                const corporativoReprovado = e.status_pgr === 'Reprovado' || e.status_pcmso === 'Reprovado';
+                const colaboradorReprovado = dadosTrabalhadores.some(c => c.cnpj_empresa === e.cnpj && possuiDocumentosReprovados(c));
+                const possuiReprovacao = corporativoReprovado || colaboradorReprovado;
+
+                // Define a estilização da linha baseado no nível crítico dos alertas
+                let estiloTr = "hover:bg-slate-50";
+                let badgeStatusHtml = "";
+
+                if (possuiPendenciaAnalise) {
+                    estiloTr = "bg-amber-50 hover:bg-amber-100/80 border-l-4 border-amber-500 transition duration-150 font-medium";
+                    badgeStatusHtml = `<span class="block text-[10px] text-amber-700 font-bold uppercase tracking-tight piscar-alerta mt-0.5"><i class="fa-solid fa-hourglass-half"></i> Aguardando Sua Avaliação</span>`;
+                } else if (possuiReprovacao) {
+                    estiloTr = "bg-red-50 hover:bg-red-100/70 border-l-4 border-red-600 transition duration-150";
+                    badgeStatusHtml = `<span class="block text-[10px] text-red-600 font-bold uppercase tracking-tight mt-0.5"><i class="fa-solid fa-circle-exclamation"></i> Empresa com Pendências</span>`;
+                }
 
                 const tr = document.createElement('tr'); 
                 tr.className = `${estiloTr} border-b transition duration-150`;
                 tr.innerHTML = `
                     <td class="p-3 align-middle">
-                        <strong>${e.nome}</strong>
-                        ${corpRep ? `<span class="block text-[10px] text-red-600 uppercase tracking-tight piscar-alerta">PGR/PCMSO Pendente de Ajuste</span>` : ''}
+                        <strong class="text-slate-800 text-sm">${e.nome}</strong>
+                        ${badgeStatusHtml}
                     </td>
-                    <td class="p-3 font-mono text-gray-600 align-middle">${e.cnpj}</td>
+                    <td class="p-3 font-mono text-gray-600 align-middle text-sm">${e.cnpj}</td>
                     <td class="p-3 text-center align-middle space-x-2">
-                        <button onclick="acessarFilaEmpresaIsolada('${e.cnpj}', '${e.nome}')" class="bg-emerald-800 hover:bg-emerald-900 text-white px-3 py-1.5 rounded-xl font-bold text-xs cursor-pointer"><i class="fa-solid fa-folder-open mr-1"></i> Acessar Ficha</button>
-                        <button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-xl text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="acessarFilaEmpresaIsolada('${e.cnpj}', '${e.nome}')" class="bg-emerald-800 hover:bg-emerald-900 text-white px-3 py-1.5 rounded-xl font-bold text-xs cursor-pointer transition shadow-sm"><i class="fa-solid fa-folder-open mr-1"></i> Acessar Ficha</button>
+                        <button onclick="excluirEmpresaAdmin(${e.id}, '${e.nome}')" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-xl text-xs cursor-pointer transition shadow-sm"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -970,6 +989,7 @@
             renderizarTabelaRetornoPrestador(filtrados);
         }
 
+        UX / UI Filter Input Admin
         function filtrarGeralAdmin() {
             const termo = document.getElementById('campo-busca').value.toLowerCase();
             const empsFiltradas = dadosEmpresas.filter(e => e.nome.toLowerCase().includes(termo) || e.cnpj.includes(termo));
