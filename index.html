@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FA Segurança do Trabalho - Portal SST</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Biblioteca do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -47,6 +50,7 @@
 </head>
 <body class="linhas-engenharia text-slate-800">
 
+    <!-- EPIS TRANSPARENTES DISPERSOS EM TODAS AS EXTREMIDADES DA PÁGINA -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
         <i class="fa-solid fa-glasses absolute text-white text-3xl top-6 left-12 rotate-12"></i>
         <i class="fa-solid fa-ear-deaf absolute text-white text-3xl top-8 right-16 -rotate-12"></i>
@@ -56,6 +60,7 @@
         <i class="fa-solid fa-shield-halved absolute text-white text-3xl top-1/2 left-8 rotate-12"></i>
     </div>
 
+    <!-- TELA DE LOGIN -->
     <div id="tela-login" class="fixed inset-0 bg-emerald-900/40 flex items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-t-8 border-emerald-800 text-center relative z-10">
             <div class="flex items-center justify-center gap-4 mb-4 select-none">
@@ -106,6 +111,7 @@
         </div>
     </div>
 
+    <!-- CABEÇALHO -->
     <header class="header-fa text-white p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 hidden relative z-10" id="main-header">
         <div class="flex items-center space-x-4">
             <img src="Segurança no Trabalho.png" alt="Logo" class="max-h-16 p-1 object-contain">
@@ -117,15 +123,19 @@
         <button onclick="logout()" class="bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow hover:bg-red-800 font-bold cursor-pointer">Sair</button>
     </header>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto p-4 md:p-6 hidden relative z-10" id="main-content">
         
+        <!-- === PORTAL DO PRESTADOR === -->
         <section id="painel-prestador" class="space-y-6 hidden">
             <div id="banner-alerta-empresa" class="hidden"></div>
             
+            <!-- BLOCÃO DE ARQUIVOS DA EMPRESA (PGR / PCMSO) -->
             <div class="card-fa p-6 rounded-2xl shadow-md border-t-4 border-slate-700">
                 <h3 class="text-base font-bold text-emerald-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-folder-closed"></i> Documentação Técnica Obrigatória da Empresa</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="grid-docs-empresa-prestador">
-                    </div>
+                    <!-- Gerado dinamicamente via JS -->
+                </div>
             </div>
 
             <div class="space-y-6">
@@ -157,6 +167,7 @@
             </div>
         </section>
 
+        <!-- === PORTAL DO ADMINISTRADOR === -->
         <section id="painel-admin" class="space-y-6 hidden">
             <div id="banner-alerta-admin" class="hidden"></div>
 
@@ -188,6 +199,7 @@
                 </div>
             </div>
 
+            <!-- FILA ISOLADA DE AUDITORIA INTERNA DA EMPRESA -->
             <div id="area-colaboradores-empresa" class="space-y-6 hidden">
                 <div class="flex justify-between items-center">
                     <button onclick="fecharFilaEmpresaIsolada()" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer shadow-sm">
@@ -202,7 +214,8 @@
                     <h3 class="text-base font-bold text-slate-800 mb-3"><i class="fa-solid fa-shield-halved text-emerald-800"></i> Análise de PGR e PCMSO da Empresa</h3>
                     <form id="form-auditoria-empresa" onsubmit="salvarAuditoriaEmpresaAdmin(event)" class="space-y-4">
                         <div id="container-docs-corporativos-admin" class="space-y-3">
-                            </div>
+                            <!-- Injetado dinamicamente via JS -->
+                        </div>
                         <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-md">
                             <i class="fa-solid fa-floppy-disk mr-1"></i> Confirmar Parecer dos Docs da Empresa
                         </button>
@@ -228,6 +241,7 @@
                 </div>
             </div>
 
+            <!-- Modal Nova Empresa -->
             <div id="modal-empresa" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
                 <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border">
                     <div class="flex justify-between items-center border-b pb-2">
@@ -252,6 +266,7 @@
                 </div>
             </div>
 
+            <!-- Painel de Auditoria Trabalhador -->
             <div id="bloco-auditoria" class="card-fa p-6 rounded-2xl shadow-xl border-2 border-emerald-600 hidden bg-emerald-50/10">
                 <h3 class="text-xl font-bold text-emerald-900 mb-2 flex items-center gap-2">Painel de Avaliação Técnica de: <span id="audit-nome-trabalhador" class="text-slate-800"></span></h3>
                 <form id="form-auditoria-salvar" onsubmit="salvarAuditoriaAdmin(event)" class="space-y-4">
@@ -266,6 +281,7 @@
         </section>
     </main>
 
+    <!-- Modal Form Colaborador -->
     <div id="modal-colaborador" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto border">
             <div class="flex justify-between items-center border-b pb-2">
@@ -294,6 +310,10 @@
                     <h4 class="text-xs font-bold text-emerald-900 border-b pb-1 uppercase">Treinamentos Normativos (NRs)</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr11"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr11" onchange="alternarAbaArquivoManual('nr11')"><span id="lbl-nr11">NR-11</span></label><div id="div-nr11" class="hidden mt-2"><input type="file" id="file-nr11" class="text-xs w-full"></div></div>
+                        
+                        <!-- ADICIONADO: CAMPO DA NR-12 EXATAMENTE NO MESMO PADRÃO -->
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr12"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr12" onchange="alternarAbaArquivoManual('nr12')"><span id="lbl-nr12">NR-12 (Máquinas)</span></label><div id="div-nr12" class="hidden mt-2"><input type="file" id="file-nr12" class="text-xs w-full"></div></div>
+                        
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
@@ -315,6 +335,7 @@
         let empresaCnpjSessao = "";
         let escopoCnpjAdminAtual = ""; 
 
+        // INCLUSÃO DA NR12 NA ESTRUTURA GLOBAL DE DOCUMENTOS
         const listaDocsDefinidos = [
             { id: 'aso', nome: 'ASO (Atestado de Saúde)', obrigatorio: true },
             { id: 'ficha', nome: 'Ficha de Registro', obrigatorio: true },
@@ -322,6 +343,7 @@
             { id: 'esocial', nome: 'e-Social / CTPS', obrigatorio: true },
             { id: 'integ', nome: 'Integração (Exclusivo Admin FA)', obrigatorio: false, adminOnly: true },
             { id: 'nr11', nome: 'NR-11', obrigatorio: false },
+            { id: 'nr12', nome: 'NR-12', obrigatorio: false },
             { id: 'nr18', nome: 'NR-18', obrigatorio: false },
             { id: 'nr33', nome: 'NR-33', obrigatorio: false },
             { id: 'nr5', nome: 'NR-05 (CIPA)', obrigatorio: false },
@@ -358,7 +380,6 @@
             atualizarAlertasIniciaisVisual();
         }
 
-        // MONTA OS CAMPOS DE ARQUIVOS PGR/PCMSO VISÍVEIS PARA O PRESTADOR CLIENTE
         function renderizarDocsEmpresaPainelPrestador(emp) {
             const container = document.getElementById('grid-docs-empresa-prestador');
             if(!container) return;
@@ -396,7 +417,7 @@
                 div.innerHTML = `
                     <div class="flex justify-between items-start">
                         <strong class="text-xs text-slate-800 block">${d.nome}</strong>
-                        <span class="text-[10px] uppercase px-2 py-0.5 rounded ${badgeColor}">${status}</span>
+                        <span class="text class="text-[10px] uppercase px-2 py-0.5 rounded ${badgeColor}">${status}</span>
                     </div>
                     ${url && url !== "Não enviado" ? `<a href="${url}" target="_blank" class="text-xs text-blue-600 underline font-bold mt-1 inline-block"><i class="fa-solid fa-file-pdf"></i> Ver Arquivo Anexado</a>` : ''}
                     ${obs ? `<p class="text-[11px] text-red-600 font-bold mt-1">Motivo: ${obs}</p>` : ''}
@@ -406,7 +427,6 @@
             });
         }
 
-        // REALIZA O UPLOAD DOS DOCUMENTOS CORPORATIVOS (PGR/PCMSO) DA EMPRESA
         async function transmitirDocCorporativoSupa(idDoc) {
             const urlFisica = await fazerUploadDeArquivo(`file-corp-${idDoc}`, idDoc);
             if(!urlFisica) { alert("Selecione um arquivo válido para transmitir!"); return; }
@@ -487,7 +507,6 @@
             });
         }
 
-        // CONTROLA VISUALMENTE OS ALERTAS DE PGR/PCMSO DO CLIENTE E DO ADMIN NAS ENTRADAS
         function atualizarAlertasIniciaisVisual() {
             const bannerAdmin = document.getElementById('banner-alerta-admin');
             const bannerEmpresa = document.getElementById('banner-alerta-empresa');
@@ -540,6 +559,7 @@
 
         function alternarModalEmpresa(abrir) { document.getElementById('modal-empresa').classList.toggle('hidden', !abrir); }
         function alternarModalColaboradorVisual(abrir) { document.getElementById('modal-colaborador').classList.toggle('hidden', !abrir); }
+        function alternarAbaArquivoManual(id) { document.getElementById(`div-${id}`).classList.toggle('hidden', !document.getElementById(`chk-${id}`).checked); }
 
         async function processarLoginAdmin(e) {
             e.preventDefault();
@@ -589,15 +609,13 @@
             document.getElementById('area-empresas-inicial').classList.add('hidden');
             document.getElementById('area-colaboradores-empresa').classList.remove('hidden');
             
-            // Carrega os dados de auditoria da própria empresa selecionada
             const empObj = dadosEmpresas.find(e => e.cnpj === cnpj);
-            if(empObj) renderizarAuditoriaEmpresaCorporativaAdmin(empObj);
+            if(empObj) renderiusAuditoriaEmpresaCorporativaAdmin(empObj);
 
             renderizarFilaTrabalhadoresFiltrada();
         }
 
-        // GERA VISUALMENTE OS CAMPOS DE PARECER E VALIDADE DO PGR/PCMSO PARA O ADM VALIDAR
-        function renderizarAuditoriaEmpresaCorporativaAdmin(emp) {
+        function renderiusAuditoriaEmpresaCorporativaAdmin(emp) {
             const container = document.getElementById('container-docs-corporativos-admin');
             if(!container) return;
             container.innerHTML = "";
@@ -630,7 +648,6 @@
             });
         }
 
-        // GRAVA OS PARECERES DE PGR / PCMSO DA EMPRESA NO SUPABASE
         async function salvarAuditoriaEmpresaAdmin(e) {
             e.preventDefault();
             const updateData = {};
