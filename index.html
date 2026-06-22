@@ -37,8 +37,8 @@
         }
 
         @keyframes piscarAlerta {
-            0%, 100__ { opacity: 1; }
-            50__ { opacity: 0.4; }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
         .piscar-alerta {
             animation: piscarAlerta 1.5s infinite;
@@ -134,7 +134,7 @@
                     </div>
 
                     <div class="card-fa p-6 rounded-2xl shadow-md">
-                        <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Painel Geral de Resposta da Auditoria</h2>
+                        <h2 class="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-users"></i> Lista de Colaboradores Cadastrados</h2>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-sm">
                                 <thead>
@@ -331,7 +331,6 @@
         let empresaCnpjSessao = "";
         let escopoCnpjAdminAtual = ""; 
 
-        // INSIRA AQUI A URL DE DISPARO DA SUA INSTÂNCIA (EX: EVOLUTION API OU Z-API)
         const WHATSAPP_GATEWAY_URL = "https://api.seumediador.com/message/sendText"; 
 
         const listaDocsDefinidos = [
@@ -366,7 +365,6 @@
             }
         });
 
-        // ENVIO HTTP POST DIRETO PARA REDE CELULAR
         async function dispararNotificacaoWhatsapp(numeroDestinatario, mensagemTexto) {
             if(!numeroDestinatario) return;
             let numeroLimpo = numeroDestinatario.replace(/\D/g, '');
@@ -402,6 +400,76 @@
             }
         }
 
+        // MONTAGEM REAL DA TABELA DA EMPRESA COM OS ALERTAS LUMINOSOS SOLICITADOS
+        function renderizarTabelaRetornoPrestador(lista) {
+            const tbody = document.getElementById('tabela-retorno-empresa');
+            if(!tbody) return;
+            tbody.innerHTML = "";
+
+            if(lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum colaborador cadastrado até o momento.</td></tr>`;
+                return;
+            }
+
+            lista.forEach(c => {
+                const reprovado = possuiDocumentosReprovados(c);
+                const analisando = possuiCorrecoesAguardando(c) || listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Pendente de análise');
+                
+                let estiloLinha = "bg-white hover:bg-slate-50";
+                let badgeStatus = "";
+                let acaoBotaoHtml = `<span class="text-gray-400 font-medium text-xs italic"><i class="fa-solid fa-lock"></i> Ficha Protegida</span>`;
+
+                if (reprovado) {
+                    // ALERTA LUMINOSO DE REPROVAÇÃO (LINHA COM BORDA E DESTAQUE VERMELHO)
+                    estiloLinha = "bg-red-50/70 border-l-4 border-red-600 hover:bg-red-100/60 transition duration-150";
+                    badgeStatus = `<span class="bg-red-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase piscar-alerta"><i class="fa-solid fa-triangle-exclamation"></i> Regularizar Pendências</span>`;
+                    acaoBotaoHtml = `
+                        <button onclick='abrirModalColaborador(${JSON.stringify(c)})' class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow flex items-center gap-1 cursor-pointer transition">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Ajustar Agora
+                        </button>
+                    `;
+                } else if (analisando) {
+                    // ALERTA DE AGUARDANDO VALIDAÇÃO
+                    estiloLinha = "bg-amber-50/50 border-l-4 border-amber-500 hover:bg-amber-50";
+                    badgeStatus = `<span class="bg-amber-500 text-slate-900 font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-spinner animate-spin"></i> Em Análise na FA</span>`;
+                } else {
+                    // TOTALMENTE APROVADO
+                    estiloLinha = "bg-green-50/40 border-l-4 border-green-600 hover:bg-green-50";
+                    badgeStatus = `<span class="bg-green-700 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center gap-1 w-max uppercase"><i class="fa-solid fa-circle-check"></i> Documentação Validada</span>`;
+                }
+
+                // DETALHAMENTO DE INDICAÇÃO DOS DOCUMENTOS DA LINHA
+                let resumoDocs = `<div class="flex flex-wrap gap-1 mt-1.5">`;
+                listaDocsDefinidos.forEach(d => {
+                    const st = c[`status_${d.id}`];
+                    if (st === 'Aprovado') {
+                        resumoDocs += `<span class="text-[9px] bg-green-100 text-green-800 font-semibold px-1.5 py-0.5 rounded border border-green-300">✓ ${d.id.toUpperCase()}</span>`;
+                    } else if (st === 'Reprovado') {
+                        const obs = c[`obs_${d.id}`] ? `: ${c[`obs_${d.id}`]}` : '';
+                        resumoDocs += `<span class="text-[9px] bg-red-100 text-red-800 font-bold px-1.5 py-0.5 rounded border border-red-300 piscar-alerta" title="${d.nome}${obs}">✕ ${d.id.toUpperCase()}</span>`;
+                    }
+                });
+                resumoDocs += `</div>`;
+
+                const tr = document.createElement('tr');
+                tr.className = `${estiloLinha} border-b transition duration-150`;
+                tr.innerHTML = `
+                    <td class="p-3 align-middle">
+                        <strong class="text-slate-800 block text-sm">${c.nome}</strong>
+                        <span class="text-xs text-gray-500 font-mono">CPF: ${c.cpf || '---'} | Fct: ${c.funcao || '---'}</span>
+                    </td>
+                    <td class="p-3 align-middle">
+                        ${badgeStatus}
+                        ${resumoDocs}
+                    </td>
+                    <td class="p-3 text-center align-middle">
+                        ${acaoBotaoHtml}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         async function salvarWhatsappsEmpresa(e) {
             e.preventDefault();
             const w1 = document.getElementById('whats-emp-1').value.replace(/\D/g, '');
@@ -415,7 +483,6 @@
             } else { alert("Erro ao salvar contatos: " + error.message); }
         }
 
-        // CONTROLADOR DE BANNERS NAS TELAS INICIAIS DE ENTRADA
         function atualizarAlertasIniciaisVisual() {
             const bannerAdmin = document.getElementById('banner-alerta-admin');
             const bannerEmpresa = document.getElementById('banner-alerta-empresa');
@@ -553,7 +620,6 @@
                             ${alertaCorrecaoHtml}
                         </div>
                         <span class="text-[10px] text-gray-500">${c.funcao}</span>
-                        <div class="w-48 mt-1">${calcularStatusGeral(c)}</div>
                     </td>
                     <td class="p-3 flex justify-center gap-2 align-middle">
                         <button onclick="abrirAuditoria(${c.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-2 rounded-xl transition text-[10px] flex items-center gap-1 cursor-pointer shadow-sm"><i class="fa-solid fa-gavel"></i> Analisar Ficha</button>
@@ -602,7 +668,6 @@
             return null;
         }
 
-        // CORREÇÃO E DESTRAVAMENTO CENTRAL DO FORMULÁRIO DE TRANSMISSÃO
         async function enviarDadosNuvem(e) {
             e.preventDefault();
             const idExistente = document.getElementById('edit-col-id').value;
@@ -650,8 +715,6 @@
                         if(empresaCnpjSessao) { carregarRetornosDaEmpresa(); } else { await carregarDadosPainelAdmin(); renderizarFilaTrabalhadoresFiltrada(); }
                     } else { alert("Erro de gravação na nuvem: " + error.message); }
                 } else {
-                    // FLUXO DE RECORREÇÃO DE DOCUMENTOS REPROVADOS DESTRAVADO
-                    let contagemSubstituida = 0;
                     for (let d of listaDocsDefinidos) {
                         if(d.adminOnly) continue;
                         const fileInput = document.getElementById(`file-${d.id}`);
@@ -661,7 +724,6 @@
                                 paths[`pdf_${d.id}`] = urlFisica;
                                 paths[`status_${d.id}`] = 'Pendente de análise';
                                 paths[`obs_${d.id}`] = '';
-                                contagemSubstituida++;
                             }
                         }
                     }
@@ -670,7 +732,6 @@
                     if (!error) {
                         alert("✅ Arquivos de reanálise retransmitidos com sucesso para a FA!");
                         
-                        // ALERTA WHATSAPP REAL DISPARADO PARA O SEU CELULAR AVISANDO DA CORREÇÃO
                         const whatsAdminDestino = localStorage.getItem('fa_whats_admin_config');
                         if(whatsAdminDestino) {
                             const msgAdmin = `🔄 *Ajuste Realizado!*\nA empresa de CNPJ ${cnpjDestinoFinal} reenviou novos documentos corrigidos para a ficha analisada.`;
@@ -862,8 +923,6 @@
 
         function possuiCorrecoesAguardando(c) { return listaDocsDefinidos.some(d => !d.adminOnly && c[`status_${d.id}`] === 'Pendente de análise' && c[`pdf_${d.id}`] && c[`pdf_${d.id}`] !== 'Não enviado'); }
         function possuiDocumentosReprovados(c) { return listaDocsDefinidos.some(d => c[`status_${d.id}`] === 'Reprovado'); }
-        function estaLiberadoTrabalho(c) { return (c.pdf_integ && c.pdf_integ !== "Não enviado" && c.status_integ === "Aprovado"); }
-        function estaLiberadoIntegracao(c) { if (estaLiberadoTrabalho(c)) return false; const obrigatorios = ['aso', 'ficha', 'os', 'esocial']; return obrigatorios.every(id => c[`status_${id}`] === 'Aprovado'); }
 
         function filtrarColaboradoresPrestador() {
             const termo = document.getElementById('busca-prestador').value.toLowerCase();
