@@ -203,6 +203,7 @@
                                 <option value="nr12">NR-12</option>
                                 <option value="nr18">NR-18</option>
                                 <option value="nr33">NR-33</option>
+                                <option value="nr35">NR-35</option>
                                 <option value="nr5">NR-05</option>
                                 <option value="nr6">NR-06</option>
                             </select>
@@ -425,6 +426,7 @@
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr12"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr12" onchange="alternarAbaArquivoManual('nr12')"><span id="lbl-nr12">NR-12 (Máquinas)</span></label><div id="div-nr12" class="hidden mt-2"><input type="file" id="file-nr12" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr18"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr18" onchange="alternarAbaArquivoManual('nr18')"><span id="lbl-nr18">NR-18</span></label><div id="div-nr18" class="hidden mt-2"><input type="file" id="file-nr18" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr33"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr33" onchange="alternarAbaArquivoManual('nr33')"><span id="lbl-nr33">NR-33</span></label><div id="div-nr33" class="hidden mt-2"><input type="file" id="file-nr33" class="text-xs w-full"></div></div>
+                        <div class="bg-white p-3 border rounded-xl" id="box-file-nr35"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr35" onchange="alternarAbaArquivoManual('nr35')"><span id="lbl-nr35">NR-35</span></label><div id="div-nr35" class="hidden mt-2"><input type="file" id="file-nr35" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl" id="box-file-nr5"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr5" onchange="alternarAbaArquivoManual('nr5')"><span id="lbl-nr5">NR-05 (CIPA)</span></label><div id="div-nr5" class="hidden mt-2"><input type="file" id="file-nr5" class="text-xs w-full"></div></div>
                         <div class="bg-white p-3 border rounded-xl md:col-span-2" id="box-file-nr6"><label class="text-xs font-bold flex items-center space-x-2 select-none"><input type="checkbox" id="chk-nr6" onchange="alternarAbaArquivoManual('nr6')"><span id="lbl-nr6">NR-06 (EPI)</span></label><div id="div-nr6" class="hidden mt-2"><input type="file" id="file-nr6" class="text-xs w-full"></div></div>
                     </div>
@@ -436,7 +438,7 @@
 
     <script>
         const SUPABASE_URL = "https://kyqtxdxiyoplpujkwiwh.supabase.co"; 
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";           
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cXR4ZHhpeW9wbHB1amt3aXdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM3MTYsImV4cCI6MjA5NzM2OTcxNn0.nIF4vSMJCXi5-dftl1ZDZZbXUL0Gj8xgcdX9XMLHS90";            
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let dadosTrabalhadores = [];
@@ -454,6 +456,7 @@
             { id: 'nr12', nome: 'NR-12', obrigatorio: false, eNormativa: true },
             { id: 'nr18', nome: 'NR-18', obrigatorio: false, eNormativa: true },
             { id: 'nr33', nome: 'NR-33', obrigatorio: false, eNormativa: true },
+            { id: 'nr35', nome: 'NR-35', obrigatorio: false, eNormativa: true },
             { id: 'nr5', nome: 'NR-05 (CIPA)', obrigatorio: false, eNormativa: true },
             { id: 'nr6', nome: 'NR-06 (EPI)', obrigatorio: false, eNormativa: true }
         ];
@@ -941,11 +944,13 @@
         function exportarRelatorioCSV() {
             if(cacheRegistrosRelatorio.length === 0) { alert("Não há registros para exportar!"); return; }
 
-            let csvContent = "\uFEFF"; // BOM para compatibilidade UTF-8 com Excel
-            csvContent += "Empresa;Trabalhador;Funcao;Documento;Validade;Status Lógico\n";
+            let csvContent = "﻿"; // BOM para compatibilidade UTF-8 com Excel
+            csvContent += "Empresa;Trabalhador;Funcao;Documento;Validade;Status Lógico
+";
 
             cacheRegistrosRelatorio.forEach(r => {
-                csvContent += `"${r.empresa}";"${r.trabalhador}";"${r.funcao}";"${r.documento}";"${r.validade}";"${r.status}"\n`;
+                csvContent += `"${r.empresa}";"${r.trabalhador}";"${r.funcao}";"${r.documento}";"${r.validade}";"${r.status}"
+`;
             });
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
